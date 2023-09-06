@@ -33,12 +33,13 @@ function Main1Container() {
     "a cat laying in the grass",
     "a woman in a bikini on a surfboard",
   ]);
-  // const [captionDict, setCaptionDict] = useState([]);
+  const [captionDict, setCaptionDict] = useState([]);
+  const [prevCaption, setPrevCaption] = useState("");
   // const [currentTime, setCurrentTime] = useState(0);
   const [moveToSurvey, setMoveToSurvey] = useState(false);
   const [render, setRender] = useState(false);
   const [popUp, setPopUp] = useState(false);
-
+  const [editMode, setEditMode] = useState(false);
   const originalCaptions = [
     "a group of horses standing around a fire",
     "a group of people standing  around a pool",
@@ -62,6 +63,101 @@ function Main1Container() {
     "a woman in a bikini on a surfboard",
   ];
 
+  const setOriginalCaptionDict = (caption) => {
+    const data = [];
+    for (let i = 0; i < caption.length; i++) {
+      const letter = caption[i];
+
+      // Create a data object for the letter
+      const dataObject = {
+        idx: i, // Index of the letter
+        letter: letter, // The actual letter
+        state: "original", // manage the state of the object
+      };
+
+      // Push the data object to the data array
+      data.push(dataObject);
+    }
+    setCaptionDict(() => data);
+  };
+
+  const setChangedCaptionDict = (editedCaption) => {
+    const originalDict = captionDict;
+    const nonDeleteDict = captionDict.filter((item) => item.state !== "delete");
+    const insert = nonDeleteDict.length < editedCaption.length ? true : false;
+    const data = [];
+    let idx = 0;
+    let editedIdx = 0;
+    let hasInserted = false;
+    for (let i = 0; i < originalDict.length; i++) {
+      let dictItem = originalDict[i];
+      console.log(dictItem);
+      console.log(editedCaption[idx]);
+      if (
+        dictItem.state === "delete" ||
+        dictItem.letter === editedCaption[idx]
+      ) {
+        console.log("not changed");
+        if (editedIdx === i) {
+          data.push(dictItem);
+        } else {
+          const dataObject = {
+            idx: editedIdx, // Index of the letter
+            letter: dictItem.letter, // The actual letter
+            state: dictItem.state, // manage the state of the object
+          };
+          data.push(dataObject);
+        }
+        editedIdx++;
+        idx = dictItem.state === "delete" ? idx : idx + 1;
+      } else if (insert) {
+        console.log("insert");
+        hasInserted = true;
+        const dataObject = {
+          idx: editedIdx, // Index of the letter
+          letter: editedCaption[idx], // The actual letter
+          state: "insert", // manage the state of the object
+        };
+        data.push(dataObject);
+        editedIdx++;
+        i--;
+        idx++;
+      } else {
+        console.log("delete");
+        const dataObject = {
+          idx: editedIdx, // Index of the letter
+          letter: dictItem.letter, // The actual letter
+          state: "delete", // manage the state of the object
+        };
+        data.push(dataObject);
+        editedIdx++;
+      }
+      if (insert && i === originalDict.length - 1 && !hasInserted) {
+        const dataObject = {
+          idx: editedIdx,
+          letter: editedCaption[idx], // The actual letter
+          state: "insert",
+        };
+        data.push(dataObject);
+        editedIdx++;
+      }
+    }
+    setCaptionDict(data);
+    console.log(data);
+  };
+
+  const getPassageComponent = () => {
+    return (
+      <div className="caption-div">
+        {captionDict.map((dictItem) => (
+          <span className={dictItem.state} key={dictItem.idx}>
+            {dictItem.letter}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   const baseImgUrl = "/image_folder/";
   const img_paths = Array.from({ length: 20 }, (_, i) => i).map(
     (idx) => `Image_${idx + 1}.png`
@@ -81,6 +177,7 @@ function Main1Container() {
     }
     setImageCount(count);
     setCurrentImage(img_paths[count]);
+    setOriginalCaptionDict(captions[count]);
     // setCaptionDict(() => [
     //   {
     //     idx: 0,
@@ -89,7 +186,6 @@ function Main1Container() {
     //   },
     // ]);
     setTaskTime(Date.now());
-    console.log(taskUseTime);
   };
 
   const nextChange = () => {
@@ -133,7 +229,58 @@ function Main1Container() {
     );
   };
 
+  const saveEditButtonClick = () => {
+    // save
+    if (editMode) {
+      setOriginalCaptionDict(captions[imageCount]);
+    } else {
+      // edit
+      setPrevCaption(captions[imageCount]);
+    }
+    setEditMode((e) => !e);
+  };
+
+  const undoClearButtonClick = () => {
+    if (editMode) {
+      // undo
+      setCaptions(
+        captions.map((caption, idx) =>
+          idx === imageCount ? prevCaption : caption
+        )
+      );
+      setOriginalCaptionDict(prevCaption);
+    } else {
+      // clear
+      setPrevCaption(captions[imageCount]);
+      const data = [];
+      for (let i = 0; i < captionDict.length; i++) {
+        const dictObj = {
+          idx: captionDict[i].idx, // Index of the letter
+          letter: captionDict[i].letter, // The actual letter
+          state: "delete", // manage the state of the object
+        };
+        data.push(dictObj);
+      }
+      setCaptionDict(() => data);
+      setCaptions(
+        captions.map((caption, idx) => (idx === imageCount ? "" : caption))
+      );
+    }
+    setEditMode((e) => !e);
+  };
+
+  const returnOriginalText = () => {
+    setPrevCaption(captions[imageCount]);
+    setCaptions(
+      captions.map((caption, idx) =>
+        idx === imageCount ? originalCaptions[imageCount] : caption
+      )
+    );
+    setOriginalCaptionDict(originalCaptions[imageCount]);
+  };
+
   const modifyCaption = (modCap) => {
+    setChangedCaptionDict(modCap.target.value);
     // const newCaption = modCap.target.value;
     // const insert =
     //   newCaption.length > captions[imageCount].length ? true : false;
@@ -179,6 +326,7 @@ function Main1Container() {
     setCurrentImage(img_paths[imageCount]);
     setTaskTime(Date.now());
     setRender(true);
+    setOriginalCaptionDict(captions[imageCount]);
     // const imageCaption = captions[imageCount];
     // const data = [];
     // for (let i = 0; i < imageCaption.length; i++) {
@@ -224,21 +372,36 @@ function Main1Container() {
 
             <div className="right-column">
               <div>
-                <t> AI-generated Original Caption:</t>
+                <p className="t"> Edit AI-Generated Caption: </p>
               </div>
-              <input
-                class="caption"
-                value={captions[imageCount]}
-                onChange={modifyCaption}
-              ></input>
-              <div>
-                <t> Final Caption:</t>
+              <div className="caption-edits">
+                <input
+                  className="caption"
+                  value={captions[imageCount]}
+                  onChange={modifyCaption}
+                  readOnly={!editMode}
+                ></input>
+                <div className="edit-buttons">
+                  <button onClick={undoClearButtonClick} className="undo-clear">
+                    {editMode ? "Undo" : "Clear"}
+                  </button>
+                  <button onClick={saveEditButtonClick} className="save-edit">
+                    {editMode ? "Save" : "Edit"}
+                  </button>
+                </div>
+                <div>
+                  <button
+                    onClick={returnOriginalText}
+                    className="return-original"
+                  >
+                    Return Original Caption
+                  </button>
+                </div>
+                <div>
+                  <p className="t"> Tracing Changes: </p>
+                </div>
+                <>{getPassageComponent()}</>
               </div>
-              <input
-                class="caption"
-                value={captions[imageCount]}
-                readOnly={true}
-              ></input>
             </div>
           </div>
 
@@ -273,7 +436,7 @@ function Main1Container() {
                     You have not made any edit on the AI-generated caption. Do
                     you want to go to the next image?
                   </p>
-                  <div className="popbuttons">
+                  <div className="popup-buttons">
                     <button className="cancel" onClick={() => setPopUp(!popUp)}>
                       Cancel
                     </button>

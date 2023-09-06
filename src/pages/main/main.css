@@ -31,11 +31,13 @@
   width: 30%;
   margin-left: 15%;
   border: 3 px solid green;
+  align-items: center;
 }
 
-t {
+.t {
   font-size: 15px;
   font-weight: 500;
+  margin-top: 20px;
 }
 
 .button-container {
@@ -120,12 +122,19 @@ t {
 }
 
 .caption {
-  text-align: left;
+  border: 2px solid black;
+  text-align: center;
   font-size: 16px;
   width: 400px;
   height: 150px;
   margin-bottom: 10px;
   margin-top: 10px;
+}
+
+.caption-div {
+  font-size: 16px;
+  margin-bottom: 10px;
+  margin-top: 50px;
 }
 
 .button-container {
@@ -169,7 +178,25 @@ t {
 .popup-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 5px;
+}
+
+.edit-buttons {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.caption-edits {
+  align-items: center;
+}
+
+.undo-clear,
+.save-edit {
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
 .proceed,
@@ -177,6 +204,22 @@ t {
   padding: 10px 20px;
   cursor: pointer;
   margin: 0 20px;
+}
+
+.return-original {
+  padding: 5px, 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.delete {
+  text-decoration: line-through;
+  color: rgb(173, 6, 6);
+}
+
+.insert {
+  text-decoration: underline;
+  color: rgb(173, 6, 6);
 }
 
 /* Add more styling as needed */
