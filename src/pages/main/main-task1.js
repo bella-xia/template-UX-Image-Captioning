@@ -40,6 +40,8 @@ function Main1Container() {
   const [render, setRender] = useState(false);
   const [popUp, setPopUp] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [editPrevTime, setEditPrevTime] = useState(Date.now());
+  const [maxChange, setMaxChange] = useState(0);
   const originalCaptions = [
     "a group of horses standing around a fire",
     "a group of people standing  around a pool",
@@ -73,6 +75,7 @@ function Main1Container() {
         idx: i, // Index of the letter
         letter: letter, // The actual letter
         state: "original", // manage the state of the object
+        order: -1,
       };
 
       // Push the data object to the data array
@@ -81,8 +84,10 @@ function Main1Container() {
     setCaptionDict(() => data);
   };
 
-  const setChangedCaptionDict = (editedCaption) => {
+  const setChangedCaptionDict = (editedCaption, remain_order) => {
     const originalDict = captionDict;
+    const order = remain_order ? maxChange : maxChange + 1;
+    let madeChanges = true;
     const nonDeleteDict = captionDict.filter((item) => item.state !== "delete");
     const insert = nonDeleteDict.length < editedCaption.length ? true : false;
     const data = [];
@@ -91,13 +96,10 @@ function Main1Container() {
     let hasInserted = false;
     for (let i = 0; i < originalDict.length; i++) {
       let dictItem = originalDict[i];
-      console.log(dictItem);
-      console.log(editedCaption[idx]);
       if (
         dictItem.state === "delete" ||
         dictItem.letter === editedCaption[idx]
       ) {
-        console.log("not changed");
         if (editedIdx === i) {
           data.push(dictItem);
         } else {
@@ -105,42 +107,51 @@ function Main1Container() {
             idx: editedIdx, // Index of the letter
             letter: dictItem.letter, // The actual letter
             state: dictItem.state, // manage the state of the object
+            order: dictItem.order,
           };
           data.push(dataObject);
         }
         editedIdx++;
         idx = dictItem.state === "delete" ? idx : idx + 1;
       } else if (insert) {
-        console.log("insert");
         hasInserted = true;
         const dataObject = {
           idx: editedIdx, // Index of the letter
           letter: editedCaption[idx], // The actual letter
           state: "insert", // manage the state of the object
+          order: order,
         };
         data.push(dataObject);
         editedIdx++;
         i--;
         idx++;
       } else {
-        console.log("delete");
-        const dataObject = {
-          idx: editedIdx, // Index of the letter
-          letter: dictItem.letter, // The actual letter
-          state: "delete", // manage the state of the object
-        };
-        data.push(dataObject);
-        editedIdx++;
+        if (dictItem.state !== "insert") {
+          const dataObject = {
+            idx: editedIdx, // Index of the letter
+            letter: dictItem.letter, // The actual letter
+            state: "delete", // manage the state of the object
+            order: order,
+          };
+          data.push(dataObject);
+          editedIdx++;
+        } else {
+          madeChanges = false;
+        }
       }
       if (insert && i === originalDict.length - 1 && !hasInserted) {
         const dataObject = {
           idx: editedIdx,
           letter: editedCaption[idx], // The actual letter
           state: "insert",
+          order: order,
         };
         data.push(dataObject);
         editedIdx++;
       }
+    }
+    if (!remain_order && madeChanges) {
+      setMaxChange(() => order);
     }
     setCaptionDict(data);
     console.log(data);
@@ -208,6 +219,7 @@ function Main1Container() {
     }
     // reinitialize variables
     updateImage(count);
+    setEditMode((e) => !e);
   };
 
   const popUpProceed = () => {
@@ -218,6 +230,7 @@ function Main1Container() {
     } else {
       // reinitialize variables
       updateImage(count);
+      setEditMode((e) => !e);
     }
   };
 
@@ -240,35 +253,6 @@ function Main1Container() {
     setEditMode((e) => !e);
   };
 
-  const undoClearButtonClick = () => {
-    if (editMode) {
-      // undo
-      setCaptions(
-        captions.map((caption, idx) =>
-          idx === imageCount ? prevCaption : caption
-        )
-      );
-      setOriginalCaptionDict(prevCaption);
-    } else {
-      // clear
-      setPrevCaption(captions[imageCount]);
-      const data = [];
-      for (let i = 0; i < captionDict.length; i++) {
-        const dictObj = {
-          idx: captionDict[i].idx, // Index of the letter
-          letter: captionDict[i].letter, // The actual letter
-          state: "delete", // manage the state of the object
-        };
-        data.push(dictObj);
-      }
-      setCaptionDict(() => data);
-      setCaptions(
-        captions.map((caption, idx) => (idx === imageCount ? "" : caption))
-      );
-    }
-    setEditMode((e) => !e);
-  };
-
   const returnOriginalText = () => {
     setPrevCaption(captions[imageCount]);
     setCaptions(
@@ -279,32 +263,73 @@ function Main1Container() {
     setOriginalCaptionDict(originalCaptions[imageCount]);
   };
 
-  const modifyCaption = (modCap) => {
-    setChangedCaptionDict(modCap.target.value);
-    // const newCaption = modCap.target.value;
-    // const insert =
-    //   newCaption.length > captions[imageCount].length ? true : false;
-    // const dictLen = captionDict.length;
-    // let j = 0;
-    // for (let i = 0; i < dictLen; i++) {
-    //   let foundElement = captionDict.find((item) => item.idx === i);
-    //   if (foundElement.state === "delete") {
-    //     continue;
-    //   }
-    //   if (newCaption.length < j + 1) {
-    //     foundElement.state = "delete";
+  const revertCaption = () => {
+    const max_order = maxChange;
+    if (max_order === -1) {
+      console.log("no more changes");
+      return;
+    }
+    const originalDict = captionDict;
+    const data = [];
+    let editedIdx = 0;
+    for (let i = 0; i < originalDict.length; i++) {
+      let dictItem = originalDict[i];
+      if (dictItem.order === max_order) {
+        // the one to revert
+        if (dictItem.state === "delete") {
+          const dataObject = {
+            idx: editedIdx, // Index of the letter
+            letter: dictItem.letter, // The actual letter
+            state: "original", // manage the state of the object
+            order: -1,
+          };
+          data.push(dataObject);
+          editedIdx++;
+        }
+      } else {
+        const dataObject = {
+          idx: editedIdx, // Index of the letter
+          letter: dictItem.letter, // The actual letter
+          state: dictItem.state, // manage the state of the object
+          order: dictItem.order,
+        };
+        data.push(dataObject);
+        editedIdx++;
+      }
+    }
+    setCaptionDict(data);
+    setMaxChange(() => max_order - 1);
+    setCaptionBasedOnDict(data);
+    console.log(data);
+  };
 
-    //     setCaptionDict((dict) =>
-    //       dict.map((item) => (item.idx === i ? foundElement : item))
-    //     );
-    //   }
-    //   if (newCaption[j] !== foundElement.letter) {
-    //     foundElement
-    //   }
-    // }
+  const modifyCaption = (modCap) => {
+    const editCurrentTime = Date.now();
+    if (editCurrentTime - editPrevTime < 1000) {
+      setChangedCaptionDict(modCap.target.value, true);
+    } else {
+      setChangedCaptionDict(modCap.target.value, false);
+      setEditPrevTime(() => editCurrentTime);
+    }
     setCaptions(
       captions.map((caption, idx) =>
         idx === imageCount ? modCap.target.value : caption
+      )
+    );
+  };
+
+  const setCaptionBasedOnDict = (dict) => {
+    let dictToString = "";
+    for (let i = 0; i < dict.length; i++) {
+      const dictItem = dict[i];
+      if (dictItem.state !== "delete") {
+        dictToString = dictToString + dictItem.letter;
+      }
+    }
+    console.log(dictToString);
+    setCaptions(
+      captions.map((caption, idx) =>
+        idx === imageCount ? dictToString : caption
       )
     );
   };
@@ -327,23 +352,6 @@ function Main1Container() {
     setTaskTime(Date.now());
     setRender(true);
     setOriginalCaptionDict(captions[imageCount]);
-    // const imageCaption = captions[imageCount];
-    // const data = [];
-    // for (let i = 0; i < imageCaption.length; i++) {
-    //   const letter = imageCaption[i];
-
-    //   // Create a data object for the letter
-    //   const dataObject = {
-    //     idx: i, // Index of the letter
-    //     letter: letter, // The actual letter
-    //     state: "original", // manage the state of the object
-    //   };
-
-    //   // Push the data object to the data array
-    //   data.push(dataObject);
-    // }
-    // setCaptionDict(() => data);
-    console.log();
   }, []);
 
   return (
@@ -382,17 +390,25 @@ function Main1Container() {
                   readOnly={!editMode}
                 ></input>
                 <div className="edit-buttons">
-                  <button onClick={undoClearButtonClick} className="undo-clear">
-                    {editMode ? "Undo" : "Clear"}
+                  <button
+                    onClick={revertCaption}
+                    className="undo-clear btn"
+                    disabled={!editMode}
+                  >
+                    Undo
                   </button>
-                  <button onClick={saveEditButtonClick} className="save-edit">
-                    {editMode ? "Save" : "Edit"}
+                  <button
+                    onClick={saveEditButtonClick}
+                    className="save-edit btn"
+                    disabled={editMode}
+                  >
+                    Start Edit
                   </button>
                 </div>
                 <div>
                   <button
                     onClick={returnOriginalText}
-                    className="return-original"
+                    className="return-original btn"
                   >
                     Return Original Caption
                   </button>
