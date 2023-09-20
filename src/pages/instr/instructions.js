@@ -1,9 +1,13 @@
 import React, { Component, useState, useEffect } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import "./instructions.css";
+let messages = ["Thank you for participating.", "Thank you for participating. You will be paid xx dollars."]
+var showCompensation = Math.floor(Math.random() * 2)
+var displayedMessage = messages[showCompensation]
 
 function InstructionsContainer() {
   const [agree, setAgree] = useState(false);
+  
   //   const [task, setTask] = useState(0);
 
   const checkboxHandler = () => {
@@ -43,9 +47,10 @@ function InstructionsContainer() {
       <div className="text">
         Read the following instructions to complete the study:
         <ol>
-          <li> Instruction No. 1</li>
-          <li> Instruction No. 2</li>
+          <li> You will be shown 20 images. For each image, please edit the AI generated caption accordingly to best describe the human action of the image.</li>
+          
         </ol>
+        {displayedMessage}
       </div>
 
       <div className="text">
@@ -53,7 +58,7 @@ function InstructionsContainer() {
           onChange={checkboxHandler}
           style={{ fontSize: "20px", textAlign: "left", alignSelf: "stretch" }}
         >
-          This is how you can add a checkbox.
+          I read and understand the conditions. 
         </Checkbox>
       </div>
 

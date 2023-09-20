@@ -174,7 +174,7 @@ function Main1Container() {
     (idx) => `Image_${idx + 1}.png`
   );
   const routeChange = () => {
-    let path = "/#/Survey";
+    let path = "/#/PaymentSurvey";
     window.location.assign(path);
   };
 
@@ -220,6 +220,8 @@ function Main1Container() {
     // reinitialize variables
     updateImage(count);
     setEditMode((e) => !e);
+    
+    
   };
 
   const popUpProceed = () => {
@@ -432,17 +434,7 @@ function Main1Container() {
             </Button>
           </div>
 
-          {moveToSurvey && (
-            <div className="button-container">
-              <Button
-                disabled={!moveToSurvey}
-                variant="btn btn-success"
-                onClick={routeChange}
-              >
-                Survey
-              </Button>
-            </div>
-          )}
+          
           {popUp && (
             <Popup
               content={

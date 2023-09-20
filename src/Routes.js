@@ -7,6 +7,7 @@ import InstructionsContainer from './pages/instr/instructions';
 import Main1Container from "./pages/main/main-task1";
 import Main2Container from "./pages/main/main-task2";
 import SurveyContainer from "./pages/survey/survey"
+import PaymentSurveyContainer from "./pages/survey/payment_survey";
 import EndContainer from "./pages/end/end";
 
 
@@ -19,6 +20,7 @@ export default class Routes extends Component {
                     <Route path="/Instructions" component={InstructionsContainer} />
                     <Route path="/Main1" component={Main1Container} />
                     <Route path="/Main2" component={Main2Container} />
+                    <Route path="/PaymentSurvey" component={PaymentSurveyContainer} />
                     <Route path="/Survey" component={SurveyContainer} />
                     <Route path="/End" component={EndContainer} />
 
