@@ -219,9 +219,7 @@ function Main1Container() {
     }
     // reinitialize variables
     updateImage(count);
-    setEditMode((e) => !e);
-    
-    
+    setEditMode(() => false);
   };
 
   const popUpProceed = () => {
@@ -232,7 +230,7 @@ function Main1Container() {
     } else {
       // reinitialize variables
       updateImage(count);
-      setEditMode((e) => !e);
+      setEditMode(() => false);
     }
   };
 
@@ -242,17 +240,6 @@ function Main1Container() {
         <div className="box">{props.content}</div>
       </div>
     );
-  };
-
-  const saveEditButtonClick = () => {
-    // save
-    if (editMode) {
-      setOriginalCaptionDict(captions[imageCount]);
-    } else {
-      // edit
-      setPrevCaption(captions[imageCount]);
-    }
-    setEditMode((e) => !e);
   };
 
   const returnOriginalText = () => {
@@ -400,7 +387,9 @@ function Main1Container() {
                     Undo
                   </button>
                   <button
-                    onClick={saveEditButtonClick}
+                    onClick={() => {
+                      setEditMode((e) => !e);
+                    }}
                     className="save-edit btn"
                     disabled={editMode}
                   >
@@ -423,18 +412,25 @@ function Main1Container() {
             </div>
           </div>
 
-          <div className="button-container">
+          <div className="botton-containers">
             <Button
               variant="btn btn-success"
-              style={{ marginLeft: "70%" }}
+              style={{ marginLeft: "50%" }}
               onClick={nextChange}
               disabled={moveToSurvey}
             >
               Next
             </Button>
+            <Button
+              disabled={!moveToSurvey}
+              variant="btn btn-success"
+              onClick={routeChange}
+              style={{ marginLeft: "70%" }}
+            >
+              Survey
+            </Button>
           </div>
 
-          
           {popUp && (
             <Popup
               content={

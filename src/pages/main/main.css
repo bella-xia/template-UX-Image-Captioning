@@ -46,6 +46,7 @@
   width: 75%;
   margin-top: 20px;
   margin-left: 13%;
+  justify-content: space-between;
 }
 
 .btn-1 {
