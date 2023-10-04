@@ -56,6 +56,8 @@ const FormItem = ({ question, idx }) => {
   );
 };
 
+
+
 const PaymentSurveyContainer = () => {
   const [form] = Form.useForm();
   const [answers, setAnswers] = useState({});
@@ -110,9 +112,12 @@ const PaymentSurveyContainer = () => {
               idx={idx}
             />
           ))}
+        
         </div>
 
+        
         <Form.Item>
+        
           <Button type="primary" htmlType="submit">
             Submit
           </Button>

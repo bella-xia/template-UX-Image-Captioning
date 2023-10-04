@@ -18,7 +18,7 @@
 
 .column-container {
   display: flex;
-  margin-top: 30px;
+  margin-top: 15px;
 }
 
 .left-column {
@@ -39,6 +39,7 @@
   font-weight: 500;
   margin-top: 20px;
 }
+
 
 .button-container {
   display: inline-block;
@@ -89,11 +90,10 @@
 }
 
 .image-frame {
-  height: 450px;
-  width: 550px;
-  padding: 8px 8px;
+  height: 550px;
+  width: 800px;
   border: 3px solid #4472c4;
-  margin-left: calc(50% - 208px);
+  margin-left: calc(50% - 308px);
 }
 
 @media (max-width: 1300px) {
@@ -183,6 +183,14 @@
 }
 
 .edit-buttons {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.back-buttons {
   width: 200px;
   display: flex;
   align-items: center;

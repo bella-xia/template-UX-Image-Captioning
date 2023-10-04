@@ -11,6 +11,7 @@ function Main1Container() {
     Array.from({ length: 15 }, (_, i) => 0)
   );
   const [totalImages, setTotalImages] = useState(0);
+  /*
   const [captions, setCaptions] = useState([
     "a group of horses standing around a fire",
     "a group of people standing  around a pool",
@@ -28,7 +29,42 @@ function Main1Container() {
     "a man parading in the water",
     "a woman in a bikini on a surfboard"
   ]);
+  */
   const [captionDict, setCaptionDict] = useState([]);
+  const shuffle = [
+    "a group of horses standing around a fire",
+    "a group of people standing  around a pool",
+    "a man standing next to a tree by a lake",
+    "a person in a kayak pad in the ocean",
+    "a man walking down the street",
+    "a woman standing in front of a car",
+    "a man sitting on a bench",
+    "a man standing on a small boat in a river",
+    "a red toy truck",
+    "a group of people sitting on a bench in a park",
+    "a couple sitting on a bench",
+    "a boy on a skateboard",
+    "Two girls playing soccer",
+    "a man parading in the water",
+    "a woman in a bikini on a surfboard",
+  ].sort(() => Math.random() - 0.5)
+  const [captions, setCaptions] = useState([
+    "a group of horses standing around a fire",
+    "a group of people standing  around a pool",
+    "a man standing next to a tree by a lake",
+    "a person in a kayak pad in the ocean",
+    "a man walking down the street",
+    "a woman standing in front of a car",
+    "a man sitting on a bench",
+    "a man standing on a small boat in a river",
+    "a red toy truck",
+    "a group of people sitting on a bench in a park",
+    "a couple sitting on a bench",
+    "a boy on a skateboard",
+    "Two girls playing soccer",
+    "a man parading in the water",
+    "a woman in a bikini on a surfboard",
+  ])
   const [prevCaption, setPrevCaption] = useState("");
   // const [currentTime, setCurrentTime] = useState(0);
   const [moveToSurvey, setMoveToSurvey] = useState(false);
@@ -42,23 +78,18 @@ function Main1Container() {
     "a group of people standing  around a pool",
     "a man standing next to a tree by a lake",
     "a person in a kayak pad in the ocean",
-    "a dog playing in the grass with its tongue",
     "a man walking down the street",
     "a woman standing in front of a car",
     "a man sitting on a bench",
     "a man standing on a small boat in a river",
     "a red toy truck",
-    "a group of dogs playing in a fountain",
-    "a person sitting on a dock watching the sunset",
     "a group of people sitting on a bench in a park",
     "a couple sitting on a bench",
-    "a dog playing with a water hose in the yard",
     "a boy on a skateboard",
     "Two girls playing soccer",
     "a man parading in the water",
-    "a cat laying in the grass",
     "a woman in a bikini on a surfboard",
-  ];
+  ]
 
   const setOriginalCaptionDict = (caption) => {
     const data = [];
@@ -175,6 +206,9 @@ function Main1Container() {
 
   const updateImage = (count) => {
     const usedTime = Date.now() - taskTime;
+    //We can get the amount of time for each image 
+    console.log(count)
+    console.log(usedTime)
     setTaskUseTime((l) =>
       l.map((time, idx) => (idx === imageCount ? usedTime : time))
     );
@@ -200,6 +234,7 @@ function Main1Container() {
     // // } else {
     //   // save data
     const count = imageCount + 1;
+    
     //   let data = {
     //     q_id: currentImage,
     //     user_id: localStorage.getItem("user-id"),
@@ -215,7 +250,12 @@ function Main1Container() {
     }
     */
     // reinitialize variables
-    updateImage(count);
+    if (count < 15) {
+      updateImage(count);
+    }
+    else {
+      routeChange(); 
+    }
     setEditMode(() => false);
   };
 
@@ -240,7 +280,15 @@ function Main1Container() {
     }
     */
     // reinitialize variables
-    updateImage(count);
+    if (count > -1) {
+      if (count < totalImages - 1) {
+        setMoveToSurvey(false);
+      }
+      updateImage(count);
+    }
+    else {
+      count +=1 
+    }
     setEditMode(() => false);
   };
 
@@ -433,35 +481,30 @@ function Main1Container() {
               </div>
             </div>
           </div>
+          
+          <div className="column-container">
+            <div className="left-column">
+            </div>
 
-          <div className="botton-containers">
-            <Button
-                variant="btn btn-success"
-                style={{ marginLeft: "50%" }}
-                onClick={lastChange}
-                disabled={moveToSurvey}
-              >
-                Back
-              </Button>
-            <Button
-              variant="btn btn-success"
-              style={{ marginLeft: "50%" }}
-              onClick={nextChange}
-              disabled={moveToSurvey}
-            >
-              Next
-            </Button>
-            
-            <Button
-              disabled={!moveToSurvey}
-              variant="btn btn-success"
-              onClick={routeChange}
-              style={{ marginLeft: "70%" }}
-            >
-              Survey
-            </Button>
+            <div className="right-column">
+              <div className="back-buttons">
+                  <button
+                    onClick={lastChange}
+                    className="undo-clear btn"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={nextChange}
+                    className="undo-clear btn"
+                  >
+                    Next
+                  </button>
+                </div>
+              
+            </div>
           </div>
-
+          
           {popUp && (
             <Popup
               content={
