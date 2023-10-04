@@ -49,8 +49,7 @@ function Main1Container() {
     "a man parading in the water",
     "a woman in a bikini on a surfboard",
   ]
-  const [captions, setCaptions] = useState(allCaptions);
-
+  const [captions, setCaptions] = useState(shuffle_idx[0].map(i => allCaptions[i]));
   const [prevCaption, setPrevCaption] = useState("");
   // const [currentTime, setCurrentTime] = useState(0);
   const [moveToSurvey, setMoveToSurvey] = useState(false);
@@ -59,23 +58,8 @@ function Main1Container() {
   const [editMode, setEditMode] = useState(false);
   const [editPrevTime, setEditPrevTime] = useState(Date.now());
   const [maxChange, setMaxChange] = useState(0);
-  const originalCaptions = [
-    "a group of horses standing around a fire",
-    "a group of people standing  around a pool",
-    "a man standing next to a tree by a lake",
-    "a person in a kayak pad in the ocean",
-    "a man walking down the street",
-    "a woman standing in front of a car",
-    "a man sitting on a bench",
-    "a man standing on a small boat in a river",
-    "a red toy truck",
-    "a group of people sitting on a bench in a park",
-    "a couple sitting on a bench",
-    "a boy on a skateboard",
-    "Two girls playing soccer",
-    "a man parading in the water",
-    "a woman in a bikini on a surfboard",
-  ]
+  const originalCaptions = useState(shuffle_idx[0].map(i => allCaptions[i]));
+  console.log(originalCaptions)
 
   const setOriginalCaptionDict = (caption) => {
     const data = [];
@@ -182,10 +166,12 @@ function Main1Container() {
   };
 
   const baseImgUrl = "/image_folder/";
-  console.log(shuffle_idx)
-  const img_paths = Array.from({ length: 15 }, (_, i) => i).map(
-    (idx) => `Image_${idx + 1}.png`
-  );
+  const img_paths = useState(shuffle_idx[0].map(i => `Image_${i + 1}.png`));
+  //Array.from({ length: 15 }, (_, i) => i).map(
+    //(idx) => `Image_${idx + 1}.png`
+  //);
+  
+  console.log(img_paths)
   const routeChange = () => {
     let path = "/#/PaymentSurvey";
     window.location.assign(path);
@@ -203,7 +189,7 @@ function Main1Container() {
       setMoveToSurvey(true);
     }
     setImageCount(count);
-    setCurrentImage(img_paths[count]);
+    setCurrentImage(img_paths[0][count]);
     setOriginalCaptionDict(captions[count]);
     // setCaptionDict(() => [
     //   {
@@ -301,13 +287,13 @@ function Main1Container() {
 
   const returnOriginalText = () => {
     console.log(originalCaptions)
-    setPrevCaption(captions[imageCount]);
+    setPrevCaption(captions[0][imageCount]);
     setCaptions(
       captions.map((caption, idx) =>
-        idx === imageCount ? originalCaptions[imageCount] : caption
+        idx === imageCount ? originalCaptions[0][imageCount] : caption
       )
     );
-    setOriginalCaptionDict(originalCaptions[imageCount]);
+    setOriginalCaptionDict(originalCaptions[0][imageCount]);
     console.log(originalCaptions)
   };
 
@@ -395,8 +381,8 @@ function Main1Container() {
   // initialize image
   useEffect(() => {
     console.log("getting images");
-    setTotalImages(img_paths.length);
-    setCurrentImage(img_paths[imageCount]);
+    setTotalImages(img_paths[0].length);
+    setCurrentImage(img_paths[0][imageCount]);
     setTaskTime(Date.now());
     setRender(true);
     setOriginalCaptionDict(captions[imageCount]);
