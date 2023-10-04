@@ -8,7 +8,7 @@ function Main1Container() {
   const [imageCount, setImageCount] = useState(0);
   const [taskTime, setTaskTime] = useState(Date.now() + 1000 * 1000);
   const [taskUseTime, setTaskUseTime] = useState(
-    Array.from({ length: 20 }, (_, i) => 0)
+    Array.from({ length: 15 }, (_, i) => 0)
   );
   const [totalImages, setTotalImages] = useState(0);
   const [captions, setCaptions] = useState([
@@ -16,22 +16,17 @@ function Main1Container() {
     "a group of people standing  around a pool",
     "a man standing next to a tree by a lake",
     "a person in a kayak pad in the ocean",
-    "a dog playing in the grass with its tongue",
     "a man walking down the street",
     "a woman standing in front of a car",
     "a man sitting on a bench",
     "a man standing on a small boat in a river",
     "a red toy truck",
-    "a group of dogs playing in a fountain",
-    "a person sitting on a dock watching the sunset",
     "a group of people sitting on a bench in a park",
     "a couple sitting on a bench",
-    "a dog playing with a water hose in the yard",
     "a boy on a skateboard",
     "Two girls playing soccer",
     "a man parading in the water",
-    "a cat laying in the grass",
-    "a woman in a bikini on a surfboard",
+    "a woman in a bikini on a surfboard"
   ]);
   const [captionDict, setCaptionDict] = useState([]);
   const [prevCaption, setPrevCaption] = useState("");
@@ -170,7 +165,7 @@ function Main1Container() {
   };
 
   const baseImgUrl = "/image_folder/";
-  const img_paths = Array.from({ length: 20 }, (_, i) => i).map(
+  const img_paths = Array.from({ length: 15 }, (_, i) => i).map(
     (idx) => `Image_${idx + 1}.png`
   );
   const routeChange = () => {
