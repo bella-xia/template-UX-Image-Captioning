@@ -208,10 +208,37 @@ function Main1Container() {
     //   };
     //   console.log(data);
     //   sendData(data);
+    /*
     if (captions[imageCount] === originalCaptions[imageCount]) {
       setPopUp(() => true);
       return;
     }
+    */
+    // reinitialize variables
+    updateImage(count);
+    setEditMode(() => false);
+  };
+
+  const lastChange = () => {
+    // // if (choice < 1) {
+    // //   alert("Please make sure to complete all the fields!");
+    // // } else {
+    //   // save data
+    const count = imageCount - 1;
+    //   let data = {
+    //     q_id: currentImage,
+    //     user_id: localStorage.getItem("user-id"),
+    //     ans: choice,
+    //     time: ((Date.now() - taskTime) / 1000).toFixed(3),
+    //   };
+    //   console.log(data);
+    //   sendData(data);
+    /*
+    if (captions[imageCount] === originalCaptions[imageCount]) {
+      setPopUp(() => true);
+      return;
+    }
+    */
     // reinitialize variables
     updateImage(count);
     setEditMode(() => false);
@@ -409,6 +436,14 @@ function Main1Container() {
 
           <div className="botton-containers">
             <Button
+                variant="btn btn-success"
+                style={{ marginLeft: "50%" }}
+                onClick={lastChange}
+                disabled={moveToSurvey}
+              >
+                Back
+              </Button>
+            <Button
               variant="btn btn-success"
               style={{ marginLeft: "50%" }}
               onClick={nextChange}
@@ -416,6 +451,7 @@ function Main1Container() {
             >
               Next
             </Button>
+            
             <Button
               disabled={!moveToSurvey}
               variant="btn btn-success"
