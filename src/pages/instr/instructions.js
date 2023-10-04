@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import "./instructions.css";
-let messages = ["Thank you for participating.", "Thank you for participating. You will be paid xx dollars."]
+let messages = ["Thank you for participating. You will be paid a base rate of xx dollars and xx dollars additionally for each image that you get correct.", "Thank you for participating. You will be paid xx dollars."]
 var showCompensation = Math.floor(Math.random() * 2)
 var displayedMessage = messages[showCompensation]
 
