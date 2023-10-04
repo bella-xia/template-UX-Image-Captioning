@@ -31,7 +31,8 @@ function Main1Container() {
   ]);
   */
   const [captionDict, setCaptionDict] = useState([]);
-  const shuffle = [
+  const shuffle_idx = useState([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14].sort(() => Math.random() - 0.5));
+  const allCaptions = [
     "a group of horses standing around a fire",
     "a group of people standing  around a pool",
     "a man standing next to a tree by a lake",
@@ -47,24 +48,9 @@ function Main1Container() {
     "Two girls playing soccer",
     "a man parading in the water",
     "a woman in a bikini on a surfboard",
-  ].sort(() => Math.random() - 0.5)
-  const [captions, setCaptions] = useState([
-    "a group of horses standing around a fire",
-    "a group of people standing  around a pool",
-    "a man standing next to a tree by a lake",
-    "a person in a kayak pad in the ocean",
-    "a man walking down the street",
-    "a woman standing in front of a car",
-    "a man sitting on a bench",
-    "a man standing on a small boat in a river",
-    "a red toy truck",
-    "a group of people sitting on a bench in a park",
-    "a couple sitting on a bench",
-    "a boy on a skateboard",
-    "Two girls playing soccer",
-    "a man parading in the water",
-    "a woman in a bikini on a surfboard",
-  ])
+  ]
+  const [captions, setCaptions] = useState(allCaptions);
+
   const [prevCaption, setPrevCaption] = useState("");
   // const [currentTime, setCurrentTime] = useState(0);
   const [moveToSurvey, setMoveToSurvey] = useState(false);
@@ -196,6 +182,7 @@ function Main1Container() {
   };
 
   const baseImgUrl = "/image_folder/";
+  console.log(shuffle_idx)
   const img_paths = Array.from({ length: 15 }, (_, i) => i).map(
     (idx) => `Image_${idx + 1}.png`
   );
@@ -313,6 +300,7 @@ function Main1Container() {
   };
 
   const returnOriginalText = () => {
+    console.log(originalCaptions)
     setPrevCaption(captions[imageCount]);
     setCaptions(
       captions.map((caption, idx) =>
@@ -320,6 +308,7 @@ function Main1Container() {
       )
     );
     setOriginalCaptionDict(originalCaptions[imageCount]);
+    console.log(originalCaptions)
   };
 
   const revertCaption = () => {
@@ -441,6 +430,10 @@ function Main1Container() {
               <div>
                 <p className="t"> Edit AI-Generated Caption: </p>
               </div>
+              <img
+                  className="arrow"
+                  src={"arrow.png"}
+                />
               <div className="caption-edits">
                 <input
                   className="caption"
@@ -456,6 +449,7 @@ function Main1Container() {
                   >
                     Undo
                   </button>
+                  
                   <button
                     onClick={() => {
                       setEditMode((e) => !e);
@@ -466,6 +460,7 @@ function Main1Container() {
                     Start Edit
                   </button>
                 </div>
+                
                 <div>
                   <button
                     onClick={returnOriginalText}
