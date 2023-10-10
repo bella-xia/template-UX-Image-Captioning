@@ -55,7 +55,7 @@ function Main1Container() {
   const [moveToSurvey, setMoveToSurvey] = useState(false);
   const [render, setRender] = useState(false);
   const [popUp, setPopUp] = useState(false);
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(true);
   const [editPrevTime, setEditPrevTime] = useState(Date.now());
   const [maxChange, setMaxChange] = useState(0);
   const originalCaptions = useState(shuffle_idx[0].map(i => allCaptions[i]));
@@ -414,7 +414,7 @@ function Main1Container() {
 
             <div className="right-column">
               <div>
-                <p className="t"> Edit AI-Generated Caption: </p>
+                <p className="t"> Edit AI-Generated Caption here: </p>
               </div>
               <img
                   className="arrow"
@@ -435,19 +435,7 @@ function Main1Container() {
                   >
                     Undo
                   </button>
-                  
-                  <button
-                    onClick={() => {
-                      setEditMode((e) => !e);
-                    }}
-                    className="save-edit btn"
-                    disabled={editMode}
-                  >
-                    Start Edit
-                  </button>
-                </div>
-                
-                <div>
+
                   <button
                     onClick={returnOriginalText}
                     className="return-original btn"
@@ -456,7 +444,7 @@ function Main1Container() {
                   </button>
                 </div>
                 <div>
-                  <p className="t"> Tracing Changes: </p>
+                  <p className="t"> Original caption with tracked Changes: </p>
                 </div>
                 <>{getPassageComponent()}</>
               </div>

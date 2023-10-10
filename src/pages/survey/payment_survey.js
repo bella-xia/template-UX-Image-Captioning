@@ -24,7 +24,7 @@ const formItemLayout = {
 };
 
 const questions = [
-  "Are you getting paid for your participation?"
+  "What is the monetary compensation you will receive for participating in this study?"
 ];
 
 const FormItem = ({ question, idx }) => {
@@ -45,11 +45,14 @@ const FormItem = ({ question, idx }) => {
       ]}
     >
       <Radio.Group>
-        <Radio value="Yes" style={style}>
-          Yes
+        <Radio value="5" style={style}>
+          5 USD
         </Radio>
         <Radio value="No" style={style}>
-          No
+          2 USD + bonus
+        </Radio>
+        <Radio value="None" style={style}>
+          No compensation
         </Radio>
       </Radio.Group>
     </Form.Item>
@@ -73,7 +76,7 @@ const PaymentSurveyContainer = () => {
       q2: 2,
     };
     sendData(data);
-    let path = "/#/Survey";
+    let path = "/#/End";
     window.location.assign(path);
   };
 

@@ -20,8 +20,8 @@ export default class Routes extends Component {
                     <Route path="/Instructions" component={InstructionsContainer} />
                     <Route path="/Main1" component={Main1Container} />
                     <Route path="/Main2" component={Main2Container} />
-                    <Route path="/PaymentSurvey" component={PaymentSurveyContainer} />
                     <Route path="/Survey" component={SurveyContainer} />
+                    <Route path="/PaymentSurvey" component={PaymentSurveyContainer} />
                     <Route path="/End" component={EndContainer} />
 
                 </Switch>

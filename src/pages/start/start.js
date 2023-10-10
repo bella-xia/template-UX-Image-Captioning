@@ -22,7 +22,7 @@ function StartContainer() {
     return (
       <div className="Home">
         <div className="lander">
-            <h1>Study title here</h1>
+            <h1>Image Captioning with AI Assistance</h1>
             <p> This is the start page. Welcome to our study. </p>
 
             <div>

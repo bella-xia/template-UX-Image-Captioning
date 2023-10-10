@@ -24,10 +24,14 @@ const formItemLayout = {
 };
 
 const questions = [
-  "On a scale from 1-5 how accurate do you think your captions were? (1: very inaccurate, 5: very accurate)",
-  "On a scale from 1-5 how accurate do you think the AI generated captions were? (1: very inaccurate, 5: very accurate)",
-  "On a scale from 1-5 how much effort did you put in completing the captioning tasks? (1: minimal effort, 5: a lot of effort)",
-  "On a scale from 1-5 how much of the salient information do you think was covered? (1: small area of coverage, 5: large area of coverage)",
+  "The AI-generated captions cover salient information present in the images.",
+  "The AI-generated captions include accurate and precise information from the images.",
+  "The AI helps me to create better captions.",
+  "I find useful the AI-generated captions.",
+  "I had to work hard to accomplish better captions.",
+  "I was really drawn into this captioning experience with AI assistance.",
+  "I felt involved in this captioning experience with AI assistance.",
+  "I felt discouraged while using AI assistance in this captioning experience."
 ];
 
 const FormItem = ({ question, idx }) => {
@@ -49,19 +53,25 @@ const FormItem = ({ question, idx }) => {
     >
       <Radio.Group>
         <Radio value="1" style={style}>
-          1
+          1 - strongly disagree
         </Radio>
         <Radio value="2" style={style}>
-          2
+          2 - disagree
         </Radio>
         <Radio value="3" style={style}>
-          3
+          3 - somewhat disagree
         </Radio>
         <Radio value="4" style={style}>
-          4
+          4 - neutral
         </Radio>
         <Radio value="5" style={style}>
-          5
+          5 - somewhat agree
+        </Radio>
+        <Radio value="6" style={style}>
+          6 - agree
+        </Radio>
+        <Radio value="7" style={style}>
+          7 - strongly agree
         </Radio>
       </Radio.Group>
     </Form.Item>
@@ -83,7 +93,7 @@ const SurveyContainer = () => {
       q2: 2,
     };
     sendData(data);
-    let path = "/#/End";
+    let path = "/#/PaymentSurvey";
     window.location.assign(path);
   };
 
@@ -112,6 +122,8 @@ const SurveyContainer = () => {
         initialValues={{}}
       >
         <div className="title">Evaluation Questions</div>
+
+        On a scale from 1 (strongly disagree) to 7 (strongly agree), rate your agreement with the following statements:
 
         <div>
           {questions.map((question, idx) => (
