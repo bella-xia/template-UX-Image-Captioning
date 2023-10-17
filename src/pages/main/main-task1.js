@@ -53,6 +53,7 @@ function Main1Container() {
   const [prevCaption, setPrevCaption] = useState("");
   // const [currentTime, setCurrentTime] = useState(0);
   const [moveToSurvey, setMoveToSurvey] = useState(false);
+  const [moveToLastImage, setMoveToLastImage] = useState(true); 
   const [render, setRender] = useState(false);
   const [popUp, setPopUp] = useState(false);
   const [editMode, setEditMode] = useState(true);
@@ -230,6 +231,7 @@ function Main1Container() {
       routeChange(); 
     }
     setEditMode(() => false);
+    setMoveToLastImage(true)
   };
 
   const lastChange = () => {
@@ -237,32 +239,35 @@ function Main1Container() {
     // //   alert("Please make sure to complete all the fields!");
     // // } else {
     //   // save data
-    const count = imageCount - 1;
-    //   let data = {
-    //     q_id: currentImage,
-    //     user_id: localStorage.getItem("user-id"),
-    //     ans: choice,
-    //     time: ((Date.now() - taskTime) / 1000).toFixed(3),
-    //   };
-    //   console.log(data);
-    //   sendData(data);
-    /*
-    if (captions[imageCount] === originalCaptions[imageCount]) {
-      setPopUp(() => true);
-      return;
-    }
-    */
-    // reinitialize variables
-    if (count > -1) {
-      if (count < totalImages - 1) {
-        setMoveToSurvey(false);
+    if (moveToLastImage === true) {
+      const count = imageCount - 1;
+      //   let data = {
+      //     q_id: currentImage,
+      //     user_id: localStorage.getItem("user-id"),
+      //     ans: choice,
+      //     time: ((Date.now() - taskTime) / 1000).toFixed(3),
+      //   };
+      //   console.log(data);
+      //   sendData(data);
+      /*
+      if (captions[imageCount] === originalCaptions[imageCount]) {
+        setPopUp(() => true);
+        return;
       }
-      updateImage(count);
+      */
+      // reinitialize variables
+      if (count > -1) {
+        if (count < totalImages - 1) {
+          setMoveToSurvey(false);
+        }
+        updateImage(count);
+      }
+      else {
+        count +=1 
+      }
+      setEditMode(() => false);
+      setMoveToLastImage(false)
     }
-    else {
-      count +=1 
-    }
-    setEditMode(() => false);
   };
 
   const popUpProceed = () => {
