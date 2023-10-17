@@ -9,6 +9,7 @@ import Main2Container from "./pages/main/main-task2";
 import SurveyContainer from "./pages/survey/survey"
 import PaymentSurveyContainer from "./pages/survey/payment_survey";
 import EndContainer from "./pages/end/end";
+import TaskEndContainer from "./pages/taskEnd/taskEnd"
 
 
 export default class Routes extends Component {

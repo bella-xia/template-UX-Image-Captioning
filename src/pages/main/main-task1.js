@@ -3,33 +3,17 @@ import { Button } from "antd";
 import "antd/dist/antd.css";
 import "./main.css";
 
+
 function Main1Container() {
+  var showLastImage = localStorage.getItem("lastImage");
   const [currentImage, setCurrentImage] = useState("");
   const [imageCount, setImageCount] = useState(0);
+  const [finishCounter, setFinishCounter] = useState(0); 
   const [taskTime, setTaskTime] = useState(Date.now() + 1000 * 1000);
   const [taskUseTime, setTaskUseTime] = useState(
     Array.from({ length: 15 }, (_, i) => 0)
   );
   const [totalImages, setTotalImages] = useState(0);
-  /*
-  const [captions, setCaptions] = useState([
-    "a group of horses standing around a fire",
-    "a group of people standing  around a pool",
-    "a man standing next to a tree by a lake",
-    "a person in a kayak pad in the ocean",
-    "a man walking down the street",
-    "a woman standing in front of a car",
-    "a man sitting on a bench",
-    "a man standing on a small boat in a river",
-    "a red toy truck",
-    "a group of people sitting on a bench in a park",
-    "a couple sitting on a bench",
-    "a boy on a skateboard",
-    "Two girls playing soccer",
-    "a man parading in the water",
-    "a woman in a bikini on a surfboard"
-  ]);
-  */
   const [captionDict, setCaptionDict] = useState([]);
   const shuffle_idx = useState([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14].sort(() => Math.random() - 0.5));
   const allCaptions = [
@@ -51,7 +35,6 @@ function Main1Container() {
   ]
   const [captions, setCaptions] = useState(shuffle_idx[0].map(i => allCaptions[i]));
   const [prevCaption, setPrevCaption] = useState("");
-  // const [currentTime, setCurrentTime] = useState(0);
   const [moveToSurvey, setMoveToSurvey] = useState(false);
   const [moveToLastImage, setMoveToLastImage] = useState(true); 
   const [render, setRender] = useState(false);
@@ -61,7 +44,9 @@ function Main1Container() {
   const [maxChange, setMaxChange] = useState(0);
   const originalCaptions = useState(shuffle_idx[0].map(i => allCaptions[i]));
   console.log(originalCaptions)
+  
 
+  console.log(showLastImage)
   const setOriginalCaptionDict = (caption) => {
     const data = [];
     for (let i = 0; i < caption.length; i++) {
@@ -168,11 +153,8 @@ function Main1Container() {
 
   const baseImgUrl = "/image_folder/";
   const img_paths = useState(shuffle_idx[0].map(i => `Image_${i + 1}.png`));
-  //Array.from({ length: 15 }, (_, i) => i).map(
-    //(idx) => `Image_${idx + 1}.png`
-  //);
+
   
-  console.log(img_paths)
   const routeChange = () => {
     let path = "/#/PaymentSurvey";
     window.location.assign(path);
@@ -228,8 +210,16 @@ function Main1Container() {
       updateImage(count);
     }
     else {
-      routeChange(); 
+      if (finishCounter === 1) {
+        routeChange();
+      }
+      else {
+        alert("If you click next then you will be finishing the captioning tasks. Click on next again if you are finished.")
+        setFinishCounter(1); 
+      }
+      //routeChange(); 
     }
+    
     setEditMode(() => false);
     setMoveToLastImage(true)
   };
@@ -239,7 +229,7 @@ function Main1Container() {
     // //   alert("Please make sure to complete all the fields!");
     // // } else {
     //   // save data
-    if (moveToLastImage === true) {
+    if (moveToLastImage === true && showLastImage !== true) {
       const count = imageCount - 1;
       //   let data = {
       //     q_id: currentImage,

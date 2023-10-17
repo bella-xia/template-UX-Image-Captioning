@@ -90,8 +90,8 @@
 }
 
 .image-frame {
-  height: 550px;
-  width: 860px;
+  height: 560px;
+  width: 900px;
   border: 3px solid #4472c4;
   margin-left: calc(50% - 308px);
 }
