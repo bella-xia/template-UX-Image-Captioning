@@ -16,7 +16,7 @@ function InstructionsContainer() {
   };
 
   const routeChange = () => {
-    let path = "/#/Main1";
+    let path = "/#/EyeGazeStart";
     window.location.assign(path);
     // if (task % 2 === 0) {
     //     let path = '/#/Main2';

@@ -13,6 +13,7 @@ function Main1Container() {
   const [taskUseTime, setTaskUseTime] = useState(
     Array.from({ length: 15 }, (_, i) => 0)
   );
+  const [showPrevCaption, setShowPrevCaption] = useState(false)
   const [totalImages, setTotalImages] = useState(0);
   const [captionDict, setCaptionDict] = useState([]);
   const shuffle_idx = useState([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14].sort(() => Math.random() - 0.5));
@@ -35,6 +36,9 @@ function Main1Container() {
   ]
   const [captions, setCaptions] = useState(shuffle_idx[0].map(i => allCaptions[i]));
   const [prevCaption, setPrevCaption] = useState("");
+  const [editData, setData] = useState([])
+  const [editDataPrev, setDataPrev] = useState([])
+  const [editDataNow, setDataNow] = useState([])
   const [moveToSurvey, setMoveToSurvey] = useState(false);
   const [moveToLastImage, setMoveToLastImage] = useState(true); 
   const [render, setRender] = useState(false);
@@ -136,12 +140,25 @@ function Main1Container() {
       setMaxChange(() => order);
     }
     setCaptionDict(data);
+    setData(data)
+    console.log("current edits")
     console.log(data);
   };
 
   const getPassageComponent = () => {
+    console.log(editDataNow)
+    if (showPrevCaption === true && editDataPrev !== []){
+      var currCaption = editDataPrev
+    } else if (showPrevCaption === false && editDataNow !== []) {
+      console.log("HERE")
+      console.log(editDataNow)
+      var currCaption = editDataNow
+    } else {
+      var currCaption = captions //Todo: change
+    }
     return (
       <div className="caption-div">
+        
         {captionDict.map((dictItem) => (
           <span className={dictItem.state} key={dictItem.idx}>
             {dictItem.letter}
@@ -156,7 +173,7 @@ function Main1Container() {
 
   
   const routeChange = () => {
-    let path = "/#/PaymentSurvey";
+    let path = "/#/EyeGazeEnd";
     window.location.assign(path);
   };
 
@@ -207,6 +224,9 @@ function Main1Container() {
     */
     // reinitialize variables
     if (count < 15) {
+      console.log(editData);
+      setDataPrev(editData)
+      setShowPrevCaption(false)
       updateImage(count);
     }
     else {
@@ -220,42 +240,29 @@ function Main1Container() {
       //routeChange(); 
     }
     
-    setEditMode(() => false);
+    //setEditMode(() => false);
     setMoveToLastImage(true)
   };
 
   const lastChange = () => {
-    // // if (choice < 1) {
-    // //   alert("Please make sure to complete all the fields!");
-    // // } else {
-    //   // save data
     if (moveToLastImage === true && showLastImage !== true) {
+      console.log(editData);
       const count = imageCount - 1;
-      //   let data = {
-      //     q_id: currentImage,
-      //     user_id: localStorage.getItem("user-id"),
-      //     ans: choice,
-      //     time: ((Date.now() - taskTime) / 1000).toFixed(3),
-      //   };
-      //   console.log(data);
-      //   sendData(data);
-      /*
-      if (captions[imageCount] === originalCaptions[imageCount]) {
-        setPopUp(() => true);
-        return;
-      }
-      */
       // reinitialize variables
       if (count > -1) {
         if (count < totalImages - 1) {
           setMoveToSurvey(false);
         }
         updateImage(count);
+        console.log("save curr")
+        console.log(editData)
+        setDataNow(editData)
+        setShowPrevCaption(true)
       }
       else {
         count +=1 
       }
-      setEditMode(() => false);
+      //setEditMode(() => false);
       setMoveToLastImage(false)
     }
   };
@@ -469,27 +476,7 @@ function Main1Container() {
             </div>
           </div>
           
-          {popUp && (
-            <Popup
-              content={
-                <>
-                  <b>Warning</b>
-                  <p>
-                    You have not made any edit on the AI-generated caption. Do
-                    you want to go to the next image?
-                  </p>
-                  <div className="popup-buttons">
-                    <button className="cancel" onClick={() => setPopUp(!popUp)}>
-                      Cancel
-                    </button>
-                    <button className="proceed" onClick={popUpProceed}>
-                      Proceed
-                    </button>
-                  </div>
-                </>
-              }
-            />
-          )}
+          
         </div>
       ) : (
         <>
