@@ -5,7 +5,7 @@ import './eyegazeEnd.css'
 function eyegazeEndContainer() {
 
   const routeChange = () => {
-    let path = "/#/PaymentSurvey";
+    let path = "/#/Survey";
     window.location.assign(path);
   };
 

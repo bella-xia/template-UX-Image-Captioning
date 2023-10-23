@@ -24,11 +24,10 @@ const formItemLayout = {
 };
 
 const questions = [
-  "The AI-generated captions cover salient information present in the images.",
-  "The AI-generated captions include accurate and precise information from the images.",
-  "The AI helps me to create better captions.",
-  "I find useful the AI-generated captions.",
-  
+  "I had to work hard to accomplish better captions.",
+  "I was really drawn into this captioning experience with AI assistance.",
+  "I felt involved in this captioning experience with AI assistance.",
+  "I felt discouraged while using AI assistance in this captioning experience."
 ];
 
 const FormItem = ({ question, idx }) => {
@@ -75,7 +74,7 @@ const FormItem = ({ question, idx }) => {
   );
 };
 
-const SurveyContainer = () => {
+const SurveyContainer2 = () => {
   const [form] = Form.useForm();
   const [answers, setAnswers] = useState({});
 
@@ -90,7 +89,7 @@ const SurveyContainer = () => {
       q2: 2,
     };
     sendData(data);
-    let path = "/#/Survey2";
+    let path = "/#/PaymentSurvey";
     window.location.assign(path);
   };
 
@@ -142,4 +141,4 @@ const SurveyContainer = () => {
     </div>
   );
 };
-export default SurveyContainer;
+export default SurveyContainer2;

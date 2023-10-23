@@ -21,7 +21,7 @@ function Main1Container() {
     "a group of horses standing around a fire",
     "a group of people standing  around a pool",
     "a man standing next to a tree by a lake",
-    "a person in a kayak pad in the ocean",
+    "a person sitting on a dock watching the sunset",
     "a man walking down the street",
     "a woman standing in front of a car",
     "a man sitting on a bench",
@@ -265,6 +265,9 @@ function Main1Container() {
       //setEditMode(() => false);
       setMoveToLastImage(false)
     }
+    else {
+      alert("You can only go back once!");
+    }
   };
 
   const popUpProceed = () => {
@@ -394,11 +397,6 @@ function Main1Container() {
     <>
       {render ? (
         <div className="container">
-          <div className="task_name">Task Instructions: </div>
-          <div className="task_descrip">
-            Correct or accept the AI-generated caption for the fiven image. Make
-            sure that the caption is specific and describes the human action.
-          </div>
           <div className="column-container">
             <div className="left-column">
               <div className="image-frame">
@@ -412,6 +410,20 @@ function Main1Container() {
                 {" "}
                 {imageCount + 1} / {totalImages} Images
               </p>
+              <div className="back-buttons">
+                  <button
+                    onClick={lastChange}
+                    className="undo-clear btn"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={nextChange}
+                    className="undo-clear btn"
+                  >
+                    Next
+                  </button>
+                </div>
             </div>
 
             <div className="right-column">
@@ -445,6 +457,10 @@ function Main1Container() {
                     Return Original Caption
                   </button>
                 </div>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
                 <div>
                   <p className="t"> Original caption with tracked Changes: </p>
                 </div>
@@ -457,23 +473,7 @@ function Main1Container() {
             <div className="left-column">
             </div>
 
-            <div className="right-column">
-              <div className="back-buttons">
-                  <button
-                    onClick={lastChange}
-                    className="undo-clear btn"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={nextChange}
-                    className="undo-clear btn"
-                  >
-                    Next
-                  </button>
-                </div>
-              
-            </div>
+            
           </div>
           
           

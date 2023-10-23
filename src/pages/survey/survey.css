@@ -48,3 +48,10 @@ h2 {
   width: 50%;
   margin-right: 10px;
 }
+
+.radio {
+  display: table;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 10px;
+  }
