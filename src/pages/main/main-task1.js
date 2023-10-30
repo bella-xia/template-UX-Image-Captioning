@@ -7,6 +7,11 @@ import { TextField } from '@mui/material';
 
 function Main1Container() {
   var showLastImage = localStorage.getItem("lastImage");
+  // The time when we first edit the image 
+  const [startEditTime, setStartEditTime] = useState(Date.now())
+  // The time when we last edit the image 
+  const [endEditTime, setEndEditTime] = useState(Date.now())
+  const [edited, setEdited] = useState(false)
   const [currentImage, setCurrentImage] = useState("");
   const [imageCount, setImageCount] = useState(0);
   const [finishCounter, setFinishCounter] = useState(0); 
@@ -46,12 +51,12 @@ function Main1Container() {
   const [popUp, setPopUp] = useState(false);
   const [editMode, setEditMode] = useState(true);
   const [editPrevTime, setEditPrevTime] = useState(Date.now());
-  const [maxChange, setMaxChange] = useState(0);
+  const [maxChange, setMaxChange] = useState(-1);
   const originalCaptions = useState(shuffle_idx[0].map(i => allCaptions[i]));
-  console.log(originalCaptions)
+  //console.log(originalCaptions)
   
 
-  console.log(showLastImage)
+  //console.log(showLastImage)
   const setOriginalCaptionDict = (caption) => {
     const data = [];
     for (let i = 0; i < caption.length; i++) {
@@ -142,17 +147,14 @@ function Main1Container() {
     }
     setCaptionDict(data);
     setData(data)
-    console.log("current edits")
-    console.log(data);
+   
   };
 
   const getPassageComponent = () => {
-    console.log(editDataNow)
+
     if (showPrevCaption === true && editDataPrev !== []){
       var currCaption = editDataPrev
     } else if (showPrevCaption === false && editDataNow !== []) {
-      console.log("HERE")
-      console.log(editDataNow)
       var currCaption = editDataNow
     } else {
       var currCaption = captions //Todo: change
@@ -292,6 +294,17 @@ function Main1Container() {
   };
 
   const returnOriginalText = () => {
+    console.log("changed caption!")
+    if (edited === false) {
+      setEdited(true)
+      var d = new Date();
+      setStartEditTime(d.toString())
+      setEndEditTime(d.toString())
+    } else {
+      var d = new Date();
+      setEndEditTime(d.toString())
+    }
+    console.log(startEditTime, endEditTime)
     console.log(originalCaptions)
     setPrevCaption(captions[0][imageCount]);
     setCaptions(
@@ -304,6 +317,18 @@ function Main1Container() {
   };
 
   const revertCaption = () => {
+    console.log("changed caption!")
+    if (edited === false) {
+      setEdited(true)
+      var d = new Date();
+      setStartEditTime(d.toString())
+      setEndEditTime(d.toString())
+    } else {
+      var d = new Date();
+      setEndEditTime(d.toString())
+    }
+    console.log(startEditTime, endEditTime)
+
     const max_order = maxChange;
     if (max_order === -1) {
       console.log("no more changes");
@@ -344,7 +369,19 @@ function Main1Container() {
   };
 
   const modifyCaption = (modCap) => {
-    console.log(modCap.target.value)
+    console.log("changed caption!")
+    if (edited === false) {
+      setEdited(true)
+      var d = new Date();
+      setStartEditTime(d.toString())
+      setEndEditTime(d.toString())
+    } else {
+      var d = new Date();
+      setEndEditTime(d.toString())
+    }
+    console.log(startEditTime, endEditTime)
+
+    //console.log(modCap.target.value)
     const editCurrentTime = Date.now();
     if (editCurrentTime - editPrevTime < 1000) {
       setChangedCaptionDict(modCap.target.value, true);
@@ -369,7 +406,7 @@ function Main1Container() {
         dictToString = dictToString + dictItem.letter;
       }
     }
-    console.log(dictToString);
+    //console.log(dictToString);
     setCaptions(
       captions.map((caption, idx) =>
         idx === imageCount ? dictToString : caption
@@ -410,7 +447,7 @@ function Main1Container() {
 
   // initialize image
   useEffect(() => {
-    console.log("getting images");
+    //console.log("getting images");
     setTotalImages(img_paths[0].length);
     setCurrentImage(img_paths[0][imageCount]);
     setTaskTime(Date.now());
