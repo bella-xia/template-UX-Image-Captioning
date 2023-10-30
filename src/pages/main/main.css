@@ -40,6 +40,14 @@
   margin-top: 20px;
 }
 
+.caption-results {
+  margin-top: 20px;
+  text-align: center;
+  margin: 0 auto;
+  width: 400px;
+  word-wrap: break-word;
+}
+
 
 .button-container {
   display: inline-block;
@@ -133,13 +141,24 @@
   height: 150px;
   margin-bottom: 10px;
   margin-top: 10px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+
 }
+
 
 .caption-div {
   font-size: 16px;
   margin-bottom: 10px;
   margin-top: 50px;
 }
+
+
 
 .button-container {
   padding: 4px 4px;

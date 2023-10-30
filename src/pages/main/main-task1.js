@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "antd";
 import "antd/dist/antd.css";
 import "./main.css";
+import { TextField } from '@mui/material';
 
 
 function Main1Container() {
@@ -343,6 +344,7 @@ function Main1Container() {
   };
 
   const modifyCaption = (modCap) => {
+    console.log(modCap.target.value)
     const editCurrentTime = Date.now();
     if (editCurrentTime - editPrevTime < 1000) {
       setChangedCaptionDict(modCap.target.value, true);
@@ -356,6 +358,8 @@ function Main1Container() {
       )
     );
   };
+
+  
 
   const setCaptionBasedOnDict = (dict) => {
     let dictToString = "";
@@ -372,6 +376,27 @@ function Main1Container() {
       )
     );
   };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+  };
+
+  const handleSelect = (e) => {
+    e.preventDefault();
+    return false;
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      const selection = window.getSelection().toString();
+      if (selection) {
+        e.preventDefault();
+        return false;
+      }
+    }
+  };
+
+
 
   // testing communication with backend
   //   useEffect(() => {
@@ -434,13 +459,20 @@ function Main1Container() {
                   className="arrow"
                   src={"arrow.png"}
                 />
-              <div className="caption-edits">
-                <input
+              <div className="caption-edits" style={{userSelect: 'none'}}>
+                <textarea 
+                  onSelect={handleSelect}
+                  onCut={handleChange}
+                  onCopy={handleChange}
+                  onPaste={handleChange}
+                  onKeyDown={handleKeyDown}
                   className="caption"
                   value={captions[imageCount]}
                   onChange={modifyCaption}
                   readOnly={!editMode}
-                ></input>
+                  rows={4} 
+                  cols={30}
+                ></textarea>
                 <div className="edit-buttons">
                   <button
                     onClick={revertCaption}
@@ -456,15 +488,17 @@ function Main1Container() {
                   >
                     Return Original Caption
                   </button>
+                
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
                 </div>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
                 <div>
                   <p className="t"> Original caption with tracked Changes: </p>
+                  <p className="caption-results">{getPassageComponent()}</p>
                 </div>
-                <>{getPassageComponent()}</>
+                
               </div>
             </div>
           </div>
