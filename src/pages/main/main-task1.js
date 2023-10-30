@@ -7,6 +7,7 @@ import { TextField } from '@mui/material';
 
 function Main1Container() {
   var showLastImage = localStorage.getItem("lastImage");
+  const [firstEditBool, setFirstEditBool] = useState(true)
   // The time when we first edit the image 
   const [startEditTime, setStartEditTime] = useState(Date.now())
   // The time when we last edit the image 
@@ -151,6 +152,14 @@ function Main1Container() {
   };
 
   const getPassageComponent = () => {
+    //Store the first and last edit in the database 
+    if (firstEditBool === true) {
+      setFirstEditBool(false)
+      console.log("first edit: ", captionDict)
+      console.log("last edit: ", captionDict)
+    } else {
+      console.log("new last edit: ", captionDict)
+    }
 
     if (showPrevCaption === true && editDataPrev !== []){
       var currCaption = editDataPrev
