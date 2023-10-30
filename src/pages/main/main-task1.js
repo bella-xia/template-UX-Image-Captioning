@@ -19,6 +19,9 @@ function Main1Container() {
   const [taskUseTime, setTaskUseTime] = useState(
     Array.from({ length: 15 }, (_, i) => 0)
   );
+  const [trackingHistories, setTrackingHistories] = useState(
+    Array.from({ length: 15 }, (_, i) => 0)
+  );
   const [showPrevCaption, setShowPrevCaption] = useState(false)
   const [totalImages, setTotalImages] = useState(0);
   const [captionDict, setCaptionDict] = useState([]);
@@ -147,22 +150,27 @@ function Main1Container() {
     }
     setCaptionDict(data);
     setData(data)
+    console.log(data)
+    var newTrackingHistories = trackingHistories
+    newTrackingHistories[imageCount] = data
+    console.log(imageCount)
+    setTrackingHistories(newTrackingHistories)
+    console.log(newTrackingHistories)
    
   };
 
   const getPassageComponent = () => {
-
-    if (showPrevCaption === true && editDataPrev !== []){
-      var currCaption = editDataPrev
-    } else if (showPrevCaption === false && editDataNow !== []) {
-      var currCaption = editDataNow
-    } else {
-      var currCaption = captions //Todo: change
+    if (trackingHistories[imageCount] !== 0) {
+      console.log("previously already edited")
+      var currCaption = trackingHistories[imageCount]
+    }
+    else {
+      var currCaption = captionDict //Todo: change
     }
     return (
       <div className="caption-div">
         
-        {captionDict.map((dictItem) => (
+        {currCaption.map((dictItem) => (
           <span className={dictItem.state} key={dictItem.idx}>
             {dictItem.letter}
           </span>
