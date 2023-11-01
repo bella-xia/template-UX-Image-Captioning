@@ -553,7 +553,7 @@ function Main1Container() {
               </div>
 
               <div className="bottom">
-              <p>
+              <p style={{marginTop: '5px', fontSize: '18px'}}>
                 {" "}
                 {imageCount + 1} / {totalImages} Images
               </p>
@@ -576,7 +576,7 @@ function Main1Container() {
 
             <div className="right-column">
               <div>
-                <p className="t"> Edit AI-Generated Caption here: </p>
+                <p className="t"> Edit the AI-Generated Caption here: </p>
               </div>
               <img
                   className="arrow"
@@ -620,8 +620,8 @@ function Main1Container() {
                 <br></br>
                 </div> 
                 <div className="original-container">
-                  <p className="t"> Original caption with tracked Changes: </p>
-                  <p className="caption-results">{getPassageComponent()}</p>
+                  <div className="t"> Original caption with tracked Changes: </div>
+                  <div className="caption-results">{getPassageComponent()}</div>
                 </div>
                 
               </div>

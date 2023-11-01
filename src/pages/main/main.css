@@ -35,13 +35,13 @@
 }
 
 .t {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 500;
   margin-top: 20px;
 }
 
 .caption-results {
-  margin-top: 20px;
+  margin-top: 5px;
   text-align: center;
   margin: 0 auto;
   width: 400px;
@@ -136,7 +136,7 @@
 .caption {
   border: 2px solid black;
   text-align: center;
-  font-size: 16px;
+  font-size: 18px;
   width: 400px;
   height: 150px;
   margin-bottom: 10px;
@@ -153,9 +153,9 @@
 
 
 .caption-div {
-  font-size: 16px;
+  font-size: 20px;
   margin-bottom: 10px;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 
@@ -210,7 +210,6 @@
   justify-content: space-between;
   margin: 0 auto;
   display: flex;
-  padding: 4px 4px;
 }
 
 .style-btn{
@@ -236,6 +235,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 0 auto;
+  margin-top: -10px;
 }
 
 .caption-edits {
@@ -247,7 +247,7 @@
 .save-edit {
   padding: 5px 10px;
   cursor: pointer;
-  height: 50px;
+  height: 40px;
   width: 80px;
 }
 
@@ -288,8 +288,10 @@ button[disabled] {
   background-color: rgba(175, 209, 235, 0.632);
   margin-bottom: 10px;
   margin-left: 80px;
-  height: 150px;
+  height: 200px;
 }
+
+
 
 
 /* Add more styling as needed */
