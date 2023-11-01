@@ -8,15 +8,20 @@ import { TextField } from '@mui/material';
 function Main1Container() {
   var showLastImage = localStorage.getItem("lastImage");
   const [firstEditBool, setFirstEditBool] = useState(true)
-  // The time when we first edit the image 
-  const [startEditTime, setStartEditTime] = useState(Date.now())
-  // The time when we last edit the image 
-  const [endEditTime, setEndEditTime] = useState(Date.now())
+  // timer for when the image is presented
+  const [startImageTime, setStartImageTime] = useState(Date.now());
+  // timer for when users move to the next image
+  const [deltaImageTime, setDeltaImageTime] = useState(0);
+  // The time when we first edit the caption
+  const [startEditTime, setStartEditTime] = useState(Date.now());
+  // The time when we last edit the caption
+  const [deltaEditTime, setDeltaEditTime] = useState(0);
   const [edited, setEdited] = useState(false)
   const [currentImage, setCurrentImage] = useState("");
   const [imageCount, setImageCount] = useState(0);
   const [finishCounter, setFinishCounter] = useState(0); 
-  const [taskTime, setTaskTime] = useState(Date.now() + 1000 * 1000);
+  const [taskTime, setTaskTime] = useState(Date.now());
+  const [editTime, setEditTime] = useState(Date.now());
   const [taskUseTime, setTaskUseTime] = useState(
     Array.from({ length: 15 }, (_, i) => 0)
   );
@@ -191,26 +196,52 @@ function Main1Container() {
 
   const updateImage = (count) => {
     const usedTime = Date.now() - taskTime;
+    let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
+    setDeltaImageTime(t_i_f);
     //We can get the amount of time for each image 
     console.log(count)
     console.log(usedTime)
+    console.log('done with image after X seconds');
+    console.log(t_i_f);
+    // TODO: ask what is this
     setTaskUseTime((l) =>
       l.map((time, idx) => (idx === imageCount ? usedTime : time))
     );
     if (count >= totalImages - 1) {
       setMoveToSurvey(true);
     }
+    // if they moved to the next image and did not edit at all the caption
+    if (edited === false) {
+      setStartEditTime(0);
+      setDeltaEditTime(0);
+
+    }
+    let data_send = {'userID': localStorage['user-id'],
+                     'startImageTime': startImageTime,
+                     'deltaImageTime': t_i_f,
+                     'startEditTime': startEditTime,
+                     'deltaEditTime': deltaEditTime, 
+                     'image_name': currentImage,
+                     'trial_number': imageCount + 1,
+                     'final_caption': captions[imageCount],
+                     'original_caption': originalCaptions[0][imageCount], 
+                    }
+
+    console.log(data_send)
+    // save data to backend
+    sendData(data_send)
+    // restart variables 
     setImageCount(count);
     setCurrentImage(img_paths[0][count]);
     setOriginalCaptionDict(captions[count]);
-    // setCaptionDict(() => [
-    //   {
-    //     idx: 0,
-    //     text: captions[count].substring(0, captions[count].length),
-    //     type: "original",
-    //   },
-    // ]);
-    setTaskTime(Date.now());
+    setEdited(false);
+    // restart counting the intial image time for the next case
+    let currentTime = Date.now()
+    let t_i_s = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+    setStartImageTime(t_i_s);
+    setTaskTime(currentTime);
+    console.log('image loading at second');
+    console.log(t_i_s);
   };
 
   const nextChange = () => {
@@ -258,6 +289,9 @@ function Main1Container() {
 
   const lastChange = () => {
     if (moveToLastImage === true && showLastImage !== true) {
+      // TODO: record image time again?
+      // let currentTime = Date.now()
+      // setTaskTime(currentTime); 
       console.log(editData);
       const count = imageCount - 1;
       // reinitialize variables
@@ -305,15 +339,20 @@ function Main1Container() {
   const returnOriginalText = () => {
     console.log("changed caption!")
     if (edited === false) {
-      setEdited(true)
-      var d = new Date();
-      setStartEditTime(d.toString())
-      setEndEditTime(d.toString())
+      alert("You have not made any changes to the current caption");
+      // setEdited(true)
+      let currentTime = Date.now()
+      setEditTime(currentTime)
+      let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+      setStartEditTime(t_i_e); 
+      setDeltaEditTime(t_i_e);
     } else {
-      var d = new Date();
-      setEndEditTime(d.toString())
+      console.log('updating last editing time')
+      let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
+      setDeltaEditTime(t_i_d);
+      console.log('Editing times')
+      console.log(startEditTime, t_i_d)
     }
-    console.log(startEditTime, endEditTime)
     console.log(originalCaptions)
     setPrevCaption(captions[0][imageCount]);
     setCaptions(
@@ -328,15 +367,20 @@ function Main1Container() {
   const revertCaption = () => {
     console.log("changed caption!")
     if (edited === false) {
-      setEdited(true)
-      var d = new Date();
-      setStartEditTime(d.toString())
-      setEndEditTime(d.toString())
+      alert("You have not made any changes to the current caption");
+      // setEdited(true)
+      let currentTime = Date.now()
+      setEditTime(currentTime)
+      let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+      setStartEditTime(t_i_e); 
+      setDeltaEditTime(t_i_e);
     } else {
-      var d = new Date();
-      setEndEditTime(d.toString())
+      console.log('updating last editing time')
+      let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
+      setDeltaEditTime(t_i_d);
+      console.log(startEditTime, t_i_d)
     }
-    console.log(startEditTime, endEditTime)
+    
 
     const max_order = maxChange;
     if (max_order === -1) {
@@ -382,13 +426,19 @@ function Main1Container() {
     if (edited === false) {
       setEdited(true)
       var d = new Date();
-      setStartEditTime(d.toString())
-      setEndEditTime(d.toString())
+      let currentTime = Date.now()
+      setEditTime(currentTime)
+      let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+      setStartEditTime(t_i_e); 
+      setDeltaEditTime(t_i_e);
+
     } else {
-      var d = new Date();
-      setEndEditTime(d.toString())
+      console.log('updating last editing time')
+      let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
+      setDeltaEditTime(t_i_d);
+      console.log('Editing times')
+      console.log(startEditTime, t_i_d)
     }
-    console.log(startEditTime, endEditTime)
 
     //console.log(modCap.target.value)
     const editCurrentTime = Date.now();
@@ -442,6 +492,25 @@ function Main1Container() {
     }
   };
 
+  const sendData = (obj) => {
+          fetch('http://0.0.0.0:8080/surveyData', { // This bit needs to be changed
+            method: 'POST',
+            body: JSON.stringify({
+                  group: localStorage['group'], 
+                  folder: 'captions',
+                  content: obj
+                }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          }).then(response => response.json())
+            .then(message => {
+              console.log(message)
+              // getLastestTodos();
+            })
+        } 
+
+
 
 
   // testing communication with backend
@@ -459,9 +528,14 @@ function Main1Container() {
     //console.log("getting images");
     setTotalImages(img_paths[0].length);
     setCurrentImage(img_paths[0][imageCount]);
-    setTaskTime(Date.now());
+    let currentTime = Date.now()
+    setTaskTime(currentTime);
+    let t_i_s = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+    setStartImageTime(t_i_s);
     setRender(true);
     setOriginalCaptionDict(captions[imageCount]);
+    console.log('image loading at second');
+    console.log(t_i_s);
   }, []);
 
   return (
@@ -477,6 +551,8 @@ function Main1Container() {
                   alt={currentImage}
                 />
               </div>
+
+              <div className="bottom">
               <p>
                 {" "}
                 {imageCount + 1} / {totalImages} Images
@@ -495,6 +571,7 @@ function Main1Container() {
                     Next
                   </button>
                 </div>
+                </div>
             </div>
 
             <div className="right-column">
@@ -506,6 +583,7 @@ function Main1Container() {
                   src={"arrow.png"}
                 />
               <div className="caption-edits" style={{userSelect: 'none'}}>
+            
                 <textarea 
                   onSelect={handleSelect}
                   onCut={handleChange}
@@ -513,12 +591,13 @@ function Main1Container() {
                   onPaste={handleChange}
                   onKeyDown={handleKeyDown}
                   className="caption"
-                  value={captions[imageCount]}
+                  value={captions[imageCount] }
                   onChange={modifyCaption}
                   readOnly={!editMode}
                   rows={4} 
                   cols={30}
                 ></textarea>
+                
                 <div className="edit-buttons">
                   <button
                     onClick={revertCaption}
@@ -527,20 +606,20 @@ function Main1Container() {
                   >
                     Undo
                   </button>
-
+  
                   <button
                     onClick={returnOriginalText}
-                    className="return-original btn"
+                    className="undo-clear btn"
                   >
-                    Return Original Caption
+                    Reset
                   </button>
                 
                 <br></br>
                 <br></br>
                 <br></br>
                 <br></br>
-                </div>
-                <div>
+                </div> 
+                <div className="original-container">
                   <p className="t"> Original caption with tracked Changes: </p>
                   <p className="caption-results">{getPassageComponent()}</p>
                 </div>

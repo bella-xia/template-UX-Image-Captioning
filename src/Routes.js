@@ -10,7 +10,7 @@ import SurveyContainer from "./pages/survey/survey"
 import SurveyContainer2 from "./pages/survey/survey2"
 import PaymentSurveyContainer from "./pages/survey/payment_survey";
 import EndContainer from "./pages/end/end";
-import eyegazeStartContainer from "./pages/eyegazeStart/eyegazeStart";
+import EyegazeStartContainer from "./pages/eyegazeStart/eyegazeStart";
 import eyegazeEndContainer from "./pages/eyegazeEnd/eyegazeEnd";
 
 
@@ -27,7 +27,7 @@ export default class Routes extends Component {
                     <Route path="/Survey2" component={SurveyContainer2} />
                     <Route path="/PaymentSurvey" component={PaymentSurveyContainer} />
                     <Route path="/End" component={EndContainer} />
-                    <Route path="/EyeGazeStart" component={eyegazeStartContainer} />
+                    <Route path="/EyeGazeStart" component={EyegazeStartContainer} />
                     <Route path="/EyeGazeEnd" component={eyegazeEndContainer} />
                 </Switch>
             </HashRouter>

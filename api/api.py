@@ -2,11 +2,13 @@ import os
 import time
 import random
 from urllib import response
+from datetime import datetime
 
 from flask import Flask, jsonify, json, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
+import pyrebase
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -14,72 +16,36 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/test.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
+firebaseConfig = {
+  "apiKey": "AIzaSyD5-rkzlf29hAmfG-39JrY69SelgU3p0Q0",
+  "authDomain": "gaze-engage.firebaseapp.com",
+  "databaseURL": "https://gaze-engage-default-rtdb.firebaseio.com",
+  "projectId": "gaze-engage",
+  "storageBucket": "gaze-engage.appspot.com",
+  "messagingSenderId": "612082376120",
+  "appId": "1:612082376120:web:cb8effd926a5966d9ec34d",
+  "measurementId": "G-DWMQ4EBNL2"
+}
+firebase = pyrebase.initialize_app(firebaseConfig)
+db = firebase.database()
 
 
-class User(db.Model):
-    user_id = db.Column(db.Integer, nullable=False, primary_key=True)
-    task = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, task):
-        self.task = task
-
-
-class Responses(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
-    q_id = db.Column(db.String(20), nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-    ans = db.Column(db.Integer, nullable=False)
-    time = db.Column(db.Float, nullable=False)
-
-    def __init__(self, q_id, user_id, ans, time):
-        self.q_id = q_id
-        self.user_id = user_id
-        self.ans = ans
-        self.time = time
-
-
-class Survey(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    q1 = db.Column(db.Integer, nullable=False)
-    q2 = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, user_id, q1, q2):
-      self.user_id = user_id
-      self.q1 = q1
-      self.q2 = q2
-
-
-# define image names. You can load this information from a local file or a database
-images = [{'name': 'cardinal.jpg', 'label': 'Cardinal'}, 
-          {'name': 'bluejay.jpg', 'label': 'Blue jay'},
-          {'name': 'cedarwaxwing.jpg', 'label': 'Cedar waxwing'}]
 
 # check that the backend is connected
 @app.route('/time')
 def get_current_time():
     return jsonify({'time': time.strftime("%I:%M:%S %p", time.localtime())})
 
-
 @app.route('/setup', methods=['GET'])
 def setup():
     # assign a random task to the current user
-    task_num = random.randint(1,2)
-    new_user = User(task=task_num)
-    db.session.add(new_user)
-    db.session.commit()
-    user_id = new_user.user_id
-    response = {'user_id': user_id, 'task_number': task_num}
+    now = datetime.now() 
+    user_id = now.strftime("%Y%m%d%H%M%S")
+    response = {'user_id': user_id}
     return jsonify(response)
 
 
-@app.route('/imageInfo', methods=['GET'])
-def getImageInfo():
-    # define the order of the images to be loaded
-    random.shuffle(images)
-    response_body = {'imgs': images}
-    return jsonify(response_body)
 
 
 # send data from frontend to backend
@@ -102,45 +68,18 @@ def responsesData():
 
 @app.route('/surveyData', methods=['POST'])
 def surveyData():
+    print("receiving data from frontend")
     request_data = json.loads(request.data)
-    user_id = request_data['user_id']
-    q1 = request_data['q1']
-    q2 = request_data['q2']
-    new_entry = Survey(user_id=user_id, q1=q1, q2=q2)
-    db.session.add(new_entry)
-    db.session.commit()
-    msg = "Record successfully added"
-    print(msg)
+    data = request_data['content']
+    print(data)
+    user_id = data['userID']
+    db.child(request_data['group']).child(request_data['folder']).child(user_id).push(data)
     response_body = {'user_id': user_id}
     return jsonify(response_body) 
 
 
-# auxiliary functions to visualize data
-def responses_serializer(obj):
-    return {
-      'id': obj.id,
-      'q_id': obj.q_id,
-      'user_id': obj.user_id,
-      'ans': obj.ans,
-      'time': obj.time
-    }
-
-
-def user_serializer(obj):
-  return {
-    'user_id': obj.user_id,
-    'task': obj.task
-  }
-
-
-# visualize the current entries in the tables
-@app.route('/api', methods=['GET'])
-def api():
-    return jsonify([*map(responses_serializer, Responses.query.all())])
-    # return jsonify([*map(user_serializer, User.query.all())])
-
 
 if __name__ == "__main__":
-    db.create_all()
+    # db.create_all()
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
