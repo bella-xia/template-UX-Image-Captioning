@@ -134,7 +134,7 @@ const SurveyContainer2 = () => {
 
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Submit
+            Continue
           </Button>
         </Form.Item>
       </Form>

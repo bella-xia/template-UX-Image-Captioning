@@ -582,21 +582,23 @@ function Main1Container() {
                   className="arrow"
                   src={"arrow.png"}
                 />
-              <div className="caption-edits" style={{userSelect: 'none'}}>
-            
+              <div className="caption-edits">
+               
                 <textarea 
                   onSelect={handleSelect}
                   onCut={handleChange}
                   onCopy={handleChange}
                   onPaste={handleChange}
                   onKeyDown={handleKeyDown}
-                  className="caption"
+                  class="caption"
                   value={captions[imageCount] }
                   onChange={modifyCaption}
                   readOnly={!editMode}
                   rows={4} 
                   cols={30}
                 ></textarea>
+
+                
                 
                 <div className="edit-buttons">
                   <button
@@ -627,14 +629,6 @@ function Main1Container() {
               </div>
             </div>
           </div>
-          
-          <div className="column-container">
-            <div className="left-column">
-            </div>
-
-            
-          </div>
-          
           
         </div>
       ) : (

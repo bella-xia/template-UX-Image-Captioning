@@ -25,7 +25,7 @@ export default class Routes extends Component {
                     <Route path="/Main2" component={Main2Container} />
                     <Route path="/Survey" component={SurveyContainer} />
                     <Route path="/Survey2" component={SurveyContainer2} />
-                    <Route path="/PaymentSurvey" component={PaymentSurveyContainer} />
+                    <Route path="/Demo" component={PaymentSurveyContainer} />
                     <Route path="/End" component={EndContainer} />
                     <Route path="/EyeGazeStart" component={EyegazeStartContainer} />
                     <Route path="/EyeGazeEnd" component={eyegazeEndContainer} />

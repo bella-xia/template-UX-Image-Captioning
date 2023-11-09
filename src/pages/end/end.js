@@ -8,7 +8,7 @@ function EndContainer() {
       <div className="container">
         <div className="title">
         <h1>Thank you for completing the study! </h1>
-        <h1> You will be paid xxx dollars. </h1>
+        <h1>  </h1>
       </div>
       </div>
       );

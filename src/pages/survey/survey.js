@@ -23,12 +23,19 @@ const formItemLayout = {
   },
 };
 
-const questions = [
+const questions1 = [
   "The AI-generated captions cover salient information present in the images.",
   "The AI-generated captions include accurate and precise information from the images.",
   "The AI helps me to create better captions.",
   "I find useful the AI-generated captions.",
   
+];
+
+const questions2 = [
+  "I had to work hard to accomplish better captions.",
+  "I was really drawn into this captioning experience with AI assistance.",
+  "I felt involved in this captioning experience with AI assistance.",
+  "I felt discouraged while using AI assistance in this captioning experience."
 ];
 
 const FormItem = ({ question, idx }) => {
@@ -79,35 +86,50 @@ const SurveyContainer = () => {
   const [form] = Form.useForm();
   const [answers, setAnswers] = useState({});
 
+  const [next, setNext] = useState(false);
+
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-    let copySaveArray = values;
-    setAnswers(values);
+    console.log('Received values of form: ', values);
+    //let copySaveArray = values
     // save data
-    let data = {
-      user_id: localStorage.getItem("user-id"),
-      q1: 1,
-      q2: 2,
-    };
-    sendData(data);
-    let path = "/#/Survey2";
-    window.location.assign(path);
+    if (next) {
+      let copySaveArray = Object.assign({}, answers, values);
+      setAnswers(copySaveArray)
+      let data_send = {
+        'userID': localStorage['user-id'], 
+        'survey_data': copySaveArray// values
+      };
+      sendData(data_send);
+      console.log("Survey Data sent:",data_send);
+      let path = '/#/Demo'; 
+      window.location.assign(path);
+    }
+    else {
+      let copySaveArray = Object.assign({}, answers, values);
+      setAnswers(copySaveArray)
+      setNext(true);
+      window.scrollTo(0, 0);
+    }
   };
 
   const sendData = (obj) => {
-    fetch("http://localhost:8080/surveyData", {
-      method: "POST",
-      body: JSON.stringify(obj),
+    fetch('http://0.0.0.0:8080/surveyData', {
+      method: 'POST',
+      body: JSON.stringify({
+        group: localStorage['group'], 
+        folder: 'survey',
+        content: obj
+      }),
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((message) => {
-        console.log(message);
-        // getLastestTodos();
-      });
-  };
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    }).then(response => response.json())
+      .then(message => {
+        console.log(message)
+      })
+  }; 
+
+
 
   return (
     <div className="container">
@@ -122,8 +144,10 @@ const SurveyContainer = () => {
 
         On a scale from 1 (strongly disagree) to 7 (strongly agree), rate your agreement with the following statements:
 
+        {!next  ?
+        <>
         <div>
-          {questions.map((question, idx) => (
+          {questions1.map((question, idx) => (
             <FormItem
               key={idx}
               class="form-questions"
@@ -135,9 +159,32 @@ const SurveyContainer = () => {
 
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Submit
+            Continue
           </Button>
         </Form.Item>
+
+        </> 
+        : 
+        <>
+
+        <div>
+          {questions2.map((question, idx) => (
+            <FormItem
+              key={idx + 4}
+              class="form-questions"
+              question={question}
+              idx={idx + 4}
+            />
+          ))}
+        </div>
+
+        <Form.Item >
+          <Button type="primary" htmlType="submit">
+          Continue
+          </Button>
+        </Form.Item>
+        </>
+        }
       </Form>
     </div>
   );
