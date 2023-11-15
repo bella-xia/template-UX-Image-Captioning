@@ -12,6 +12,8 @@ function InstructionsContainer() {
   const [agree, setAgree] = useState(false);
   const [acceptFirst, setAcceptFirst] = useState(false);
 
+  console.log(showCompensation)
+
   
   //   const [task, setTask] = useState(0);
 

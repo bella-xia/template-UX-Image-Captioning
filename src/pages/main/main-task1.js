@@ -20,6 +20,7 @@ function Main1Container() {
   const [currentImage, setCurrentImage] = useState("");
   const [imageCount, setImageCount] = useState(0);
   const [finishCounter, setFinishCounter] = useState(0); 
+  // time variables using date.now
   const [taskTime, setTaskTime] = useState(Date.now());
   const [editTime, setEditTime] = useState(Date.now());
   const [taskUseTime, setTaskUseTime] = useState(
@@ -196,13 +197,10 @@ function Main1Container() {
 
   const updateImage = (count) => {
     const usedTime = Date.now() - taskTime;
-    let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
-    setDeltaImageTime(t_i_f);
+
     //We can get the amount of time for each image 
     console.log(count)
     console.log(usedTime)
-    console.log('done with image after X seconds');
-    console.log(t_i_f);
     // TODO: ask what is this
     setTaskUseTime((l) =>
       l.map((time, idx) => (idx === imageCount ? usedTime : time))
@@ -210,26 +208,7 @@ function Main1Container() {
     if (count >= totalImages - 1) {
       setMoveToSurvey(true);
     }
-    // if they moved to the next image and did not edit at all the caption
-    if (edited === false) {
-      setStartEditTime(0);
-      setDeltaEditTime(0);
 
-    }
-    let data_send = {'userID': localStorage['user-id'],
-                     'startImageTime': startImageTime,
-                     'deltaImageTime': t_i_f,
-                     'startEditTime': startEditTime,
-                     'deltaEditTime': deltaEditTime, 
-                     'image_name': currentImage,
-                     'trial_number': imageCount + 1,
-                     'final_caption': captions[imageCount],
-                     'original_caption': originalCaptions[0][imageCount], 
-                    }
-
-    console.log(data_send)
-    // save data to backend
-    sendData(data_send)
     // restart variables 
     setImageCount(count);
     setCurrentImage(img_paths[0][count]);
@@ -244,13 +223,43 @@ function Main1Container() {
     console.log(t_i_s);
   };
 
+  const recordTimes = () => {
+      let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
+      setDeltaImageTime(t_i_f);
+      console.log('done with image after X seconds');
+      console.log(t_i_f);
+
+      // if they moved to the next image and did not edit at all the caption
+      if (edited === false) {
+        setStartEditTime(0);
+        setDeltaEditTime(0);
+
+      }
+  }
+
   const nextChange = () => {
     // // if (choice < 1) {
     // //   alert("Please make sure to complete all the fields!");
     // // } else {
     //   // save data
+    // measure image times here
+    recordTimes()
+
     const count = imageCount + 1;
-    
+    let data_send = {'userID': localStorage['user-id'],
+                    'startImageTime': startImageTime,
+                    'deltaImageTime': deltaImageTime,
+                    'startEditTime': startEditTime,
+                    'deltaEditTime': deltaEditTime, 
+                    'image_name': currentImage,
+                    'trial_number': imageCount + 1,
+                    'final_caption': captions[imageCount],
+                    'original_caption': originalCaptions[0][imageCount], 
+                      }
+
+    console.log(data_send)
+// save data to backend
+
     //   let data = {
     //     q_id: currentImage,
     //     user_id: localStorage.getItem("user-id"),
@@ -265,19 +274,22 @@ function Main1Container() {
       return;
     }
     */
-    // reinitialize variables
+
     if (count < 15) {
       console.log(editData);
+      // reinitialize variables
       setDataPrev(editData)
       setShowPrevCaption(false)
       updateImage(count);
+      sendData(data_send)
     }
     else {
       if (finishCounter === 1) {
         routeChange();
+        sendData(data_send);
       }
       else {
-        alert("If you click next then you will be finishing the captioning tasks. Click on next again if you are finished.")
+        alert("If you click Next then you will be finishing the captioning tasks. Click on Next again if you are finished.")
         setFinishCounter(1); 
       }
       //routeChange(); 
@@ -289,6 +301,21 @@ function Main1Container() {
 
   const lastChange = () => {
     if (moveToLastImage === true && showLastImage !== true) {
+      // measure image times here
+      recordTimes();
+      let data_send = {'userID': localStorage['user-id'],
+      'startImageTime': startImageTime,
+      'deltaImageTime': deltaImageTime,
+      'startEditTime': startEditTime,
+      'deltaEditTime': deltaEditTime, 
+      'image_name': currentImage,
+      'trial_number': imageCount + 1,
+      'final_caption': captions[imageCount],
+      'original_caption': originalCaptions[0][imageCount], 
+      }
+      sendData(data_send);
+
+
       // TODO: record image time again?
       // let currentTime = Date.now()
       // setTaskTime(currentTime); 
