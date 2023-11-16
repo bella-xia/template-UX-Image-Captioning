@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "antd";
 import "antd/dist/antd.css";
 import "./main.css";
@@ -30,24 +30,8 @@ function Main1Container() {
   const [totalImages, setTotalImages] = useState(0);
   const [captionDict, setCaptionDict] = useState([]);
   const shuffle_idx = useState([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14].sort(() => Math.random() - 0.5));
-  const allCaptions = [
-    "a group of horses standing around a fire",
-    "a group of people standing  around a pool",
-    "a man standing next to a tree by a lake",
-    "a person sitting on a dock watching the sunset",
-    "a man walking down the street",
-    "a woman standing in front of a car",
-    "a man sitting on a bench",
-    "a man standing on a small boat in a river",
-    "a red toy truck",
-    "a group of people sitting on a bench in a park",
-    "a couple sitting on a bench",
-    "a boy on a skateboard",
-    "Two girls playing soccer",
-    "a man parading in the water",
-    "a woman in a bikini on a surfboard",
-  ]
-  const [captions, setCaptions] = useState(shuffle_idx[0].map(i => allCaptions[i]));
+  const isMounted = useRef(true);
+  const [captions, setCaptions] = useState([]); // useState(shuffle_idx[0].map(i => allCaptions[i]));
   const [prevCaption, setPrevCaption] = useState("");
   const [editData, setData] = useState([])
   const [editDataPrev, setDataPrev] = useState([])
@@ -59,7 +43,7 @@ function Main1Container() {
   const [editMode, setEditMode] = useState(true);
   const [editPrevTime, setEditPrevTime] = useState(Date.now());
   const [maxChange, setMaxChange] = useState(-1);
-  const originalCaptions = useState(shuffle_idx[0].map(i => allCaptions[i]));
+  const [originalCaptions, setOriginalCaptions] = useState([]); // shuffle_idx[0].map(i => allCaptions[i]));
   //console.log(originalCaptions)
   
 
@@ -219,22 +203,15 @@ function Main1Container() {
     let t_i_s = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
     setStartImageTime(t_i_s);
     setTaskTime(currentTime);
+    setDeltaImageTime(0);
+    setDeltaEditTime(0);
+    setStartEditTime(0);
     console.log('image loading at second');
     console.log(t_i_s);
   };
 
   const recordTimes = () => {
-      let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
-      setDeltaImageTime(t_i_f);
-      console.log('done with image after X seconds');
-      console.log(t_i_f);
 
-      // if they moved to the next image and did not edit at all the caption
-      if (edited === false) {
-        setStartEditTime(0);
-        setDeltaEditTime(0);
-
-      }
   }
 
   const nextChange = () => {
@@ -243,21 +220,29 @@ function Main1Container() {
     // // } else {
     //   // save data
     // measure image times here
-    recordTimes()
+    let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
+    setDeltaImageTime(t_i_f);
+    console.log('done with image after X seconds');
+    console.log(t_i_f);
+
+    // if they moved to the next image and did not edit at all the caption
+    if (edited === false) {
+      setStartEditTime(0);
+      setDeltaEditTime(0);
+
+    }
 
     const count = imageCount + 1;
     let data_send = {'userID': localStorage['user-id'],
                     'startImageTime': startImageTime,
-                    'deltaImageTime': deltaImageTime,
+                    'deltaImageTime': t_i_f,
                     'startEditTime': startEditTime,
                     'deltaEditTime': deltaEditTime, 
                     'image_name': currentImage,
                     'trial_number': imageCount + 1,
                     'final_caption': captions[imageCount],
-                    'original_caption': originalCaptions[0][imageCount], 
+                    'original_caption': originalCaptions[imageCount], 
                       }
-
-    console.log(data_send)
 // save data to backend
 
     //   let data = {
@@ -302,16 +287,27 @@ function Main1Container() {
   const lastChange = () => {
     if (moveToLastImage === true && showLastImage !== true) {
       // measure image times here
-      recordTimes();
+      let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
+      setDeltaImageTime(t_i_f);
+      console.log('done with image after X seconds');
+      console.log(t_i_f);
+  
+      // if they moved to the next image and did not edit at all the caption
+      if (edited === false) {
+        console.log('caption not edited at all')
+        setStartEditTime(0);
+        setDeltaEditTime(0);
+  
+      }
       let data_send = {'userID': localStorage['user-id'],
       'startImageTime': startImageTime,
-      'deltaImageTime': deltaImageTime,
+      'deltaImageTime': t_i_f,
       'startEditTime': startEditTime,
       'deltaEditTime': deltaEditTime, 
       'image_name': currentImage,
       'trial_number': imageCount + 1,
       'final_caption': captions[imageCount],
-      'original_caption': originalCaptions[0][imageCount], 
+      'original_caption': originalCaptions[imageCount], 
       }
       sendData(data_send);
 
@@ -384,10 +380,10 @@ function Main1Container() {
     setPrevCaption(captions[0][imageCount]);
     setCaptions(
       captions.map((caption, idx) =>
-        idx === imageCount ? originalCaptions[0][imageCount] : caption
+        idx === imageCount ? originalCaptions[imageCount] : caption
       )
     );
-    setOriginalCaptionDict(originalCaptions[0][imageCount]);
+    setOriginalCaptionDict(originalCaptions[imageCount]);
     console.log(originalCaptions)
   };
 
@@ -538,8 +534,6 @@ function Main1Container() {
         } 
 
 
-
-
   // testing communication with backend
   //   useEffect(() => {
   //     fetch("http://0.0.0.0:8080/time")
@@ -549,6 +543,41 @@ function Main1Container() {
   //         console.log(data.time);
   //       });
   //   }, []);
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+          // Replace with your asynchronous operation
+          const response = await fetch('http://0.0.0.0:8080/captionInfo');
+          const data = await response.json();
+          
+          if (isMounted.current) {
+
+              let captionsData = Array.from( data['captions']);
+              let allCaptions = [];
+              for (let i=0; i<captionsData.length; i++){
+                allCaptions.push(captionsData[i].caption)
+              }
+              let aux_captions = shuffle_idx[0].map(i => allCaptions[i])
+              setCaptions(aux_captions);
+              console.log(aux_captions)
+              setOriginalCaptions(shuffle_idx[0].map(i => allCaptions[i]));
+              setOriginalCaptionDict(aux_captions[imageCount]);
+              localStorage.setItem('original-captions', allCaptions);
+          }
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      };
+    };
+    fetchData();
+
+    // Cleanup function
+    return () => {
+        isMounted.current = false;
+    };
+  }, []); 
+
 
   // initialize image
   useEffect(() => {
@@ -560,10 +589,10 @@ function Main1Container() {
     let t_i_s = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
     setStartImageTime(t_i_s);
     setRender(true);
-    setOriginalCaptionDict(captions[imageCount]);
     console.log('image loading at second');
     console.log(t_i_s);
   }, []);
+
 
   return (
     <>

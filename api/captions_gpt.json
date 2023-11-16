@@ -1,0 +1,78 @@
+[
+    {
+        "caption": "A young individual stands in a grassy area, holding a rope, with a small fire in the foreground and open land in the background",
+        "img_name": "Image_1", 
+        "error": "omission"
+    }, 
+    {
+        "caption": "A group of individuals stands by an indoor water feature, engaging with the exhibit",
+        "img_name": "Image_2", 
+        "error": "omission" 
+    }
+    ,
+    {
+        "caption": "A lone figure stands beside a tranquil lake at dawn, under the shelter of a large tree",
+        "img_name": "Image_3", 
+        "error": "omission"
+    },
+    {
+        "caption": "Two individuals seated on a dock against the backdrop of a sunset over a body of water",
+        "img_name": "Image_4", 
+        "error": "omission"
+    },
+    {
+        "caption": "City pedestrians walk by a colorful street vendor cart on a busy day",
+        "img_name": "Image_5", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "Customers interact with a vendor at a dimly lit outdoor market",
+        "img_name": "Image_6", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "A man in a red jacket sits on a bench surrounded by greenery, preparing a meal outdoors",
+        "img_name": "Image_7", 
+        "error": "omission"
+    },
+    {
+        "caption": "A person stands by a water channel in a lush garden setting",
+        "img_name": "Image_8", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "A red off-road vehicle is perched on an uneven dirt path with a spectator in the distance.",
+        "img_name": "Image_9", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "People enjoy a leisurely walk on a paved pathway in a park with benches and lush grass on a cloudy day",
+        "img_name": "Image_10", 
+        "error": "omission"
+    },
+    {
+        "caption": "Two people sit on a bench overlooking a calm sea as the sun sets in the distance",
+        "img_name": "Image_11", 
+        "error": "omission"
+    },
+    {
+        "caption": "A young person is enjoying a sunny day outside on a scooter",
+        "img_name": "Image_12", 
+        "error": "omission"
+    },
+    {
+        "caption": "Two athletes in a competitive chase for the ball during a soccer match",
+        "img_name": "Image_13", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "Two children in colorful clothing are playing with a toy outdoors",
+        "img_name": "Image_14", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "A traveler treks across a gentle snowy trail in a quiet forest, taking in the serene winter landscape",
+        "img_name": "Image_15", 
+        "error": "inaccurate"
+    }
+]

@@ -63,7 +63,7 @@ function InstructionsContainer() {
       <div style={{fontSize: "20px", textAlign: "left", width:"75%", marginLeft: "10%"}}>
         Image captioning is the process of describing the content of an image in words. 
         
-        <b>Your task</b> today is to describe the <b>information an image conveys</b> and the <b>visual details</b> that may be important to visually impaired audiences. 
+        <b>Your task</b> today is to describe the <b>information an image conveys</b> and the <b>visual details</b> that may be important to <b>visually impaired audiences</b>. 
 
         You wil collaborate with an AI assistant that generates captions automatically to provide the best quality captions (include key information and use good language). 
 

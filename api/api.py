@@ -30,12 +30,14 @@ firebaseConfig = {
 firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 
-
+with open('captions_gpt.json') as f:
+    all_captions = json.load(f)
 
 # check that the backend is connected
 @app.route('/time')
 def get_current_time():
     return jsonify({'time': time.strftime("%I:%M:%S %p", time.localtime())})
+
 
 @app.route('/setup', methods=['GET'])
 def setup():
@@ -45,7 +47,11 @@ def setup():
     response = {'user_id': user_id}
     return jsonify(response)
 
-
+@app.route('/captionInfo', methods=['GET'])
+def getImageInfo():
+    # define the order of the images to be loaded
+    response_body = {'captions': all_captions}
+    return jsonify(response_body)
 
 
 # send data from frontend to backend

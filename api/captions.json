@@ -1,0 +1,78 @@
+[
+    {
+        "caption": "a group of horses standing around a fire",
+        "img_name": "Image_1", 
+        "error": "omission"
+    }, 
+    {
+        "caption": "a group of people standing around a pool",
+        "img_name": "Image_2", 
+        "error": "omission" 
+    }
+    ,
+    {
+        "caption": "a man standing next to a tree by a lake",
+        "img_name": "Image_3", 
+        "error": "omission"
+    },
+    {
+        "caption": "a person sitting on a dock watching the sunset",
+        "img_name": "Image_4", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "a man walking down the street",
+        "img_name": "Image_5", 
+        "error": "omission"
+    },
+    {
+        "caption": "a woman standing in front of a car",
+        "img_name": "Image_6", 
+        "error": "omission"
+    },
+    {
+        "caption": "a man sitting on a bench",
+        "img_name": "Image_7", 
+        "error": "omission"
+    },
+    {
+        "caption": "a man standing on a small boat in a river",
+        "img_name": "Image_8", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "a red toy truck",
+        "img_name": "Image_9", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "a group of people sitting on a bench in a park",
+        "img_name": "Image_10", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "a couple sitting on a bench",
+        "img_name": "Image_11", 
+        "error": "omission"
+    },
+    {
+        "caption": "a boy on a skateboard",
+        "img_name": "Image_12", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "Two girls playing soccer",
+        "img_name": "Image_13", 
+        "error": "omission"
+    },
+    {
+        "caption": "a man parading in the water",
+        "img_name": "Image_14", 
+        "error": "inaccurate"
+    },
+    {
+        "caption": "a woman in a bikini on a surfboard",
+        "img_name": "Image_15", 
+        "error": "inaccurate"
+    }
+]
