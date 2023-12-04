@@ -44,7 +44,7 @@ const FormItem = ({ question, idx }) => {
     <Form.Item
       name={`Q${idx + 1}`}
       label={
-        <p style={{ fontSize: "18px" }}>
+        <p style={{ fontSize: "19px" }}>
           {" "}
           {idx + 1}. {question}
         </p>
@@ -113,7 +113,7 @@ const SurveyContainer = () => {
   };
 
   const sendData = (obj) => {
-    fetch('http://0.0.0.0:8080/surveyData', {
+    fetch('http://127.0.0.1:8080/surveyData', {
       method: 'POST',
       body: JSON.stringify({
         group: localStorage['group'], 
@@ -141,12 +141,12 @@ const SurveyContainer = () => {
         initialValues={{}}
       >
         <div className="title">Evaluation Questions</div>
-
+        <div className="text">
         On a scale from 1 (strongly disagree) to 7 (strongly agree), rate your agreement with the following statements:
-
+        </div>
         {!next  ?
         <>
-        <div>
+        <div className="text">
           {questions1.map((question, idx) => (
             <FormItem
               key={idx}
@@ -167,7 +167,7 @@ const SurveyContainer = () => {
         : 
         <>
 
-        <div>
+        <div className="text">
           {questions2.map((question, idx) => (
             <FormItem
               key={idx + 4}

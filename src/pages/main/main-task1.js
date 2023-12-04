@@ -368,7 +368,7 @@ function Main1Container() {
       setEditTime(currentTime)
       let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
       setStartEditTime(t_i_e); 
-      setDeltaEditTime(t_i_e);
+      setDeltaEditTime(0);
     } else {
       console.log('updating last editing time')
       let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
@@ -396,7 +396,7 @@ function Main1Container() {
       setEditTime(currentTime)
       let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
       setStartEditTime(t_i_e); 
-      setDeltaEditTime(t_i_e);
+      setDeltaEditTime(0);
     } else {
       console.log('updating last editing time')
       let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
@@ -453,7 +453,7 @@ function Main1Container() {
       setEditTime(currentTime)
       let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
       setStartEditTime(t_i_e); 
-      setDeltaEditTime(t_i_e);
+      setDeltaEditTime(0);
 
     } else {
       console.log('updating last editing time')
@@ -516,7 +516,7 @@ function Main1Container() {
   };
 
   const sendData = (obj) => {
-          fetch('http://0.0.0.0:8080/surveyData', { // This bit needs to be changed
+          fetch('http://127.0.0.1:8080/surveyData', { // This bit needs to be changed
             method: 'POST',
             body: JSON.stringify({
                   group: localStorage['group'], 
@@ -549,7 +549,7 @@ function Main1Container() {
     const fetchData = async () => {
       try {
           // Replace with your asynchronous operation
-          const response = await fetch('http://0.0.0.0:8080/captionInfo');
+          const response = await fetch('http://127.0.0.1:8080/captionInfo');
           const data = await response.json();
           
           if (isMounted.current) {

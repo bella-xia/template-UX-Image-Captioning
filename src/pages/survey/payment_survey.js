@@ -43,7 +43,7 @@ const PaymentSurveyContainer = () => {
   };
 
   const sendData = (obj) => {
-    fetch('http://0.0.0.0:8080/surveyData', {
+    fetch('http://127.0.0.1:8080/surveyData', {
       method: 'POST',
       body: JSON.stringify({
         group: localStorage['group'], 
@@ -137,7 +137,7 @@ const PaymentSurveyContainer = () => {
         <Form.Item 
             name ="check" 
             label= {
-                <p style={{fontSize: "18px"}}>What is the monetary compensation you will receive for participating in this study?</p>}
+                <p style={{fontSize: "18px"}}>What was the monetary compensation mentioned at the beginning of this study for your participation?</p>}
             rules={[{
                     required: true,
                   },

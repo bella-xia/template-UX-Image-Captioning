@@ -55,23 +55,6 @@ def getImageInfo():
 
 
 # send data from frontend to backend
-@app.route('/responsesData', methods=['POST'])
-def responsesData():
-    request_data = json.loads(request.data)
-    q_id = request_data['q_id']
-    user_id = request_data['user_id']
-    ans = request_data['ans']
-    time = request_data['time']
-    print('saving data')
-    new_entry = Responses(q_id, user_id, ans, time)
-    db.session.add(new_entry)
-    db.session.commit()
-    msg = "Record successfully added"
-    print(msg)
-    response_body = {'user_id': user_id}
-    return jsonify(response_body)
-
-
 @app.route('/surveyData', methods=['POST'])
 def surveyData():
     print("receiving data from frontend")
@@ -81,6 +64,19 @@ def surveyData():
     user_id = data['userID']
     db.child(request_data['group']).child(request_data['folder']).child(user_id).push(data)
     response_body = {'user_id': user_id}
+    return jsonify(response_body) 
+
+
+@app.route('/emailData', methods=['POST'])
+def emailData():
+    print("receiving data from frontend")
+    request_data = json.loads(request.data)
+    data = request_data['content']
+    user_id = data['userID']
+    response_body = {'date': user_id // (10 ** 6)}
+    response_body.update(data['survey_data'])
+    print(data)
+    db.child(request_data['group']).child(request_data['folder']).push(response_body) 
     return jsonify(response_body) 
 
 

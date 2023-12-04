@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import "./instructions.css";
-let messages = ["Thank you for participating. You will be paid a base rate of 2.0 dollars for successfully completing the study, and 0.2 dollars additionally for each image caption that you make better.", 
+let messages = ["Thank you for participating. You will be paid a base rate of 2.0 dollars for successfully completing the study, and en extra bonus for each image caption that you make better. You can earn up to 5.0 dollars. ", 
                 "Thank you for participating. You will be paid 5.0 dollars for succesfully completing the study."]
 let group_names = ["effort", "default"]
 var showCompensation = Math.floor(Math.random() * 2)
@@ -10,6 +10,7 @@ var displayedMessage = messages[showCompensation]
 
 function InstructionsContainer() {
   const [agree, setAgree] = useState(false);
+  const [display, setDisplay] = useState(false);
   const [acceptFirst, setAcceptFirst] = useState(false);
 
   console.log(showCompensation)
@@ -24,6 +25,10 @@ function InstructionsContainer() {
   const continueChange = () =>{ 
     setAcceptFirst(true);
    }  
+
+  const displayChange =  () => {
+    setDisplay(true);
+  }
 
   const routeChange = () => {
     let path = "/#/EyeGazeStart";
@@ -43,7 +48,7 @@ function InstructionsContainer() {
 
     // connect with the backend to get a user ID and randomize agent  
     useEffect(() => {
-      fetch('http://0.0.0.0:8080/setup')
+      fetch('http://127.0.0.1:8080/setup')
       .then(response => response.json())
       .then(data => {
           console.log(data)
@@ -61,11 +66,29 @@ function InstructionsContainer() {
       <> 
 
       <div style={{fontSize: "20px", textAlign: "left", width:"75%", marginLeft: "10%"}}>
+        <p>
         Image captioning is the process of describing the content of an image in words. 
-        
-        <b>Your task</b> today is to describe the <b>information an image conveys</b> and the <b>visual details</b> that may be important to <b>visually impaired audiences</b>. 
 
-        You wil collaborate with an AI assistant that generates captions automatically to provide the best quality captions (include key information and use good language). 
+        The textual description of the image is then converted to speech, making images more accessible to visually impaired audiences. 
+
+        We are looking for people to help us in the development of algorithms that enhance digital accessibility. 
+        Human insights are essential for refining and improving such tools. 
+
+        </p> 
+        </div>
+
+        {!display ? 
+            <Button variant="btn btn-success" onClick={displayChange} style={{marginTop: "10px", marginBottom: "10px"}}>
+                Join study
+            </Button>
+
+      : 
+      <> 
+        <div style={{fontSize: "20px", textAlign: "left", width:"75%", marginLeft: "10%"}}>
+
+        <b>Your task</b> today is to describe the <b>information an image conveys</b> and the <b>visual details</b> that may be important to a person with visual impairments. 
+
+        You wil collaborate with an Artificial Intelligence (AI) model that generates captions automatically to provide the best quality captions (include key information and use good language). 
 
         The images you will see mostly involve human actions in different contexts.  
 
@@ -94,9 +117,10 @@ function InstructionsContainer() {
             Continue
       </Button>
       </>
+      }
+      </>
       : 
       <>
-
       <div style={{fontSize: "23px", width: "75%", margin: "auto"}}>
         {displayedMessage}
       </div>
