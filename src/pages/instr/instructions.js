@@ -67,9 +67,9 @@ function InstructionsContainer() {
 
       <div style={{fontSize: "20px", textAlign: "left", width:"75%", marginLeft: "10%"}}>
         <p>
-        Image captioning is the process of describing the content of an image in words. 
+        <b>Image captioning</b> is the process of describing the content of an image in words. 
 
-        The textual description of the image is then converted to speech, making images more accessible to visually impaired audiences. 
+        The textual description of the image is then converted to speech, making images <b>more accessible</b> to visually impaired audiences. 
 
         We are looking for people to help us in the development of algorithms that enhance digital accessibility. 
         Human insights are essential for refining and improving such tools. 

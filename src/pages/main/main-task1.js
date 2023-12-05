@@ -364,11 +364,11 @@ function Main1Container() {
     if (edited === false) {
       alert("You have not made any changes to the current caption");
       // setEdited(true)
-      let currentTime = Date.now()
-      setEditTime(currentTime)
-      let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
-      setStartEditTime(t_i_e); 
-      setDeltaEditTime(0);
+      // let currentTime = Date.now()
+      // setEditTime(currentTime)
+      // let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+      // setStartEditTime(t_i_e); 
+      // setDeltaEditTime(0);
     } else {
       console.log('updating last editing time')
       let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
@@ -392,11 +392,11 @@ function Main1Container() {
     if (edited === false) {
       alert("You have not made any changes to the current caption");
       // setEdited(true)
-      let currentTime = Date.now()
-      setEditTime(currentTime)
-      let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
-      setStartEditTime(t_i_e); 
-      setDeltaEditTime(0);
+      // let currentTime = Date.now()
+      // setEditTime(currentTime)
+      // let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+      // setStartEditTime(t_i_e); 
+      // setDeltaEditTime(0);
     } else {
       console.log('updating last editing time')
       let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
