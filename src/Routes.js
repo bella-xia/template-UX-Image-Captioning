@@ -10,6 +10,7 @@ import PaymentSurveyContainer from "./pages/survey/payment_survey";
 import EndContainer from "./pages/end/end";
 import EyegazeStartContainer from "./pages/eyegazeStart/eyegazeStart";
 import eyegazeEndContainer from "./pages/eyegazeEnd/eyegazeEnd";
+import InterventionContainer from "./pages/instr/primer"
 
 
 export default class Routes extends Component {
@@ -21,6 +22,7 @@ export default class Routes extends Component {
                     <Route path="/Instructions" component={InstructionsContainer} />
                     <Route path="/Main1" component={Main1Container} />
                     <Route path="/Survey" component={SurveyContainer} />
+                    <Route path="/Mid" component={InterventionContainer} />
                     <Route path="/Demo" component={PaymentSurveyContainer} />
                     <Route path="/End" component={EndContainer} />
                     <Route path="/EyeGazeStart" component={EyegazeStartContainer} />
