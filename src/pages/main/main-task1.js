@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "antd";
 import "antd/dist/antd.css";
 import "./main.css";
-import { TextField } from '@mui/material';
-
+import { TextField } from "@mui/material";
 
 function Main1Container() {
   var showLastImage = localStorage.getItem("lastImage");
-  const [firstEditBool, setFirstEditBool] = useState(true)
+  const [firstEditBool, setFirstEditBool] = useState(true);
   // timer for when the image is presented
   const [startImageTime, setStartImageTime] = useState(Date.now());
   // timer for when users move to the next image
@@ -16,28 +15,31 @@ function Main1Container() {
   const [startEditTime, setStartEditTime] = useState(Date.now());
   // The time when we last edit the caption
   const [deltaEditTime, setDeltaEditTime] = useState(0);
-  const [edited, setEdited] = useState(false)
+  const [edited, setEdited] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
   const [imageCount, setImageCount] = useState(0);
-  const [finishCounter, setFinishCounter] = useState(0); 
+  localStorage.setItem("currentImageCount", imageCount);
+  const [finishCounter, setFinishCounter] = useState(0);
   // time variables using date.now
   const [taskTime, setTaskTime] = useState(Date.now());
   const [editTime, setEditTime] = useState(Date.now());
   const [taskUseTime, setTaskUseTime] = useState(
-    Array.from({ length: 15 }, (_, i) => 0)
+    Array.from({ length: 12 }, (_, i) => 0)
   );
-  const [showPrevCaption, setShowPrevCaption] = useState(false)
+  const [showPrevCaption, setShowPrevCaption] = useState(false);
   const [totalImages, setTotalImages] = useState(0);
   const [captionDict, setCaptionDict] = useState([]);
-  const shuffle_idx = useState([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14].sort(() => Math.random() - 0.5));
+  const shuffle_idx = useState(
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].sort(() => Math.random() - 0.5)
+  );
   const isMounted = useRef(true);
   const [captions, setCaptions] = useState([]); // useState(shuffle_idx[0].map(i => allCaptions[i]));
   const [prevCaption, setPrevCaption] = useState("");
-  const [editData, setData] = useState([])
-  const [editDataPrev, setDataPrev] = useState([])
-  const [editDataNow, setDataNow] = useState([])
+  const [editData, setData] = useState([]);
+  const [editDataPrev, setDataPrev] = useState([]);
+  const [editDataNow, setDataNow] = useState([]);
   const [moveToSurvey, setMoveToSurvey] = useState(false);
-  const [moveToLastImage, setMoveToLastImage] = useState(true); 
+  const [moveToLastImage, setMoveToLastImage] = useState(true);
   const [render, setRender] = useState(false);
   const [popUp, setPopUp] = useState(false);
   const [editMode, setEditMode] = useState(true);
@@ -45,7 +47,6 @@ function Main1Container() {
   const [maxChange, setMaxChange] = useState(-1);
   const [originalCaptions, setOriginalCaptions] = useState([]); // shuffle_idx[0].map(i => allCaptions[i]));
   //console.log(originalCaptions)
-  
 
   //console.log(showLastImage)
   const setOriginalCaptionDict = (caption) => {
@@ -137,30 +138,28 @@ function Main1Container() {
       setMaxChange(() => order);
     }
     setCaptionDict(data);
-    setData(data)
-   
+    setData(data);
   };
 
   const getPassageComponent = () => {
-    //Store the first and last edit in the database 
+    //Store the first and last edit in the database
     if (firstEditBool === true) {
-      setFirstEditBool(false)
-      console.log("first edit: ", captionDict)
-      console.log("last edit: ", captionDict)
+      setFirstEditBool(false);
+      console.log("first edit: ", captionDict);
+      console.log("last edit: ", captionDict);
     } else {
-      console.log("new last edit: ", captionDict)
+      console.log("new last edit: ", captionDict);
     }
 
-    if (showPrevCaption === true && editDataPrev !== []){
-      var currCaption = editDataPrev
+    if (showPrevCaption === true && editDataPrev !== []) {
+      var currCaption = editDataPrev;
     } else if (showPrevCaption === false && editDataNow !== []) {
-      var currCaption = editDataNow
+      var currCaption = editDataNow;
     } else {
-      var currCaption = captions //Todo: change
+      var currCaption = captions; //Todo: change
     }
     return (
       <div className="caption-div">
-        
         {captionDict.map((dictItem) => (
           <span className={dictItem.state} key={dictItem.idx}>
             {dictItem.letter}
@@ -171,9 +170,9 @@ function Main1Container() {
   };
 
   const baseImgUrl = "/image_folder/";
-  const img_paths = useState(shuffle_idx[0].map(i => `Image_${i + 1}.png`));
+  const img_paths = useState(shuffle_idx[0].map((i) => `Image_${i + 1}.png`));
+  localStorage.setItem("img_paths", JSON.stringify(img_paths));
 
-  
   const routeChange = () => {
     let path = "/#/EyeGazeEnd";
     window.location.assign(path);
@@ -182,37 +181,42 @@ function Main1Container() {
   const updateImage = (count) => {
     const usedTime = Date.now() - taskTime;
 
-    //We can get the amount of time for each image 
-    console.log(count)
-    console.log(usedTime)
+    //We can get the amount of time for each image
+    console.log(count);
+    console.log(usedTime);
     // TODO: ask what is this
     setTaskUseTime((l) =>
       l.map((time, idx) => (idx === imageCount ? usedTime : time))
     );
+
     if (count >= totalImages - 1) {
       setMoveToSurvey(true);
     }
+    if (count === 6) {
+      // Redirect to "/mid"
+      let path = "/#/Mid";
+      window.location.assign(path);
+      return;
+    }
 
-    // restart variables 
+    // restart variables
     setImageCount(count);
     setCurrentImage(img_paths[0][count]);
     setOriginalCaptionDict(captions[count]);
     setEdited(false);
     // restart counting the intial image time for the next case
-    let currentTime = Date.now()
-    let t_i_s = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+    let currentTime = Date.now();
+    let t_i_s = ((currentTime - localStorage["start_eye"]) / 1000).toFixed(3);
     setStartImageTime(t_i_s);
     setTaskTime(currentTime);
     setDeltaImageTime(0);
     setDeltaEditTime(0);
     setStartEditTime(0);
-    console.log('image loading at second');
+    console.log("image loading at second");
     console.log(t_i_s);
   };
 
-  const recordTimes = () => {
-
-  }
+  const recordTimes = () => {};
 
   const nextChange = () => {
     // // if (choice < 1) {
@@ -220,30 +224,30 @@ function Main1Container() {
     // // } else {
     //   // save data
     // measure image times here
-    let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
+    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
     setDeltaImageTime(t_i_f);
-    console.log('done with image after X seconds');
+    console.log("done with image after X seconds");
     console.log(t_i_f);
 
     // if they moved to the next image and did not edit at all the caption
     if (edited === false) {
       setStartEditTime(0);
       setDeltaEditTime(0);
-
     }
 
     const count = imageCount + 1;
-    let data_send = {'userID': localStorage['user-id'],
-                    'startImageTime': startImageTime,
-                    'deltaImageTime': t_i_f,
-                    'startEditTime': startEditTime,
-                    'deltaEditTime': deltaEditTime, 
-                    'image_name': currentImage,
-                    'trial_number': imageCount + 1,
-                    'final_caption': captions[imageCount],
-                    'original_caption': originalCaptions[imageCount], 
-                      }
-// save data to backend
+    let data_send = {
+      userID: localStorage["user-id"],
+      startImageTime: startImageTime,
+      deltaImageTime: t_i_f,
+      startEditTime: startEditTime,
+      deltaEditTime: deltaEditTime,
+      image_name: currentImage,
+      trial_number: imageCount + 1,
+      final_caption: captions[imageCount],
+      original_caption: originalCaptions[imageCount],
+    };
+    // save data to backend
 
     //   let data = {
     //     q_id: currentImage,
@@ -260,61 +264,60 @@ function Main1Container() {
     }
     */
 
-    if (count < 15) {
+    if (count < 12) {
       console.log(editData);
       // reinitialize variables
-      setDataPrev(editData)
-      setShowPrevCaption(false)
+      setDataPrev(editData);
+      setShowPrevCaption(false);
       updateImage(count);
-      sendData(data_send)
-    }
-    else {
+      sendData(data_send);
+    } else {
       if (finishCounter === 1) {
         routeChange();
         sendData(data_send);
+      } else {
+        alert(
+          "If you click Next then you will be finishing the captioning tasks. Click on Next again if you are finished."
+        );
+        setFinishCounter(1);
       }
-      else {
-        alert("If you click Next then you will be finishing the captioning tasks. Click on Next again if you are finished.")
-        setFinishCounter(1); 
-      }
-      //routeChange(); 
+      //routeChange();
     }
-    
+
     //setEditMode(() => false);
-    setMoveToLastImage(true)
+    setMoveToLastImage(true);
   };
 
   const lastChange = () => {
     if (moveToLastImage === true && showLastImage !== true) {
       // measure image times here
-      let t_i_f = ((Date.now() - taskTime)/1000).toFixed(3); 
+      let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
       setDeltaImageTime(t_i_f);
-      console.log('done with image after X seconds');
+      console.log("done with image after X seconds");
       console.log(t_i_f);
-  
+
       // if they moved to the next image and did not edit at all the caption
       if (edited === false) {
-        console.log('caption not edited at all')
+        console.log("caption not edited at all");
         setStartEditTime(0);
         setDeltaEditTime(0);
-  
       }
-      let data_send = {'userID': localStorage['user-id'],
-      'startImageTime': startImageTime,
-      'deltaImageTime': t_i_f,
-      'startEditTime': startEditTime,
-      'deltaEditTime': deltaEditTime, 
-      'image_name': currentImage,
-      'trial_number': imageCount + 1,
-      'final_caption': captions[imageCount],
-      'original_caption': originalCaptions[imageCount], 
-      }
+      let data_send = {
+        userID: localStorage["user-id"],
+        startImageTime: startImageTime,
+        deltaImageTime: t_i_f,
+        startEditTime: startEditTime,
+        deltaEditTime: deltaEditTime,
+        image_name: currentImage,
+        trial_number: imageCount + 1,
+        final_caption: captions[imageCount],
+        original_caption: originalCaptions[imageCount],
+      };
       sendData(data_send);
-
 
       // TODO: record image time again?
       // let currentTime = Date.now()
-      // setTaskTime(currentTime); 
+      // setTaskTime(currentTime);
       console.log(editData);
       const count = imageCount - 1;
       // reinitialize variables
@@ -323,18 +326,16 @@ function Main1Container() {
           setMoveToSurvey(false);
         }
         updateImage(count);
-        console.log("save curr")
-        console.log(editData)
-        setDataNow(editData)
-        setShowPrevCaption(true)
-      }
-      else {
-        count +=1 
+        console.log("save curr");
+        console.log(editData);
+        setDataNow(editData);
+        setShowPrevCaption(true);
+      } else {
+        count += 1;
       }
       //setEditMode(() => false);
-      setMoveToLastImage(false)
-    }
-    else {
+      setMoveToLastImage(false);
+    } else {
       alert("You can only go back once!");
     }
   };
@@ -360,23 +361,23 @@ function Main1Container() {
   };
 
   const returnOriginalText = () => {
-    console.log("changed caption!")
+    console.log("changed caption!");
     if (edited === false) {
       alert("You have not made any changes to the current caption");
       // setEdited(true)
       // let currentTime = Date.now()
       // setEditTime(currentTime)
-      // let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
-      // setStartEditTime(t_i_e); 
+      // let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3);
+      // setStartEditTime(t_i_e);
       // setDeltaEditTime(0);
     } else {
-      console.log('updating last editing time')
-      let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
+      console.log("updating last editing time");
+      let t_i_d = ((Date.now() - editTime) / 1000).toFixed(3);
       setDeltaEditTime(t_i_d);
-      console.log('Editing times')
-      console.log(startEditTime, t_i_d)
+      console.log("Editing times");
+      console.log(startEditTime, t_i_d);
     }
-    console.log(originalCaptions)
+    console.log(originalCaptions);
     setPrevCaption(captions[0][imageCount]);
     setCaptions(
       captions.map((caption, idx) =>
@@ -384,26 +385,25 @@ function Main1Container() {
       )
     );
     setOriginalCaptionDict(originalCaptions[imageCount]);
-    console.log(originalCaptions)
+    console.log(originalCaptions);
   };
 
   const revertCaption = () => {
-    console.log("changed caption!")
+    console.log("changed caption!");
     if (edited === false) {
       alert("You have not made any changes to the current caption");
       // setEdited(true)
       // let currentTime = Date.now()
       // setEditTime(currentTime)
-      // let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
-      // setStartEditTime(t_i_e); 
+      // let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3);
+      // setStartEditTime(t_i_e);
       // setDeltaEditTime(0);
     } else {
-      console.log('updating last editing time')
-      let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
+      console.log("updating last editing time");
+      let t_i_d = ((Date.now() - editTime) / 1000).toFixed(3);
       setDeltaEditTime(t_i_d);
-      console.log(startEditTime, t_i_d)
+      console.log(startEditTime, t_i_d);
     }
-    
 
     const max_order = maxChange;
     if (max_order === -1) {
@@ -445,22 +445,21 @@ function Main1Container() {
   };
 
   const modifyCaption = (modCap) => {
-    console.log("changed caption!")
+    console.log("changed caption!");
     if (edited === false) {
-      setEdited(true)
+      setEdited(true);
       var d = new Date();
-      let currentTime = Date.now()
-      setEditTime(currentTime)
-      let t_i_e = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
-      setStartEditTime(t_i_e); 
+      let currentTime = Date.now();
+      setEditTime(currentTime);
+      let t_i_e = ((currentTime - localStorage["start_eye"]) / 1000).toFixed(3);
+      setStartEditTime(t_i_e);
       setDeltaEditTime(0);
-
     } else {
-      console.log('updating last editing time')
-      let t_i_d = ((Date.now() - editTime)/1000).toFixed(3); 
+      console.log("updating last editing time");
+      let t_i_d = ((Date.now() - editTime) / 1000).toFixed(3);
       setDeltaEditTime(t_i_d);
-      console.log('Editing times')
-      console.log(startEditTime, t_i_d)
+      console.log("Editing times");
+      console.log(startEditTime, t_i_d);
     }
 
     //console.log(modCap.target.value)
@@ -477,8 +476,6 @@ function Main1Container() {
       )
     );
   };
-
-  
 
   const setCaptionBasedOnDict = (dict) => {
     let dictToString = "";
@@ -506,7 +503,7 @@ function Main1Container() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Backspace' || e.key === 'Delete') {
+    if (e.key === "Backspace" || e.key === "Delete") {
       const selection = window.getSelection().toString();
       if (selection) {
         e.preventDefault();
@@ -516,23 +513,24 @@ function Main1Container() {
   };
 
   const sendData = (obj) => {
-          fetch('http://127.0.0.1:8080/surveyData', { // This bit needs to be changed
-            method: 'POST',
-            body: JSON.stringify({
-                  group: localStorage['group'], 
-                  folder: 'captions',
-                  content: obj
-                }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8"
-            }
-          }).then(response => response.json())
-            .then(message => {
-              console.log(message)
-              // getLastestTodos();
-            })
-        } 
-
+    fetch("http://127.0.0.1:8080/surveyData", {
+      // This bit needs to be changed
+      method: "POST",
+      body: JSON.stringify({
+        group: localStorage["group"],
+        folder: "captions",
+        content: obj,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((message) => {
+        console.log(message);
+        // getLastestTodos();
+      });
+  };
 
   // testing communication with backend
   //   useEffect(() => {
@@ -545,54 +543,50 @@ function Main1Container() {
   //   }, []);
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-          // Replace with your asynchronous operation
-          const response = await fetch('http://127.0.0.1:8080/captionInfo');
-          const data = await response.json();
-          
-          if (isMounted.current) {
+        // Replace with your asynchronous operation
+        const response = await fetch("http://127.0.0.1:8080/captionInfo");
+        const data = await response.json();
 
-              let captionsData = Array.from( data['captions']);
-              let allCaptions = [];
-              for (let i=0; i<captionsData.length; i++){
-                allCaptions.push(captionsData[i].caption)
-              }
-              let aux_captions = shuffle_idx[0].map(i => allCaptions[i])
-              setCaptions(aux_captions);
-              console.log(aux_captions)
-              setOriginalCaptions(shuffle_idx[0].map(i => allCaptions[i]));
-              setOriginalCaptionDict(aux_captions[imageCount]);
-              localStorage.setItem('original-captions', allCaptions);
+        if (isMounted.current) {
+          let captionsData = Array.from(data["captions"]);
+          let allCaptions = [];
+          for (let i = 0; i < captionsData.length; i++) {
+            allCaptions.push(captionsData[i].caption);
           }
+          let aux_captions = shuffle_idx[0].map((i) => allCaptions[i]);
+          setCaptions(aux_captions);
+          console.log(aux_captions);
+          setOriginalCaptions(shuffle_idx[0].map((i) => allCaptions[i]));
+          setOriginalCaptionDict(aux_captions[imageCount]);
+          localStorage.setItem("captions", JSON.stringify(aux_captions));
+        }
       } catch (error) {
-          console.error('Error fetching data:', error);
-      };
+        console.error("Error fetching data:", error);
+      }
     };
     fetchData();
 
     // Cleanup function
     return () => {
-        isMounted.current = false;
+      isMounted.current = false;
     };
-  }, []); 
-
+  }, []);
 
   // initialize image
   useEffect(() => {
     //console.log("getting images");
     setTotalImages(img_paths[0].length);
     setCurrentImage(img_paths[0][imageCount]);
-    let currentTime = Date.now()
+    let currentTime = Date.now();
     setTaskTime(currentTime);
-    let t_i_s = ((currentTime - localStorage['start_eye'])/1000).toFixed(3); 
+    let t_i_s = ((currentTime - localStorage["start_eye"]) / 1000).toFixed(3);
     setStartImageTime(t_i_s);
     setRender(true);
-    console.log('image loading at second');
+    console.log("image loading at second");
     console.log(t_i_s);
   }, []);
-
 
   return (
     <>
@@ -609,53 +603,41 @@ function Main1Container() {
               </div>
 
               <div className="bottom">
-              <p style={{marginTop: '5px', fontSize: '18px'}}>
-                {" "}
-                {imageCount + 1} / {totalImages} Images
-              </p>
-              <div className="back-buttons">
-                  <button
-                    onClick={lastChange}
-                    className="undo-clear btn"
-                  >
+                <p style={{ marginTop: "5px", fontSize: "18px" }}>
+                  {" "}
+                  {imageCount + 1} / {totalImages} Images
+                </p>
+                <div className="back-buttons">
+                  <button onClick={lastChange} className="undo-clear btn">
                     Back
                   </button>
-                  <button
-                    onClick={nextChange}
-                    className="undo-clear btn"
-                  >
+                  <button onClick={nextChange} className="undo-clear btn">
                     Next
                   </button>
                 </div>
-                </div>
+              </div>
             </div>
 
             <div className="right-column">
               <div>
                 <p className="t"> Edit the AI-Generated Caption here: </p>
               </div>
-              <img
-                  className="arrow"
-                  src={"arrow.png"}
-                />
+              <img className="arrow" src={"arrow.png"} />
               <div className="caption-edits">
-               
-                <textarea 
+                <textarea
                   onSelect={handleSelect}
                   onCut={handleChange}
                   onCopy={handleChange}
                   onPaste={handleChange}
                   onKeyDown={handleKeyDown}
                   class="caption"
-                  value={captions[imageCount] }
+                  value={captions[imageCount]}
                   onChange={modifyCaption}
                   readOnly={!editMode}
-                  rows={4} 
+                  rows={4}
                   cols={30}
                 ></textarea>
 
-                
-                
                 <div className="edit-buttons">
                   <button
                     onClick={revertCaption}
@@ -664,28 +646,29 @@ function Main1Container() {
                   >
                     Undo
                   </button>
-  
+
                   <button
                     onClick={returnOriginalText}
                     className="undo-clear btn"
                   >
                     Reset
                   </button>
-                
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                </div> 
+
+                  <br></br>
+                  <br></br>
+                  <br></br>
+                  <br></br>
+                </div>
                 <div className="original-container">
-                  <div className="t"> Original caption with tracked Changes: </div>
+                  <div className="t">
+                    {" "}
+                    Original caption with tracked Changes:{" "}
+                  </div>
                   <div className="caption-results">{getPassageComponent()}</div>
                 </div>
-                
               </div>
             </div>
           </div>
-          
         </div>
       ) : (
         <>
