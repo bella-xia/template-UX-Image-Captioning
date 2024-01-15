@@ -206,6 +206,7 @@ function Main2Container() {
 
     // restart variables
     setImageCount(count);
+    console.log(count);
     setCurrentImage(img_paths[0][count]);
     setOriginalCaptionDict(captions[count]);
     setEdited(false);
