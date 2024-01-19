@@ -24,7 +24,7 @@ const formItemLayout = {
 };
 
 const questions1 = [
-  "The AI-generated captions cover salient information present in the images.",
+  "The AI-generated captions cover salient (notable) information present in the images.",
   "The AI-generated captions include accurate and precise information from the images.",
   "The AI helps me to create better captions.",
   "I find useful the AI-generated captions.",
