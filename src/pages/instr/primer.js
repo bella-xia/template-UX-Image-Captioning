@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import "./instructions.css";
 let messages = [
-  "You have earned $ 3.0 dollars so far. Now, for the remaining images, you can receive an extra bonus for each caption that you make better. Failing to create better captions will subtract credits from your actual compensation of $ 3.0 You can earn up to 6.0 dollars.",
+  "You have earned $ 3.0 dollars so far. Now, for the remaining images, you can receive an extra bonus for each caption that you make better. Failing to create better captions will subtract credits from your actual compensation of $ 3.0. You can earn up to 6.0 dollars.",
   "You have completed half of the images. You have six images left.",
 ];
 

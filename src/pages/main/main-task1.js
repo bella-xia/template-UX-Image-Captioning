@@ -634,7 +634,7 @@ function Main1Container() {
                   value={captions[imageCount]}
                   onChange={modifyCaption}
                   readOnly={!editMode}
-                  rows={4}
+                  rows={5}
                   cols={30}
                 ></textarea>
 
