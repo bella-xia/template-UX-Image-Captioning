@@ -41,7 +41,6 @@ function Main1Container() {
   const [moveToSurvey, setMoveToSurvey] = useState(false);
   const [moveToLastImage, setMoveToLastImage] = useState(true);
   const [render, setRender] = useState(false);
-  const [popUp, setPopUp] = useState(false);
   const [editMode, setEditMode] = useState(true);
   const [editPrevTime, setEditPrevTime] = useState(Date.now());
   const [maxChange, setMaxChange] = useState(-1);
@@ -216,8 +215,6 @@ function Main1Container() {
     console.log(t_i_s);
   };
 
-  const recordTimes = () => {};
-
   const nextChange = () => {
     // // if (choice < 1) {
     // //   alert("Please make sure to complete all the fields!");
@@ -340,25 +337,6 @@ function Main1Container() {
     }
   };
 
-  const popUpProceed = () => {
-    setPopUp(!popUp);
-    const count = imageCount + 1;
-    if (count >= totalImages) {
-      setMoveToSurvey(true);
-    } else {
-      // reinitialize variables
-      updateImage(count);
-      setEditMode(() => false);
-    }
-  };
-
-  const Popup = (props) => {
-    return (
-      <div className="popup-box">
-        <div className="box">{props.content}</div>
-      </div>
-    );
-  };
 
   const returnOriginalText = () => {
     console.log("changed caption!");

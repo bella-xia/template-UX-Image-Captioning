@@ -41,7 +41,6 @@ function Main2Container() {
   const [moveToSurvey, setMoveToSurvey] = useState(false);
   const [moveToLastImage, setMoveToLastImage] = useState(true);
   const [render, setRender] = useState(false);
-  const [popUp, setPopUp] = useState(false);
   const [editMode, setEditMode] = useState(true);
   const [editPrevTime, setEditPrevTime] = useState(Date.now());
   const [maxChange, setMaxChange] = useState(-1);
@@ -222,8 +221,6 @@ function Main2Container() {
     console.log(t_i_s);
   };
 
-  const recordTimes = () => {};
-
   const nextChange = () => {
     // // if (choice < 1) {
     // //   alert("Please make sure to complete all the fields!");
@@ -240,7 +237,7 @@ function Main2Container() {
       setStartEditTime(0);
       setDeltaEditTime(0);
     }
-
+    
     const count = imageCount + 1;
     let data_send = {
       userID: localStorage["user-id"],
@@ -350,25 +347,6 @@ function Main2Container() {
     }
   };
 
-  const popUpProceed = () => {
-    setPopUp(!popUp);
-    const count = imageCount + 1;
-    if (count >= totalImages) {
-      setMoveToSurvey(true);
-    } else {
-      // reinitialize variables
-      updateImage(count);
-      setEditMode(() => false);
-    }
-  };
-
-  const Popup = (props) => {
-    return (
-      <div className="popup-box">
-        <div className="box">{props.content}</div>
-      </div>
-    );
-  };
 
   const returnOriginalText = () => {
     console.log("changed caption!");
@@ -570,9 +548,8 @@ function Main2Container() {
           console.log(aux_captions);
           setCaptions(aux_captions);
           console.log(aux_captions);
-          setOriginalCaptions(shuffle_idx[0].map((i) => allCaptions[i]));
+          setOriginalCaptions(aux_captions); // no need to shuffle
           setOriginalCaptionDict(aux_captions[imageCount]);
-          localStorage.setItem("original-captions", allCaptions);
         }
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -1,20 +1,13 @@
 import React, { Component, useState, useEffect } from "react";
 import { Button, Modal, Checkbox, Row, Col } from "antd";
 import "./instructions.css";
-let messages = ["Thank you for participating. You will be paid $ 3.0 dollars for the next six images you evaluate.", 
-                "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."]
-let group_names = ["effort", "default"]
-var showCompensation = Math.floor(Math.random() * 2)
-localStorage.setItem('group', group_names[showCompensation]);
-var displayedMessage = messages[showCompensation]
+
 
 function InstructionsContainer() {
   const [agree, setAgree] = useState(false);
   const [display, setDisplay] = useState(false);
   const [acceptFirst, setAcceptFirst] = useState(false);
   const [doneExample, setDoneExample] = useState(false);
-
-  console.log(showCompensation)
 
   
   //   const [task, setTask] = useState(0);
@@ -27,15 +20,11 @@ function InstructionsContainer() {
     setAcceptFirst(true);
    }  
 
-  const exampleChange = () =>{ 
-    setDoneExample(true);
-   }  
-
   const displayChange =  () => {
     setDisplay(true);
   }
 
-  const routeChange = () => {
+  const exampleChange = () => {
     let path = "/#/EyeGazeStart"; // change back
     window.location.assign(path);
     console.log('opening popup')
@@ -125,8 +114,6 @@ function InstructionsContainer() {
       </>
       : 
       <>
-      {!doneExample ? 
-      <>
       <div className="text"> Now, consider the following examples: </div>
 
       <Row type="flex" justify="center">
@@ -175,25 +162,6 @@ function InstructionsContainer() {
           Continue
         </Button>
       </div>
-      </>
-      : 
-      <> 
-      
-      <div style={{fontSize: "23px", width: "75%", margin: "auto"}}>
-        {displayedMessage}
-      </div>
-
-      <div> 
-      <Button
-        variant="btn btn-success"
-        onClick={routeChange}
-      >
-        Start
-      </Button>
-      </div>
-      </>
-      }
-      
       </>
       }
     </div>
