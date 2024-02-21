@@ -337,7 +337,6 @@ function Main1Container() {
     }
   };
 
-
   const returnOriginalText = () => {
     console.log("changed caption!");
     if (edited === false) {
@@ -612,8 +611,8 @@ function Main1Container() {
                   value={captions[imageCount]}
                   onChange={modifyCaption}
                   readOnly={!editMode}
-                  rows={5}
-                  cols={30}
+                  style={{ width: "500px", height: "200px", resize: "none" }}
+                  maxLength={200}
                 ></textarea>
 
                 <div className="edit-buttons">

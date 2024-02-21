@@ -237,7 +237,7 @@ function Main2Container() {
       setStartEditTime(0);
       setDeltaEditTime(0);
     }
-    
+
     const count = imageCount + 1;
     let data_send = {
       userID: localStorage["user-id"],
@@ -346,7 +346,6 @@ function Main2Container() {
       }
     }
   };
-
 
   const returnOriginalText = () => {
     console.log("changed caption!");
@@ -623,8 +622,8 @@ function Main2Container() {
                   value={captions[imageCount]}
                   onChange={modifyCaption}
                   readOnly={!editMode}
-                  rows={4}
-                  cols={30}
+                  style={{ width: "500px", height: "200px", resize: "none" }}
+                  maxLength={200}
                 ></textarea>
 
                 <div className="edit-buttons">
