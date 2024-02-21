@@ -622,8 +622,7 @@ function Main2Container() {
                   value={captions[imageCount]}
                   onChange={modifyCaption}
                   readOnly={!editMode}
-                  style={{ width: "500px", height: "200px", resize: "none" }}
-                  maxLength={200}
+                  style={{ resize: "none" }}
                 ></textarea>
 
                 <div className="edit-buttons">
