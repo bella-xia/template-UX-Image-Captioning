@@ -143,8 +143,8 @@ const PaymentSurveyContainer = () => {
                   },
                 ]}>
             <Select>
-                <Select.Option value="1"> 5 USD </Select.Option>
-                <Select.Option value="2"> 2 USD + bonus </Select.Option>
+                <Select.Option value="1"> 6 USD </Select.Option>
+                <Select.Option value="2"> 3 USD + bonus </Select.Option>
                 <Select.Option value="3"> No compensation </Select.Option>
             </Select>
         </Form.Item>

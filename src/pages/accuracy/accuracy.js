@@ -4,19 +4,7 @@ import "antd/dist/antd.css";
 import "./main.css";
 import { TextField } from "@mui/material";
 
-function Main1Container() {
-  //const history = useHistory();
-  const [selectedColumns, setSelectedColumns] = useState({
-    1: null,
-    2: null,
-    3: null,
-  });
-
-  const [columnDisabled, setColumnDisabled] = useState({
-    1: false,
-    2: false,
-    3: false,
-  });
+function Accuracy() {
   var showLastImage = localStorage.getItem("lastImage");
   const [firstEditBool, setFirstEditBool] = useState(true);
   // timer for when the image is presented
@@ -38,13 +26,11 @@ function Main1Container() {
   const [taskUseTime, setTaskUseTime] = useState(
     Array.from({ length: 12 }, (_, i) => 0)
   );
-  const [showPopup, setShowPopup] = useState(false);
-
   const [showPrevCaption, setShowPrevCaption] = useState(false);
   const [totalImages, setTotalImages] = useState(0);
   const [captionDict, setCaptionDict] = useState([]);
   const shuffle_idx = useState(
-    [0, 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14] //.sort(() => Math.random() - 0.5)
+    [0, 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14].sort(() => Math.random() - 0.5)
   );
   const isMounted = useRef(true);
   const [captions, setCaptions] = useState([]); // useState(shuffle_idx[0].map(i => allCaptions[i]));
@@ -60,31 +46,6 @@ function Main1Container() {
   const [maxChange, setMaxChange] = useState(-1);
   const [originalCaptions, setOriginalCaptions] = useState([]); // shuffle_idx[0].map(i => allCaptions[i]));
   //console.log(originalCaptions)
-
-  const renderRadioButtons = (rowNumber) => {
-    const isColumnDisabled = (columnNumber) =>
-      selectedColumns[1] === columnNumber ||
-      selectedColumns[2] === columnNumber ||
-      selectedColumns[3] === columnNumber;
-
-    const handleInputChange = (columnNumber) => {
-      if (!isColumnDisabled(columnNumber)) {
-        handleRadioChange(rowNumber, columnNumber);
-      }
-    };
-
-    return [1, 2, 3].map((columnNumber) => (
-      <td key={columnNumber} style={{ marginRight: "10px" }}>
-        <input
-          type="radio"
-          name={`radioRow${rowNumber}`}
-          value={columnNumber}
-          onChange={() => handleInputChange(columnNumber)}
-          //disabled={isColumnDisabled(columnNumber)}
-        />
-      </td>
-    ));
-  };
 
   //console.log(showLastImage)
   const setOriginalCaptionDict = (caption) => {
@@ -116,7 +77,6 @@ function Main1Container() {
     let idx = 0;
     let editedIdx = 0;
     let hasInserted = false;
-
     for (let i = 0; i < originalDict.length; i++) {
       let dictItem = originalDict[i];
       if (
@@ -197,7 +157,6 @@ function Main1Container() {
     } else {
       var currCaption = captions; //Todo: change
     }
-
     return (
       <div className="caption-div">
         {captionDict.map((dictItem) => (
@@ -209,24 +168,12 @@ function Main1Container() {
     );
   };
 
-  const handleRadioChange = (rowNumber, columnNumber, label) => {
-    console.log(
-      `Survey Selection: Row ${rowNumber}, Column ${columnNumber} (${label})`
-    );
-
-    // Update selected columns state
-    setSelectedColumns((prevSelectedColumns) => ({
-      ...prevSelectedColumns,
-      [rowNumber]: columnNumber,
-    }));
-  };
-
   const baseImgUrl = "/image_folder/";
   const img_paths = useState(shuffle_idx[0].map((i) => `Image_${i + 1}.png`));
   localStorage.setItem("img_paths", JSON.stringify(img_paths));
 
   const routeChange = () => {
-    let path = "/#/End";
+    let path = "/#/EyeGazeEnd";
     window.location.assign(path);
   };
 
@@ -243,6 +190,12 @@ function Main1Container() {
 
     if (count >= totalImages - 1) {
       setMoveToSurvey(true);
+    }
+    if (count === 6) {
+      // Redirect to "/mid"
+      let path = "/#/Mid";
+      window.location.assign(path);
+      return;
     }
 
     // restart variables
@@ -263,6 +216,10 @@ function Main1Container() {
   };
 
   const nextChange = () => {
+    // // if (choice < 1) {
+    // //   alert("Please make sure to complete all the fields!");
+    // // } else {
+    //   // save data
     // measure image times here
     let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
     setDeltaImageTime(t_i_f);
@@ -287,38 +244,42 @@ function Main1Container() {
       final_caption: captions[imageCount],
       original_caption: originalCaptions[imageCount],
     };
-
     // save data to backend
-    sendData(data_send);
 
-    if (count < totalImages) {
+    //   let data = {
+    //     q_id: currentImage,
+    //     user_id: localStorage.getItem("user-id"),
+    //     ans: choice,
+    //     time: ((Date.now() - taskTime) / 1000).toFixed(3),
+    //   };
+    //   console.log(data);
+    //   sendData(data);
+    /*
+    if (captions[imageCount] === originalCaptions[imageCount]) {
+      setPopUp(() => true);
+      return;
+    }
+    */
+
+    if (count < 12) {
       console.log(editData);
       // reinitialize variables
       setDataPrev(editData);
       setShowPrevCaption(false);
       updateImage(count);
+      sendData(data_send);
     } else {
       if (finishCounter === 1) {
         routeChange();
+        sendData(data_send);
       } else {
         alert(
-          "If you click Next then you will be finishing scoring for quality. Click on Next again if you are finished."
+          "If you click Next then you will be finishing the captioning tasks. Click on Next again if you are finished."
         );
         setFinishCounter(1);
       }
+      //routeChange();
     }
-
-    setSelectedColumns({
-      1: null,
-      2: null,
-      3: null,
-    });
-
-    setColumnDisabled({
-      1: false,
-      2: false,
-      3: false,
-    });
 
     //setEditMode(() => false);
     setMoveToLastImage(true);
@@ -606,82 +567,83 @@ function Main1Container() {
 
   return (
     <>
-      <h1>
-        {" "}
-        For your quality assessment, consider the correctness of the details
-        contained in the captions and the amount of details provided. Rank the
-        three captions in order of quality, with 1 being the lowest quality and
-        3 being the highest quality. For your assessment, consider the
-        correctness of the details contained in the captions and the amount of
-        details provided
-      </h1>
       {render ? (
         <div className="container">
-          <div
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: "300px",
-              marginBottom: "20px",
-              textAlign: "center",
-            }}
-          >
-            <img
-              src={baseImgUrl + currentImage}
-              alt={currentImage}
-              style={{ maxWidth: "100%", height: "auto" }}
-            />
-            <div className="box-container">
-              <div className="box">Caption A: </div>
-              <div className="box">Caption B: </div>
-              <div className="box">Caption C: </div>
-            </div>
-            {/* Centering the survey-container */}
-            <div
-              className="survey-container"
-              style={{ margin: "auto", width: "fit-content" }}
-            >
-              <table>
-                <thead>
-                  <tr>
-                    <th></th>
-                    {["Caption A ", "Caption B ", "Caption C"].map((label) => (
-                      <th key={label}>{label}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {["Highest", "Intermediate", "Lowest"].map((label, index) => (
-                    <tr key={index + 1}>
-                      <td>{`${index + 1} (${label})`}</td>
-                      {renderRadioButtons(index + 1)}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {/* Display pop-up message */}
-              {showPopup && (
-                <div className="popup">
-                  <p>
-                    Please select a different column. This column has already
-                    been chosen in another row.
-                  </p>
-                  <button onClick={() => setShowPopup(false)}>OK</button>
+          <div className="column-container">
+            <div className="left-column">
+              <div className="image-frame">
+                <img
+                  className="image-inner"
+                  src={baseImgUrl + currentImage}
+                  alt={currentImage}
+                />
+              </div>
+
+              <div className="bottom">
+                <p style={{ marginTop: "5px", fontSize: "18px" }}>
+                  {" "}
+                  {imageCount + 1} / {totalImages} Images
+                </p>
+                <div className="back-buttons">
+                  <button onClick={lastChange} className="undo-clear btn">
+                    Back
+                  </button>
+                  <button onClick={nextChange} className="undo-clear btn">
+                    Next
+                  </button>
                 </div>
-              )}
-              <p style={{ marginTop: "5px", fontSize: "18px" }}>
-                {" "}
-                {imageCount + 1} / {totalImages} Images
-              </p>
+              </div>
             </div>
 
-            <div className="back-buttons">
-              <button onClick={lastChange} className="undo-clear btn">
-                Back
-              </button>
-              <button onClick={nextChange} className="undo-clear btn">
-                Next
-              </button>
+            <div className="right-column">
+              <div>
+                <p className="t"> Edit the AI-Generated Caption here: </p>
+              </div>
+              <img className="arrow" src={"arrow.png"} />
+              <div className="caption-edits">
+                <textarea
+                  onSelect={handleSelect}
+                  onCut={handleChange}
+                  onCopy={handleChange}
+                  onPaste={handleChange}
+                  onKeyDown={handleKeyDown}
+                  class="caption"
+                  value={captions[imageCount]}
+                  onChange={modifyCaption}
+                  readOnly={!editMode}
+                  style={{ width: "500px", height: "200px", resize: "none" }}
+                  maxLength={200}
+                ></textarea>
+
+                <div className="edit-buttons">
+                  <button
+                    onClick={revertCaption}
+                    className="undo-clear btn"
+                    disabled={!editMode}
+                  >
+                    Undo
+                  </button>
+
+                  <button
+                    onClick={returnOriginalText}
+                    className="undo-clear btn"
+                  >
+                    Reset
+                  </button>
+
+                  <br></br>
+                  <br></br>
+                  <br></br>
+                  <br></br>
+                </div>
+                <div className="original-container">
+                  <div className="t">
+                    {" "}
+                    Original caption with tracked Changes:{" "}
+                  </div>
+                  <div className="caption-results">{getPassageComponent()}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -694,4 +656,4 @@ function Main1Container() {
   );
 }
 
-export default Main1Container;
+export default Accuracy;
