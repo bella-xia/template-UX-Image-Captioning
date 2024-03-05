@@ -11,7 +11,7 @@ function InstructionsContainer() {
   //   const [task, setTask] = useState(0);
 
   const routeChange = () => {
-    let path = "/#/SelectionStart";
+    let path = "/#/Assessment";
     // history.push(path);
     window.location.assign(path);
     console.log("moving to eye gaze start page");

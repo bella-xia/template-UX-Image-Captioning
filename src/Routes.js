@@ -20,7 +20,7 @@ export default class Routes extends Component {
         <Switch>
           <Route path="/" exact component={StartContainer} />
           <Route path="/Instructions" component={InstructionsContainer} />
-          <Route path="/Accuracy" component={Main1Container} />
+          <Route path="/Assessment" component={Main1Container} />
           <Route path="/Details" component={Main2Container} />
           <Route path="/Survey" component={SurveyContainer} />
           <Route path="/Mid" component={InterventionContainer} />

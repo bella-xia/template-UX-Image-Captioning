@@ -3,6 +3,7 @@ import { Button } from "antd";
 import "antd/dist/antd.css";
 import "./main.css";
 import { TextField } from "@mui/material";
+import Papa from "papaparse";
 
 function Main1Container() {
   //const history = useHistory();
@@ -30,6 +31,7 @@ function Main1Container() {
   const [edited, setEdited] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
   const [imageCount, setImageCount] = useState(0);
+  const [imagePath, setImagePath] = useState("");
   localStorage.setItem("currentImageCount", imageCount);
   const [finishCounter, setFinishCounter] = useState(0);
   // time variables using date.now
@@ -60,6 +62,10 @@ function Main1Container() {
   const [maxChange, setMaxChange] = useState(-1);
   const [originalCaptions, setOriginalCaptions] = useState([]); // shuffle_idx[0].map(i => allCaptions[i]));
   //console.log(originalCaptions)
+  const [defaultCaption, setDefaultCaption] = useState("");
+  const [effortCaption, setEffortCaption] = useState("");
+  const [originalCaption, setOriginalCaption] = useState("");
+  const [captionsInfo, setCaptionsInfo] = useState("");
 
   const renderRadioButtons = (rowNumber) => {
     const isColumnDisabled = (columnNumber) =>
@@ -87,24 +93,6 @@ function Main1Container() {
   };
 
   //console.log(showLastImage)
-  const setOriginalCaptionDict = (caption) => {
-    const data = [];
-    for (let i = 0; i < caption.length; i++) {
-      const letter = caption[i];
-
-      // Create a data object for the letter
-      const dataObject = {
-        idx: i, // Index of the letter
-        letter: letter, // The actual letter
-        state: "original", // manage the state of the object
-        order: -1,
-      };
-
-      // Push the data object to the data array
-      data.push(dataObject);
-    }
-    setCaptionDict(() => data);
-  };
 
   const setChangedCaptionDict = (editedCaption, remain_order) => {
     const originalDict = captionDict;
@@ -223,6 +211,7 @@ function Main1Container() {
 
   const baseImgUrl = "/image_folder/";
   const img_paths = useState(shuffle_idx[0].map((i) => `Image_${i + 1}.png`));
+  //console.log(img_paths[imageCount][0]);
   localStorage.setItem("img_paths", JSON.stringify(img_paths));
 
   const routeChange = () => {
@@ -247,8 +236,10 @@ function Main1Container() {
 
     // restart variables
     setImageCount(count);
+    setImagePath(img_paths[0][count]);
+    console.log(imagePath);
     setCurrentImage(img_paths[0][count]);
-    setOriginalCaptionDict(captions[count]);
+    //setOriginalCaptionDict(captions[count]);
     setEdited(false);
     // restart counting the intial image time for the next case
     let currentTime = Date.now();
@@ -400,7 +391,7 @@ function Main1Container() {
         idx === imageCount ? originalCaptions[imageCount] : caption
       )
     );
-    setOriginalCaptionDict(originalCaptions[imageCount]);
+    //setOriginalCaptionDict(originalCaptions[imageCount]);
     console.log(originalCaptions);
   };
 
@@ -562,21 +553,16 @@ function Main1Container() {
     const fetchData = async () => {
       try {
         // Replace with your asynchronous operation
-        const response = await fetch("http://127.0.0.1:8080/captionInfo");
+        const response = await fetch("http://127.0.0.1:8080/setup");
         const data = await response.json();
 
         if (isMounted.current) {
-          let captionsData = Array.from(data["captions"]);
-          let allCaptions = [];
-          for (let i = 0; i < captionsData.length; i++) {
-            allCaptions.push(captionsData[i].caption);
-          }
-          let aux_captions = shuffle_idx[0].map((i) => allCaptions[i]);
-          setCaptions(aux_captions);
-          console.log(aux_captions);
-          setOriginalCaptions(shuffle_idx[0].map((i) => allCaptions[i]));
-          setOriginalCaptionDict(aux_captions[imageCount]);
-          localStorage.setItem("captions", JSON.stringify(aux_captions));
+          // Update state with received data
+          console.log(data.captions_info);
+          setCaptionsInfo(data.captions_info);
+
+          const imgPath = img_paths[0][imageCount];
+          setImagePath(imgPath);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -588,7 +574,7 @@ function Main1Container() {
     return () => {
       isMounted.current = false;
     };
-  }, []);
+  }, [imageCount, imagePath]);
 
   // initialize image
   useEffect(() => {
@@ -631,11 +617,49 @@ function Main1Container() {
               alt={currentImage}
               style={{ maxWidth: "100%", height: "auto" }}
             />
-            <div className="box-container">
-              <div className="box">Caption A: </div>
-              <div className="box">Caption B: </div>
-              <div className="box">Caption C: </div>
-            </div>
+
+            {Array.isArray(captionsInfo) ? (
+              captionsInfo.map((captionInfo, index) => {
+                const allImageIds = captionsInfo.map(
+                  (captionInfo) => captionInfo.image_id
+                );
+
+                // Find the index of the matching image_id in img_paths
+
+                //console.log(captionsInfo);
+                const imgIndex = allImageIds.findIndex((imageId) => {
+                  return imageId === imagePath;
+                });
+                console.log("imgIndex:", imgIndex);
+
+                // Check if the image_id is found in img_paths
+                if (imgIndex !== -1) {
+                  const curr_captions_annot = captionsInfo[imgIndex];
+                  console.log(curr_captions_annot);
+                  if (index === 0) {
+                    return (
+                      <div key={index}>
+                        <div className="box-container">
+                          <div className="box">
+                            Caption A: {curr_captions_annot.default_caption}{" "}
+                          </div>
+                          <div className="box">
+                            Caption B: {curr_captions_annot.original_caption}{" "}
+                          </div>
+                          <div className="box">
+                            Caption C: {curr_captions_annot.effort_caption}{" "}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                }
+
+                return null;
+              })
+            ) : (
+              <p>No captionsInfo available</p>
+            )}
             {/* Centering the survey-container */}
             <div
               className="survey-container"
