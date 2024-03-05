@@ -6,7 +6,7 @@ This template uses React to build the frontend and Flask in the backend. The ove
 You can directly clone this repository and follow these steps to launch the web application. 
 
 ### Prerequisites
-First, you need to install NodeJS and NPM from the website: [https://nodejs.org/en/](https://nodejs.org/en/). 
+First, you need to install NodeJS and NPM from the website: [https://nodejs.org/en/](https://nodejs.org/en/). You also need Python3.9 
 
 ### Installation
 1. Install all the packages neeeded for the frontend. Run the following line in the project directory. This will create a folder called node_modules
