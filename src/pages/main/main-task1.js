@@ -66,6 +66,7 @@ function Main1Container() {
   const [effortCaption, setEffortCaption] = useState("");
   const [originalCaption, setOriginalCaption] = useState("");
   const [captionsInfo, setCaptionsInfo] = useState("");
+  const [shuffledIndices, setShuffledIndices] = useState([]);
 
   const renderRadioButtons = (rowNumber) => {
     const isColumnDisabled = (columnNumber) =>
@@ -550,6 +551,27 @@ function Main1Container() {
   //   }, []);
 
   useEffect(() => {
+    // Shuffle captions when the component mounts or when image paths change
+    const shuffleCaptions = () => {
+      if (Array.isArray(captionsInfo)) {
+        const shuffledIndicesList = captionsInfo.map(() => {
+          const indicesList = [0, 1, 2];
+          const shuffledList = [...indicesList].sort(() => Math.random() - 0.5);
+          return shuffledList;
+        });
+        setShuffledIndices(shuffledIndicesList);
+      }
+    };
+
+    shuffleCaptions(); // Initial shuffle
+
+    // Clean up function
+    return () => {
+      // Clean up if necessary
+    };
+  }, [captionsInfo]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         // Replace with your asynchronous operation
@@ -641,7 +663,7 @@ function Main1Container() {
                     curr_captions_annot.effort_caption,
                   ];
 
-                  console.log("Before shuffle:", captionsList);
+                  //console.log("Before shuffle:", captionsList);
 
                   const shuffledCaptionsList = [...captionsList]; // Creating a copy of the original list
                   for (let i = shuffledCaptionsList.length - 1; i > 0; i--) {
@@ -652,20 +674,25 @@ function Main1Container() {
                     ];
                   }
 
-                  console.log("Original Captions List:", captionsList);
-                  console.log("Shuffled Captions List:", shuffledCaptionsList);
+                  //console.log("Original Captions List:", captionsList);
+                  //console.log("Shuffled Captions List:", shuffledCaptionsList);
+
                   if (index === 0) {
+                    console.log("shuffled indicies", shuffledIndices[imgIndex]);
                     return (
                       <div key={index}>
                         <div className="box-container">
                           <div className="box">
-                            Caption A: {shuffledCaptionsList[0]}{" "}
+                            Caption A:{" "}
+                            {captionsList[shuffledIndices[imgIndex][0]]}{" "}
                           </div>
                           <div className="box">
-                            Caption B: {shuffledCaptionsList[1]}{" "}
+                            Caption B:{" "}
+                            {captionsList[shuffledIndices[imgIndex][1]]}{" "}
                           </div>
                           <div className="box">
-                            Caption C: {shuffledCaptionsList[2]}{" "}
+                            Caption C:{" "}
+                            {captionsList[shuffledIndices[imgIndex][2]]}{" "}
                           </div>
                         </div>
                       </div>

@@ -52,6 +52,7 @@ def setup():
 
     # get captions and image IDs based on the selected combination
     captions_info = get_captions_info(selected_combination)
+    print(selected_combination)
 
     # assign a random task to the current user
     now = datetime.now()
