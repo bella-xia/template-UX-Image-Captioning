@@ -635,19 +635,37 @@ function Main1Container() {
                 // Check if the image_id is found in img_paths
                 if (imgIndex !== -1) {
                   const curr_captions_annot = captionsInfo[imgIndex];
-                  console.log(curr_captions_annot);
+                  const captionsList = [
+                    curr_captions_annot.default_caption,
+                    curr_captions_annot.original_caption,
+                    curr_captions_annot.effort_caption,
+                  ];
+
+                  console.log("Before shuffle:", captionsList);
+
+                  const shuffledCaptionsList = [...captionsList]; // Creating a copy of the original list
+                  for (let i = shuffledCaptionsList.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffledCaptionsList[i], shuffledCaptionsList[j]] = [
+                      shuffledCaptionsList[j],
+                      shuffledCaptionsList[i],
+                    ];
+                  }
+
+                  console.log("Original Captions List:", captionsList);
+                  console.log("Shuffled Captions List:", shuffledCaptionsList);
                   if (index === 0) {
                     return (
                       <div key={index}>
                         <div className="box-container">
                           <div className="box">
-                            Caption A: {curr_captions_annot.default_caption}{" "}
+                            Caption A: {shuffledCaptionsList[0]}{" "}
                           </div>
                           <div className="box">
-                            Caption B: {curr_captions_annot.original_caption}{" "}
+                            Caption B: {shuffledCaptionsList[1]}{" "}
                           </div>
                           <div className="box">
-                            Caption C: {curr_captions_annot.effort_caption}{" "}
+                            Caption C: {shuffledCaptionsList[2]}{" "}
                           </div>
                         </div>
                       </div>
