@@ -683,15 +683,19 @@ function Main1Container() {
                       <div key={index}>
                         <div className="box-container">
                           <div className="box">
-                            Caption A:{" "}
+                            <b> Caption A:</b>{" "}
                             {captionsList[shuffledIndices[imgIndex][0]]}{" "}
                           </div>
+                        </div>
+                        <div className="box-container">
                           <div className="box">
-                            Caption B:{" "}
+                            <b>Caption B:</b>{" "}
                             {captionsList[shuffledIndices[imgIndex][1]]}{" "}
                           </div>
+                        </div>
+                        <div className="box-container">
                           <div className="box">
-                            Caption C:{" "}
+                            <b>Caption C:</b>{" "}
                             {captionsList[shuffledIndices[imgIndex][2]]}{" "}
                           </div>
                         </div>
