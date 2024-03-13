@@ -41,8 +41,9 @@ function EyegazeStartContainer() {
         </div>
       </>
       : 
-      <> 
-          <div style={{fontSize: "23px", width: "75%", margin: "auto"}}>
+      <>  
+          <h1>Announcement</h1>
+          <div style={{fontSize: "23px", width: "75%", margin: "auto", margintop: "100px" }}>
             {displayedMessage}
           </div>
 
@@ -50,6 +51,7 @@ function EyegazeStartContainer() {
           <Button
             variant="btn btn-success"
             onClick={routeChange}
+            style={{ marginTop: "30px" }}
           >
             Continue
           </Button>
