@@ -39,7 +39,7 @@ function EyegazeStartContainer() {
           <h1> We will start recording eyegaze data now. </h1>
 
           <div style={{ fontSize: "20px", width: "75%", margin: "auto"}}>
-             Communicate with the experimenter. 
+            Please inform the experimenter once you have reached this point. 
           </div>
 
           <Button onClick={recordChange}> Start </Button>
