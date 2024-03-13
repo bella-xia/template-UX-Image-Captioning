@@ -130,7 +130,7 @@ function InstructionsContainer() {
             <b>Modified caption:</b> A young boy wearing a blue sleeveless shirt stands at the river's edge, poised to throw a stone. In the background, the silhouette of a cathedral with twin spires rises above the cityscape, with a bridge spanning the river to the right. The sky is partly cloud
             </div>
             <div className="text">
-            <b>Why it was improved?</b> includes information about the action, the actor(s) involved, and the background. 
+            <b>Why it was improved?</b> includes information about the action that is happening, the subject(s), and the setting/background. 
             </div>
 
 
