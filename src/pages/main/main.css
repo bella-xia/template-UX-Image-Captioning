@@ -133,9 +133,9 @@
 .box {
   border: 1px solid #ccc;
   padding: 10px;
-  width: 30%; /* Adjust the width as needed */
+  width: 60%; 
   text-align: center;
-  margin-right: 5px; /* Adjust the margin-right value */
+  margin-right: 5px; 
 }
 
 .caption-container {
@@ -143,6 +143,10 @@
   justify-content: space-between;
   width: 70%;
   margin-top: 10px; 
+}
+
+.custom-radio {
+  transform: scale(1.5); 
 }
 
 .image-inner {
@@ -182,6 +186,10 @@
   -ms-user-select: none;
   user-select: none;
 
+}
+
+.caption-text {
+  font-size: 25px; 
 }
 
 textarea::selection {

@@ -87,6 +87,7 @@ function Main1Container() {
           name={`radioRow${rowNumber}`}
           value={columnNumber}
           onChange={() => handleInputChange(columnNumber)}
+          className="custom-radio"
           //disabled={isColumnDisabled(columnNumber)}
         />
       </td>
@@ -683,20 +684,35 @@ function Main1Container() {
                       <div key={index}>
                         <div className="box-container">
                           <div className="box">
-                            <b> Caption A:</b>{" "}
-                            {captionsList[shuffledIndices[imgIndex][0]]}{" "}
+                            <span className="caption-text">
+                              {" "}
+                              <b>Caption A:</b>
+                            </span>{" "}
+                            <span className="caption-text">
+                              {captionsList[shuffledIndices[imgIndex][0]]}
+                            </span>{" "}
                           </div>
                         </div>
                         <div className="box-container">
                           <div className="box">
-                            <b>Caption B:</b>{" "}
-                            {captionsList[shuffledIndices[imgIndex][1]]}{" "}
+                            <span className="caption-text">
+                              {" "}
+                              <b>Caption B:</b>
+                            </span>{" "}
+                            <span className="caption-text">
+                              {captionsList[shuffledIndices[imgIndex][1]]}
+                            </span>{" "}
                           </div>
                         </div>
                         <div className="box-container">
                           <div className="box">
-                            <b>Caption C:</b>{" "}
-                            {captionsList[shuffledIndices[imgIndex][2]]}{" "}
+                            <span className="caption-text">
+                              {" "}
+                              <b>Caption C:</b>
+                            </span>{" "}
+                            <span className="caption-text">
+                              {captionsList[shuffledIndices[imgIndex][2]]}
+                            </span>{" "}
                           </div>
                         </div>
                       </div>
