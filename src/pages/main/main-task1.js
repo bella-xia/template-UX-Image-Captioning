@@ -222,6 +222,17 @@ function Main1Container() {
   };
 
   const updateImage = (count) => {
+    setSelectedColumns({
+      1: null,
+      2: null,
+      3: null,
+    });
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach((radioButton) => {
+      radioButton.checked = false;
+    });
+
+    console.log("reset radio");
     const usedTime = Date.now() - taskTime;
 
     //We can get the amount of time for each image
@@ -256,6 +267,11 @@ function Main1Container() {
   };
 
   const nextChange = () => {
+    setSelectedColumns({
+      1: null,
+      2: null,
+      3: null,
+    });
     // measure image times here
     let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
     setDeltaImageTime(t_i_f);
@@ -318,6 +334,11 @@ function Main1Container() {
   };
 
   const lastChange = () => {
+    setSelectedColumns({
+      1: null,
+      2: null,
+      3: null,
+    });
     //if (moveToLastImage === true && showLastImage !== true) {
     // measure image times here
     let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
