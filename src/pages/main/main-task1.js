@@ -295,7 +295,7 @@ function Main1Container() {
         routeChange();
       } else {
         alert(
-          "If you click Next then you will be finishing scoring for quality. Click on Next again if you are finished."
+          "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
         );
         setFinishCounter(1);
       }
@@ -318,55 +318,55 @@ function Main1Container() {
   };
 
   const lastChange = () => {
-    if (moveToLastImage === true && showLastImage !== true) {
-      // measure image times here
-      let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
-      setDeltaImageTime(t_i_f);
-      console.log("done with image after X seconds");
-      console.log(t_i_f);
+    //if (moveToLastImage === true && showLastImage !== true) {
+    // measure image times here
+    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
+    setDeltaImageTime(t_i_f);
+    console.log("done with image after X seconds");
+    console.log(t_i_f);
 
-      // if they moved to the next image and did not edit at all the caption
-      if (edited === false) {
-        console.log("caption not edited at all");
-        setStartEditTime(0);
-        setDeltaEditTime(0);
-      }
-      let data_send = {
-        userID: localStorage["user-id"],
-        startImageTime: startImageTime,
-        deltaImageTime: t_i_f,
-        startEditTime: startEditTime,
-        deltaEditTime: deltaEditTime,
-        image_name: currentImage,
-        trial_number: imageCount + 1,
-        final_caption: captions[imageCount],
-        original_caption: originalCaptions[imageCount],
-      };
-      sendData(data_send);
-
-      // TODO: record image time again?
-      // let currentTime = Date.now()
-      // setTaskTime(currentTime);
-      console.log(editData);
-      const count = imageCount - 1;
-      // reinitialize variables
-      if (count > -1) {
-        if (count < totalImages - 1) {
-          setMoveToSurvey(false);
-        }
-        updateImage(count);
-        console.log("save curr");
-        console.log(editData);
-        setDataNow(editData);
-        setShowPrevCaption(true);
-      } else {
-        count += 1;
-      }
-      //setEditMode(() => false);
-      setMoveToLastImage(false);
-    } else {
-      alert("You can only go back once!");
+    // if they moved to the next image and did not edit at all the caption
+    if (edited === false) {
+      console.log("caption not edited at all");
+      setStartEditTime(0);
+      setDeltaEditTime(0);
     }
+    let data_send = {
+      userID: localStorage["user-id"],
+      startImageTime: startImageTime,
+      deltaImageTime: t_i_f,
+      startEditTime: startEditTime,
+      deltaEditTime: deltaEditTime,
+      image_name: currentImage,
+      trial_number: imageCount + 1,
+      final_caption: captions[imageCount],
+      original_caption: originalCaptions[imageCount],
+    };
+    sendData(data_send);
+
+    // TODO: record image time again?
+    // let currentTime = Date.now()
+    // setTaskTime(currentTime);
+    console.log(editData);
+    const count = imageCount - 1;
+    // reinitialize variables
+    if (count > -1) {
+      if (count < totalImages - 1) {
+        setMoveToSurvey(false);
+      }
+      updateImage(count);
+      console.log("save curr");
+      console.log(editData);
+      setDataNow(editData);
+      setShowPrevCaption(true);
+    } else {
+      count += 1;
+    }
+    //setEditMode(() => false);
+    setMoveToLastImage(false);
+    //} else {
+    //alert("You can only go back once!");
+    //}
   };
 
   const returnOriginalText = () => {
