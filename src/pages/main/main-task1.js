@@ -7,6 +7,7 @@ import Papa from "papaparse";
 
 function Main1Container() {
   //const history = useHistory();
+  const [surveyData, setSurveyData] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState({
     1: null,
     2: null,
@@ -45,6 +46,8 @@ function Main1Container() {
   const [showPrevCaption, setShowPrevCaption] = useState(false);
   const [totalImages, setTotalImages] = useState(0);
   const [captionDict, setCaptionDict] = useState([]);
+  const [captionsList, setCaptionsList] = useState([]);
+
   const shuffle_idx = useState(
     [0, 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14] //.sort(() => Math.random() - 0.5)
   );
@@ -67,6 +70,10 @@ function Main1Container() {
   const [originalCaption, setOriginalCaption] = useState("");
   const [captionsInfo, setCaptionsInfo] = useState("");
   const [shuffledIndices, setShuffledIndices] = useState([]);
+  const [currACaption, setCurrACaption] = useState([]);
+  const [currBCaption, setCurrBCaption] = useState([]);
+  const [currCCaption, setCurrCCaption] = useState([]);
+  const [imageCountBackend, setImageCountBackend] = useState(0);
 
   const renderRadioButtons = (rowNumber) => {
     const handleInputChange = (columnNumber) => {
@@ -87,7 +94,32 @@ function Main1Container() {
   };
 
   //console.log(showLastImage)
+  const updateAnnotationData = (rowData) => {
+    const newData = [...surveyData];
+    newData.push(rowData);
+    setSurveyData(newData);
+  };
 
+  const sendAnnotationData = (obj) => {
+    fetch("http://127.0.0.1:8080/annotationData", {
+      method: "POST",
+      body: JSON.stringify({
+        group: localStorage.getItem("group"),
+        folder: "annotations",
+        data: obj,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((message) => {
+        console.log(message);
+      })
+      .catch((error) => {
+        console.error("Error saving survey data:", error);
+      });
+  };
   const setChangedCaptionDict = (editedCaption, remain_order) => {
     const originalDict = captionDict;
     const order = remain_order ? maxChange : maxChange + 1;
@@ -274,6 +306,25 @@ function Main1Container() {
       2: null,
       3: null,
     });
+
+    const idxToCaption = ["A", "B", "C"];
+    const rowData = {
+      image_name: currentImage,
+      highestCaption: idxToCaption[selectedColumns[1] - 1],
+      intermediateCaption: idxToCaption[selectedColumns[2] - 1],
+      lowestCaption: idxToCaption[selectedColumns[3] - 1],
+      captionA: captionsList[shuffledIndices[imageCountBackend][0]],
+      captionB: captionsList[shuffledIndices[imageCountBackend][1]],
+      captionC: captionsList[shuffledIndices[imageCountBackend][2]],
+      defaultCaption: captionsList[0],
+      effortCaption: captionsList[2],
+      originalCaption: captionsList[1],
+    };
+    console.log("getting ready to send data", rowData);
+    console.log(selectedColumns);
+
+    //updateAnnotationData(rowData);
+    sendAnnotationData(rowData);
     // measure image times here
     let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
     setDeltaImageTime(t_i_f);
@@ -300,7 +351,7 @@ function Main1Container() {
     };
 
     // save data to backend
-    sendData(data_send);
+    //sendData(data_send);
 
     if (count < totalImages) {
       console.log(editData);
@@ -365,7 +416,7 @@ function Main1Container() {
       final_caption: captions[imageCount],
       original_caption: originalCaptions[imageCount],
     };
-    sendData(data_send);
+    //senddata(data_send);
 
     // TODO: record image time again?
     // let currentTime = Date.now()
@@ -604,6 +655,7 @@ function Main1Container() {
 
         if (isMounted.current) {
           // Update state with received data
+          console.log("combination information");
           console.log(data.captions_info);
           setCaptionsInfo(data.captions_info);
 
@@ -635,6 +687,27 @@ function Main1Container() {
     console.log("image loading at second");
     console.log(t_i_s);
   }, []);
+
+  useEffect(() => {
+    if (Array.isArray(captionsInfo)) {
+      const allImageIds = captionsInfo.map(
+        (captionInfo) => captionInfo.image_id
+      );
+      const imgIndex = allImageIds.findIndex(
+        (imageId) => imageId === imagePath
+      );
+      if (imgIndex !== -1) {
+        const currCaptionsAnnot = captionsInfo[imgIndex];
+        const captionsList = [
+          currCaptionsAnnot.default_caption,
+          currCaptionsAnnot.original_caption,
+          currCaptionsAnnot.effort_caption,
+        ];
+        setCaptionsList(captionsList);
+      }
+      setImageCountBackend(imgIndex);
+    }
+  }, [captionsInfo, imagePath]);
 
   return (
     <>
@@ -686,7 +759,6 @@ function Main1Container() {
                     curr_captions_annot.original_caption,
                     curr_captions_annot.effort_caption,
                   ];
-
                   //console.log("Before shuffle:", captionsList);
 
                   const shuffledCaptionsList = [...captionsList]; // Creating a copy of the original list
@@ -700,7 +772,6 @@ function Main1Container() {
 
                   //console.log("Original Captions List:", captionsList);
                   //console.log("Shuffled Captions List:", shuffledCaptionsList);
-
                   if (index === 0) {
                     console.log("shuffled indicies", shuffledIndices[imgIndex]);
                     return (
