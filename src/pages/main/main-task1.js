@@ -69,15 +69,8 @@ function Main1Container() {
   const [shuffledIndices, setShuffledIndices] = useState([]);
 
   const renderRadioButtons = (rowNumber) => {
-    const isColumnDisabled = (columnNumber) =>
-      selectedColumns[1] === columnNumber ||
-      selectedColumns[2] === columnNumber ||
-      selectedColumns[3] === columnNumber;
-
     const handleInputChange = (columnNumber) => {
-      if (!isColumnDisabled(columnNumber)) {
-        handleRadioChange(rowNumber, columnNumber);
-      }
+      handleRadioChange(rowNumber, columnNumber);
     };
 
     return [1, 2, 3].map((columnNumber) => (
@@ -88,7 +81,6 @@ function Main1Container() {
           value={columnNumber}
           onChange={() => handleInputChange(columnNumber)}
           className="custom-radio"
-          //disabled={isColumnDisabled(columnNumber)}
         />
       </td>
     ));
@@ -203,6 +195,16 @@ function Main1Container() {
     console.log(
       `Survey Selection: Row ${rowNumber}, Column ${columnNumber} (${label})`
     );
+
+    const isColumnAlreadySelected =
+      Object.values(selectedColumns).includes(columnNumber);
+    console.log(isColumnAlreadySelected);
+
+    if (isColumnAlreadySelected) {
+      alert(
+        "Please select a different column. This column has already been chosen in another row."
+      );
+    }
 
     // Update selected columns state
     setSelectedColumns((prevSelectedColumns) => ({
@@ -769,16 +771,7 @@ function Main1Container() {
                   ))}
                 </tbody>
               </table>
-              {/* Display pop-up message */}
-              {showPopup && (
-                <div className="popup">
-                  <p>
-                    Please select a different column. This column has already
-                    been chosen in another row.
-                  </p>
-                  <button onClick={() => setShowPopup(false)}>OK</button>
-                </div>
-              )}
+
               <p style={{ marginTop: "5px", fontSize: "18px" }}>
                 {" "}
                 {imageCount + 1} / {totalImages} Images
