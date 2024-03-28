@@ -17,7 +17,7 @@ cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-csv_file_path = "/Users/mungyaojia/Desktop/human_annot_git/template-UX-Image-Captioning/api/captions_eval_assign.csv"
+csv_file_path = "captions_eval_assign.csv"
 
 
 # db = SQLAlchemy(app)
