@@ -301,89 +301,97 @@ function Main1Container() {
   };
 
   const nextChange = () => {
-    setSelectedColumns({
-      1: null,
-      2: null,
-      3: null,
-    });
-
-    const idxToCaption = ["A", "B", "C"];
-    const rowData = {
-      image_name: currentImage,
-      highestCaption: idxToCaption[selectedColumns[1] - 1],
-      intermediateCaption: idxToCaption[selectedColumns[2] - 1],
-      lowestCaption: idxToCaption[selectedColumns[3] - 1],
-      captionA: captionsList[shuffledIndices[imageCountBackend][0]],
-      captionB: captionsList[shuffledIndices[imageCountBackend][1]],
-      captionC: captionsList[shuffledIndices[imageCountBackend][2]],
-      defaultCaption: captionsList[0],
-      effortCaption: captionsList[2],
-      originalCaption: captionsList[1],
-    };
-    console.log("getting ready to send data", rowData);
     console.log(selectedColumns);
-
-    //updateAnnotationData(rowData);
-    sendAnnotationData(rowData);
-    // measure image times here
-    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
-    setDeltaImageTime(t_i_f);
-    console.log("done with image after X seconds");
-    console.log(t_i_f);
-
-    // if they moved to the next image and did not edit at all the caption
-    if (edited === false) {
-      setStartEditTime(0);
-      setDeltaEditTime(0);
-    }
-
-    const count = imageCount + 1;
-    let data_send = {
-      userID: localStorage["user-id"],
-      startImageTime: startImageTime,
-      deltaImageTime: t_i_f,
-      startEditTime: startEditTime,
-      deltaEditTime: deltaEditTime,
-      image_name: currentImage,
-      trial_number: imageCount + 1,
-      final_caption: captions[imageCount],
-      original_caption: originalCaptions[imageCount],
-    };
-
-    // save data to backend
-    //sendData(data_send);
-
-    if (count < totalImages) {
-      console.log(editData);
-      // reinitialize variables
-      setDataPrev(editData);
-      setShowPrevCaption(false);
-      updateImage(count);
+    if (
+      selectedColumns[1] == null ||
+      selectedColumns[2] == null ||
+      selectedColumns[3] == null
+    ) {
+      alert("All captions must be ranked.");
+    } else if (
+      selectedColumns[1] == selectedColumns[2] ||
+      selectedColumns[1] == selectedColumns[3] ||
+      selectedColumns[2] == selectedColumns[3]
+    ) {
+      alert("All rankings must be unique.");
     } else {
-      if (finishCounter === 1) {
-        routeChange();
-      } else {
-        alert(
-          "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
-        );
-        setFinishCounter(1);
+      const idxToCaption = ["A", "B", "C"];
+      const rowData = {
+        image_name: currentImage,
+        highestCaption: idxToCaption[selectedColumns[1] - 1],
+        intermediateCaption: idxToCaption[selectedColumns[2] - 1],
+        lowestCaption: idxToCaption[selectedColumns[3] - 1],
+        captionA: captionsList[shuffledIndices[imageCountBackend][0]],
+        captionB: captionsList[shuffledIndices[imageCountBackend][1]],
+        captionC: captionsList[shuffledIndices[imageCountBackend][2]],
+        defaultCaption: captionsList[0],
+        effortCaption: captionsList[2],
+        originalCaption: captionsList[1],
+      };
+      console.log("getting ready to send data", rowData);
+      console.log(selectedColumns);
+
+      //updateAnnotationData(rowData);
+      sendAnnotationData(rowData);
+      // measure image times here
+      let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
+      setDeltaImageTime(t_i_f);
+      console.log("done with image after X seconds");
+      console.log(t_i_f);
+
+      // if they moved to the next image and did not edit at all the caption
+      if (edited === false) {
+        setStartEditTime(0);
+        setDeltaEditTime(0);
       }
+
+      const count = imageCount + 1;
+      let data_send = {
+        userID: localStorage["user-id"],
+        startImageTime: startImageTime,
+        deltaImageTime: t_i_f,
+        startEditTime: startEditTime,
+        deltaEditTime: deltaEditTime,
+        image_name: currentImage,
+        trial_number: imageCount + 1,
+        final_caption: captions[imageCount],
+        original_caption: originalCaptions[imageCount],
+      };
+
+      // save data to backend
+      //sendData(data_send);
+
+      if (count < totalImages) {
+        console.log(editData);
+        // reinitialize variables
+        setDataPrev(editData);
+        setShowPrevCaption(false);
+        updateImage(count);
+      } else {
+        if (finishCounter === 1) {
+          routeChange();
+        } else {
+          alert(
+            "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
+          );
+          setFinishCounter(1);
+        }
+      }
+      setSelectedColumns({
+        1: null,
+        2: null,
+        3: null,
+      });
+
+      setColumnDisabled({
+        1: false,
+        2: false,
+        3: false,
+      });
+
+      //setEditMode(() => false);
+      setMoveToLastImage(true);
     }
-
-    setSelectedColumns({
-      1: null,
-      2: null,
-      3: null,
-    });
-
-    setColumnDisabled({
-      1: false,
-      2: false,
-      3: false,
-    });
-
-    //setEditMode(() => false);
-    setMoveToLastImage(true);
   };
 
   const lastChange = () => {

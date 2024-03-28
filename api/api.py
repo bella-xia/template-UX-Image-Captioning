@@ -103,9 +103,7 @@ def sendAnnotationData():
     data = request_data["content"]
     print(data)
     user_id = data["userID"]
-    db.child(request_data["group"]).child(request_data["folder"]).child(user_id).push(
-        data
-    )
+    db.child(request_data["folder"]).child(user_id).push(data)
     response_body = {"user_id": user_id}
     return jsonify(response_body)
 
