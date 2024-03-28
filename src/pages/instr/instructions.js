@@ -31,16 +31,17 @@ function InstructionsContainer() {
   };
 
   // connect with the backend to get a user ID and randomize agent
-  useEffect(() => {
-    fetch("http://127.0.0.1:8080/setup")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // setTask(data['agent_number']);
-        // send user id as well
-        localStorage.setItem("user-id", data["user_id"]);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://127.0.0.1:8080/setup")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       // setTask(data['agent_number']);
+  //       // send user id as well
+  //       localStorage.setItem("user-id", data["user_id"]);
+  //       localStorage.setItem("combination", data["selected_combination"]);
+  //     });
+  // }, []);
 
   return (
     <div className="container">
@@ -56,12 +57,12 @@ function InstructionsContainer() {
       >
         <p>
           Welcome to this evaluation exercise. In this task, you will be
-          presented with 12 images and captions for each of two different
-          evaluations. Your role is to rank these captions based on specific
+          presented with 12 images and captions acquired in an initial study. 
+          Your role is to rank these captions based on specific
           criteria provided for each set. It's important to approach this task
           with your first instinct. We value your initial perceptions and
-          judgments, so please avoid overthinking your responses. Please select
-          the evaluation indicated by the researcher.
+          judgments, so please avoid overthinking your responses. 
+          Do not reload the website or try to go back since you will have to start again. 
         </p>
       </div>
       <Button variant="btn btn-success" onClick={routeChange}>

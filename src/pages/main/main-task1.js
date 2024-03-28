@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "antd";
+import { Button, Col, Row } from "antd";
 import "antd/dist/antd.css";
 import "./main.css";
 import { TextField } from "@mui/material";
@@ -47,6 +47,7 @@ function Main1Container() {
   const [totalImages, setTotalImages] = useState(0);
   const [captionDict, setCaptionDict] = useState([]);
   const [captionsList, setCaptionsList] = useState([]);
+  const [captionsGroups, setCaptionsGroups] = useState([]);
 
   const shuffle_idx = useState(
     [0, 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14] //.sort(() => Math.random() - 0.5)
@@ -104,9 +105,10 @@ function Main1Container() {
     fetch("http://127.0.0.1:8080/annotationData", {
       method: "POST",
       body: JSON.stringify({
-        group: localStorage.getItem("group"),
+        comb: localStorage.getItem("combination"),
+        userID: localStorage["user-id"], 
         folder: "annotations",
-        data: obj,
+        content: obj,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -322,8 +324,11 @@ function Main1Container() {
         intermediateCaption: idxToCaption[selectedColumns[2] - 1],
         lowestCaption: idxToCaption[selectedColumns[3] - 1],
         captionA: captionsList[shuffledIndices[imageCountBackend][0]],
+        captionA_group: captionsGroups[shuffledIndices[imageCountBackend][0]], 
         captionB: captionsList[shuffledIndices[imageCountBackend][1]],
+        captionB_group:  captionsGroups[shuffledIndices[imageCountBackend][1]], 
         captionC: captionsList[shuffledIndices[imageCountBackend][2]],
+        captionC_group: captionsGroups[shuffledIndices[imageCountBackend][2]], 
         defaultCaption: captionsList[0],
         effortCaption: captionsList[2],
         originalCaption: captionsList[1],
@@ -662,6 +667,8 @@ function Main1Container() {
         const data = await response.json();
 
         if (isMounted.current) {
+          localStorage.setItem("user-id", data["user_id"]);
+          localStorage.setItem("combination", data["selected_combination"]);
           // Update state with received data
           console.log("combination information");
           console.log(data.captions_info);
@@ -712,6 +719,11 @@ function Main1Container() {
           currCaptionsAnnot.effort_caption,
         ];
         setCaptionsList(captionsList);
+        const groups = [
+          "default", "original", "effort"
+        ]
+        setCaptionsGroups(groups)
+        
       }
       setImageCountBackend(imgIndex);
     }
@@ -719,16 +731,9 @@ function Main1Container() {
 
   return (
     <>
-      <h1>
-        {" "}
-        For your quality assessment, consider the correctness of the details
-        contained in the captions and the amount of details provided. Rank the
-        three captions in order of quality, with 1 being the lowest quality and
-        3 being the highest quality. For your assessment, consider the
-        correctness of the details contained in the captions and the amount of
-        details provided
-      </h1>
+
       {render ? (
+        
         <div className="container">
           <div
             style={{
@@ -739,12 +744,27 @@ function Main1Container() {
               textAlign: "center",
             }}
           >
+          <div style={{fontSize: "20px"}}>
+            To evaluate caption quality, consider the correctness of the details
+            contained in the captions and the amount of details provided. Rank the
+            three captions in order of quality, with <b>1 being the lowest quality</b> and <b>3 being the highest quality</b>.
+          </div>
+
+          <Row type="flex" justify="center">
+
+          <Col span={8} type="flex" >
             <img
               src={baseImgUrl + currentImage}
               alt={currentImage}
-              style={{ maxWidth: "100%", height: "auto" }}
+              style={{ maxWidth: "100%", height: "auto", marginTop: "10%", marginLeft: "30%"}}
             />
-
+            <p style={{ marginTop: "5px", marginLeft: "50%", fontSize: "18px" }}>
+              {" "}
+              {imageCount + 1} / {totalImages} Images
+            </p>
+          </Col>
+         
+          <Col span={15} align="left">
             {Array.isArray(captionsInfo) ? (
               captionsInfo.map((captionInfo, index) => {
                 const allImageIds = captionsInfo.map(
@@ -851,16 +871,13 @@ function Main1Container() {
                 </tbody>
               </table>
 
-              <p style={{ marginTop: "5px", fontSize: "18px" }}>
-                {" "}
-                {imageCount + 1} / {totalImages} Images
-              </p>
+
             </div>
+            </Col>
+            </Row>
 
             <div className="back-buttons">
-              <button onClick={lastChange} className="undo-clear btn">
-                Back
-              </button>
+
               <button onClick={nextChange} className="undo-clear btn">
                 Next
               </button>

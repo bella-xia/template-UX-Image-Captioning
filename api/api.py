@@ -48,11 +48,24 @@ def get_current_time():
 def setup():
     # randomly select a combination from the list
     combinations = ["D1E1", "D2E2", "D3E3", "D4E4"]
+
+    eval_combinations = db.child("annotations").get()
+
+    # only if eval_comb is not empty
+    # iterate over pyrebase objects
+    if eval_combinations.val(): 
+        for comb in eval_combinations.each():
+            comb_str =  comb.key()
+            combinations.remove(comb_str)
+            print('comb list', combinations)
+    else:
+        print('no combinations have been recorded')
+
     selected_combination = random.choice(combinations)
 
     # get captions and image IDs based on the selected combination
     captions_info = get_captions_info(selected_combination)
-    print(selected_combination)
+    print('selected combination', selected_combination)
 
     # assign a random task to the current user
     now = datetime.now()
@@ -96,14 +109,14 @@ def getImageInfo():
     return jsonify(response_body)
 
 
-@app.route("/sendAnnotationData", methods=["POST"])
-def sendAnnotationData():
+@app.route("/annotationData", methods=["POST"])
+def annotationData():
     print("receiving data from frontend")
     request_data = json.loads(request.data)
     data = request_data["content"]
     print(data)
-    user_id = data["userID"]
-    db.child(request_data["folder"]).child(user_id).push(data)
+    user_id = request_data["userID"]
+    db.child(request_data["folder"]).child(request_data["comb"]).child(user_id).push(data)
     response_body = {"user_id": user_id}
     return jsonify(response_body)
 
@@ -115,8 +128,8 @@ def surveyData():
     request_data = json.loads(request.data)
     data = request_data["content"]
     print(data)
-    user_id = data["userID"]
-    db.child(request_data["group"]).child(request_data["folder"]).child(user_id).push(
+    user_id = request_data["userID"]
+    db.child(request_data["comb"]).child(request_data["folder"]).child(user_id).push(
         data
     )
     response_body = {"user_id": user_id}
