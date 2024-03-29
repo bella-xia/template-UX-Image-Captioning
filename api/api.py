@@ -48,6 +48,7 @@ def get_current_time():
 def setup():
     # randomly select a combination from the list
     combinations = ["D1E1", "D2E2", "D3E3", "D4E4"]
+    unmatched = "E5"
 
     eval_combinations = db.child("annotations").get()
 
@@ -56,13 +57,17 @@ def setup():
     if eval_combinations.val(): 
         for comb in eval_combinations.each():
             comb_str =  comb.key()
+            # if len(combinations) > 1:
             combinations.remove(comb_str)
+
+                # comb_extra = df[df['combination'].str.contains(unmatched)]
+                # result_df = comb_extra.groupby('image_name').apply(lambda x: x.sample(1)).reset_index(drop=True)
+
             print('comb list', combinations)
     else:
         print('no combinations have been recorded')
 
     selected_combination = random.choice(combinations)
-
     # get captions and image IDs based on the selected combination
     captions_info = get_captions_info(selected_combination)
     print('selected combination', selected_combination)

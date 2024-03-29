@@ -35,7 +35,7 @@
 }
 
 .t {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   margin-top: 20px;
 }
@@ -189,7 +189,7 @@
 }
 
 .caption-text {
-  font-size: 20px; 
+  font-size: 18px; 
 }
 
 textarea::selection {

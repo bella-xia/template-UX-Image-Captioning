@@ -82,7 +82,7 @@ function Main1Container() {
     };
 
     return [1, 2, 3].map((columnNumber) => (
-      <td key={columnNumber} style={{ marginRight: "10px" }}>
+      <td key={columnNumber} style={{ marginRight: "10px", textAlign: 'center' }}>
         <input
           type="radio"
           name={`radioRow${rowNumber}`}
@@ -373,14 +373,10 @@ function Main1Container() {
         setShowPrevCaption(false);
         updateImage(count);
       } else {
-        if (finishCounter === 1) {
-          routeChange();
-        } else {
-          alert(
-            "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
-          );
-          setFinishCounter(1);
-        }
+        alert(
+          "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
+        );
+        routeChange();
       }
       setSelectedColumns({
         1: null,
@@ -744,10 +740,11 @@ function Main1Container() {
               textAlign: "center",
             }}
           >
-          <div style={{fontSize: "20px"}}>
+          <div style={{fontSize: "20px", width: "80%", marginLeft: "15%", textAlign: "left"}}>
+            Considering the image on the left and each caption, rank the three 
+            captions in order of quality, with <b>1 being the lowest quality</b> and <b>3 being the highest quality</b>.
             To evaluate caption quality, consider the correctness of the details
-            contained in the captions and the amount of details provided. Rank the
-            three captions in order of quality, with <b>1 being the lowest quality</b> and <b>3 being the highest quality</b>.
+            contained in the captions and the amount of details provided. 
           </div>
 
           <Row type="flex" justify="center">
@@ -852,19 +849,19 @@ function Main1Container() {
               className="survey-container"
               style={{ margin: "auto", width: "fit-content" }}
             >
-              <table>
+              <table style={{ borderCollapse: 'separate' }}>
                 <thead>
                   <tr>
                     <th></th>
                     {["Caption A ", "Caption B ", "Caption C"].map((label) => (
-                      <th key={label}>{label}</th>
+                      <th key={label} style={{ padding: '0 10px', textAlign: 'center' }}>{label}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {["Highest", "Intermediate", "Lowest"].map((label, index) => (
                     <tr key={index + 1}>
-                      <td>{`${index + 1} (${label})`}</td>
+                      <td style={{ fontSize: "18px", padding: '0 10px' }}>{`${index + 1} (${label})`}</td>
                       {renderRadioButtons(index + 1)}
                     </tr>
                   ))}

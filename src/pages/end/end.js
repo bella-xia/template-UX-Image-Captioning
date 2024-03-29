@@ -50,7 +50,7 @@ function EndContainer() {
   return (
     <div className="container">
       <div className="title">
-        <h1>Thank you for completing the caption quality assessment! </h1>
+        <h2>Thank you for completing the caption quality assessment! </h2>
       </div>
     </div>
   );
