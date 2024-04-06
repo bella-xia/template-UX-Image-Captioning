@@ -176,7 +176,7 @@ function Main2Container() {
   console.log(retrievedList);
 
   const routeChange = () => {
-    let path = "/#/EyeGazeEnd";
+    let path = "/#/Survey";
     window.location.assign(path);
   };
 

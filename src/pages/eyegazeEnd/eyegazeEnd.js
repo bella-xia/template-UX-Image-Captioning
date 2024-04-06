@@ -1,15 +1,20 @@
-import { Button } from "antd";
-import React from "react";
+import { Button, Checkbox } from "antd";
+import React, { Component, useState, useEffect } from "react";
 import "./eyegazeEnd.css";
 
 function EyegazeEndContainer() {
+  const [agree, setAgree] = useState(false);
   const routeChange = () => {
-    let path = "/#/Survey";
+    let path = "/#/Demo";
     window.location.assign(path);
   };
 
   // Retrieve the user-id from localStorage
   const userId = localStorage.getItem("user-id");
+
+  const checkboxHandler = () => {
+    setAgree(!agree);
+  };
 
   return (
     <div className="container">
@@ -29,6 +34,12 @@ function EyegazeEndContainer() {
         </h1>
         <Button onClick={routeChange}>Continue</Button>
       </div>
+      <Checkbox
+        onChange={checkboxHandler}
+        style={{ fontSize: "20px", textAlign: "left", alignSelf: "stretch" }}
+      >
+        I have completed the Google Form.
+      </Checkbox>
     </div>
   );
 }

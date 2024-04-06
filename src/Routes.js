@@ -12,7 +12,6 @@ import EndContainer from "./pages/end/end";
 import EyegazeStartContainer from "./pages/eyegazeStart/eyegazeStart";
 import eyegazeEndContainer from "./pages/eyegazeEnd/eyegazeEnd";
 import InterventionContainer from "./pages/instr/primer";
-import attentionCheckContainer from "./pages/attentionCheck/attentionCheck";
 
 export default class Routes extends Component {
   render() {
@@ -29,7 +28,6 @@ export default class Routes extends Component {
           <Route path="/End" component={EndContainer} />
           <Route path="/EyeGazeStart" component={EyegazeStartContainer} />
           <Route path="/EyeGazeEnd" component={eyegazeEndContainer} />
-          <Route path="/AttentionCheck" component={attentionCheckContainer} />
         </Switch>
       </HashRouter>
     );

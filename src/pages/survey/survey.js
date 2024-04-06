@@ -36,7 +36,7 @@ const questions2 = [
   "I was really drawn into this captioning experience with AI assistance.",
   "I felt involved in this captioning experience with AI assistance.",
   "I was very focused on the task of editing the captions for accuracy and detail.",
-  "Using AI to improve captions for the visually impaired differed strongly from your expectations.",
+  "Using AI to improve captions for the visually impaired differed strongly from my expectations.",
 ];
 
 const FormItem = ({ question, idx }) => {
@@ -102,7 +102,7 @@ const SurveyContainer = () => {
       };
       sendData(data_send);
       console.log("Survey Data sent:", data_send);
-      let path = "/#/AttentionCheck";
+      let path = "/#/EyeGazeEnd";
       window.location.assign(path);
     } else {
       let copySaveArray = Object.assign({}, answers, values);
