@@ -9,7 +9,7 @@ import {
   Button,
   Radio,
 } from "antd";
-import "./survey.css";
+import "./attentionCheck.css";
 const { Option } = Select;
 
 const formItemLayout = {
@@ -24,19 +24,17 @@ const formItemLayout = {
 };
 
 const questions1 = [
-  "I was fully concentrating on the task of editing captions.",
-  "Improving the captions for visually impaired audiences gave me a sense of personal involvement or contribution to a larger cause.",
-  "I found the task of providing detailed and accurate captions for each image extremely rewarding.",
-  "I found the task of editing AI captions to improve captions for visually impaired audiences very unique.",
-  "Editing AI-generated captions introduced me to many new ideas or concepts about accessibility.",
+  "The AI-generated captions cover salient (notable) information present in the images.",
+  "The AI-generated captions include accurate and precise information from the images.",
+  "The AI helps me to create better captions.",
+  "I find useful the AI-generated captions.",
 ];
 
 const questions2 = [
   "I had to work hard to accomplish better captions.",
   "I was really drawn into this captioning experience with AI assistance.",
   "I felt involved in this captioning experience with AI assistance.",
-  "I was very focused on the task of editing the captions for accuracy and detail.",
-  "Using AI to improve captions for the visually impaired differed strongly from your expectations.",
+  "I felt discouraged while using AI assistance in this captioning experience.",
 ];
 
 const FormItem = ({ question, idx }) => {
@@ -83,7 +81,7 @@ const FormItem = ({ question, idx }) => {
   );
 };
 
-const SurveyContainer = () => {
+const AttentionCheckContainer = () => {
   const [form] = Form.useForm();
   const [answers, setAnswers] = useState({});
 
@@ -100,9 +98,9 @@ const SurveyContainer = () => {
         userID: localStorage["user-id"],
         survey_data: copySaveArray, // values
       };
-      sendData(data_send);
+      //sendData(data_send);
       console.log("Survey Data sent:", data_send);
-      let path = "/#/AttentionCheck";
+      let path = "/#/Demo";
       window.location.assign(path);
     } else {
       let copySaveArray = Object.assign({}, answers, values);
@@ -168,10 +166,10 @@ const SurveyContainer = () => {
             <div className="text">
               {questions2.map((question, idx) => (
                 <FormItem
-                  key={idx + 5}
+                  key={idx + 4}
                   class="form-questions"
                   question={question}
-                  idx={idx + 5}
+                  idx={idx + 4}
                 />
               ))}
             </div>
@@ -187,4 +185,4 @@ const SurveyContainer = () => {
     </div>
   );
 };
-export default SurveyContainer;
+export default AttentionCheckContainer;
