@@ -132,9 +132,10 @@
 
 .box {
   border: 1px solid #ccc;
-  padding: 10px;
-  width: 60%; 
+  padding: 5px;
+  width: 100%; 
   text-align: center;
+  margin-left: 20%;
   margin-right: 5px; 
 }
 
@@ -189,7 +190,7 @@
 }
 
 .caption-text {
-  font-size: 18px; 
+  font-size: 17px; 
 }
 
 textarea::selection {
@@ -272,7 +273,7 @@ textarea::selection {
   align-items: center;
   justify-content: space-between;
   margin: 0 auto;
-  margin-top: -10px;
+  margin-top: 10px;
 }
 
 .caption-edits{

@@ -47,7 +47,8 @@ def get_current_time():
 @app.route("/setup", methods=["GET"])
 def setup():
     # randomly select a combination from the list
-    combinations = ["D1E1", "D2E2", "D3E3", "D4E4"]
+    df = pd.read_csv(csv_file_path)
+    combinations = ["D1E1", "D2E2", "D3E3", "D4E4", "D1E5"]
     unmatched = "E5"
 
     eval_combinations = db.child("annotations").get()
@@ -57,11 +58,12 @@ def setup():
     if eval_combinations.val(): 
         for comb in eval_combinations.each():
             comb_str =  comb.key()
-            # if len(combinations) > 1:
-            combinations.remove(comb_str)
-
-                # comb_extra = df[df['combination'].str.contains(unmatched)]
-                # result_df = comb_extra.groupby('image_name').apply(lambda x: x.sample(1)).reset_index(drop=True)
+            if len(combinations) > 1:
+                combinations.remove(comb_str)
+            else: 
+                
+                comb_extra = df[df['combination'].str.contains(unmatched)]
+                result_df = comb_extra.groupby('image_name').apply(lambda x: x.sample(1)).reset_index(drop=True)
 
             print('comb list', combinations)
     else:

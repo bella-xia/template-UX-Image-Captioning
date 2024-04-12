@@ -8,13 +8,25 @@ import Papa from "papaparse";
 function Main1Container() {
   //const history = useHistory();
   const [surveyData, setSurveyData] = useState([]);
-  const [selectedColumns, setSelectedColumns] = useState({
+  const [selectedColumnsA, setSelectedColumnsA] = useState({
     1: null,
     2: null,
     3: null,
   });
 
-  const [columnDisabled, setColumnDisabled] = useState({
+  const [columnDisabledA, setColumnDisabledA] = useState({
+    1: false,
+    2: false,
+    3: false,
+  });
+
+  const [selectedColumnsD, setSelectedColumnsD] = useState({
+    1: null,
+    2: null,
+    3: null,
+  });
+
+  const [columnDisabledD, setColumnDisabledD] = useState({
     1: false,
     2: false,
     3: false,
@@ -76,16 +88,16 @@ function Main1Container() {
   const [currCCaption, setCurrCCaption] = useState([]);
   const [imageCountBackend, setImageCountBackend] = useState(0);
 
-  const renderRadioButtons = (rowNumber) => {
+  const renderRadioButtons = (rowNumber, selectedColumns, setColumns, setIdentifier) => {
     const handleInputChange = (columnNumber) => {
-      handleRadioChange(rowNumber, columnNumber);
+      handleRadioChange(rowNumber, columnNumber, selectedColumns, setColumns, setIdentifier);
     };
 
     return [1, 2, 3].map((columnNumber) => (
       <td key={columnNumber} style={{ marginRight: "10px", textAlign: 'center' }}>
         <input
           type="radio"
-          name={`radioRow${rowNumber}`}
+          name={`radio${setIdentifier}Row${rowNumber}`}
           value={columnNumber}
           onChange={() => handleInputChange(columnNumber)}
           className="custom-radio"
@@ -225,10 +237,10 @@ function Main1Container() {
     );
   };
 
-  const handleRadioChange = (rowNumber, columnNumber, label) => {
-    console.log(
-      `Survey Selection: Row ${rowNumber}, Column ${columnNumber} (${label})`
-    );
+  const handleRadioChange = (rowNumber, columnNumber, selectedColumns, setColumns) => {
+    // console.log(
+    //   `Survey Selection: Row ${rowNumber}, Column ${columnNumber} (${label})`
+    // );
 
     const isColumnAlreadySelected =
       Object.values(selectedColumns).includes(columnNumber);
@@ -241,7 +253,7 @@ function Main1Container() {
     }
 
     // Update selected columns state
-    setSelectedColumns((prevSelectedColumns) => ({
+    setColumns((prevSelectedColumns) => ({
       ...prevSelectedColumns,
       [rowNumber]: columnNumber,
     }));
@@ -258,7 +270,12 @@ function Main1Container() {
   };
 
   const updateImage = (count) => {
-    setSelectedColumns({
+    setSelectedColumnsA({
+      1: null,
+      2: null,
+      3: null,
+    });
+    setSelectedColumnsD({
       1: null,
       2: null,
       3: null,
@@ -303,26 +320,41 @@ function Main1Container() {
   };
 
   const nextChange = () => {
-    console.log(selectedColumns);
+    // console.log(selectedColumns);
     if (
-      selectedColumns[1] == null ||
-      selectedColumns[2] == null ||
-      selectedColumns[3] == null
+      selectedColumnsA[1] == null ||
+      selectedColumnsA[2] == null ||
+      selectedColumnsA[3] == null
     ) {
-      alert("All captions must be ranked.");
+      alert("All captions must be ranked for accuracy.");
     } else if (
-      selectedColumns[1] == selectedColumns[2] ||
-      selectedColumns[1] == selectedColumns[3] ||
-      selectedColumns[2] == selectedColumns[3]
+      selectedColumnsA[1] == selectedColumnsA[2] ||
+      selectedColumnsA[1] == selectedColumnsA[3] ||
+      selectedColumnsA[2] == selectedColumnsA[3]
     ) {
-      alert("All rankings must be unique.");
+      alert("All accuracy rankings must be unique.");
+    } else if (
+      selectedColumnsD[1] == null ||
+      selectedColumnsD[2] == null ||
+      selectedColumnsD[3] == null
+    ) {
+      alert("All captions must be ranked for details.");
+    } else if (
+      selectedColumnsD[1] == selectedColumnsD[2] ||
+      selectedColumnsD[1] == selectedColumnsD[3] ||
+      selectedColumnsD[2] == selectedColumnsD[3]
+    ) {
+      alert("All details rankings must be unique.");
     } else {
       const idxToCaption = ["A", "B", "C"];
       const rowData = {
         image_name: currentImage,
-        highestCaption: idxToCaption[selectedColumns[1] - 1],
-        intermediateCaption: idxToCaption[selectedColumns[2] - 1],
-        lowestCaption: idxToCaption[selectedColumns[3] - 1],
+        highestCaptionA: idxToCaption[selectedColumnsA[1] - 1],
+        intermediateCaptionA: idxToCaption[selectedColumnsA[2] - 1],
+        lowestCaptionA: idxToCaption[selectedColumnsA[3] - 1],
+        highestCaptionD: idxToCaption[selectedColumnsD[1] - 1],
+        intermediateCaptionD: idxToCaption[selectedColumnsD[2] - 1],
+        lowestCaptionD: idxToCaption[selectedColumnsD[3] - 1],
         captionA: captionsList[shuffledIndices[imageCountBackend][0]],
         captionA_group: captionsGroups[shuffledIndices[imageCountBackend][0]], 
         captionB: captionsList[shuffledIndices[imageCountBackend][1]],
@@ -334,7 +366,7 @@ function Main1Container() {
         originalCaption: captionsList[1],
       };
       console.log("getting ready to send data", rowData);
-      console.log(selectedColumns);
+      console.log(selectedColumnsA);
 
       //updateAnnotationData(rowData);
       sendAnnotationData(rowData);
@@ -378,13 +410,25 @@ function Main1Container() {
         );
         routeChange();
       }
-      setSelectedColumns({
+      setSelectedColumnsA({
         1: null,
         2: null,
         3: null,
       });
 
-      setColumnDisabled({
+      setColumnDisabledA({
+        1: false,
+        2: false,
+        3: false,
+      });
+
+      setSelectedColumnsD({
+        1: null,
+        2: null,
+        3: null,
+      });
+
+      setColumnDisabledD({
         1: false,
         2: false,
         3: false,
@@ -395,62 +439,6 @@ function Main1Container() {
     }
   };
 
-  const lastChange = () => {
-    setSelectedColumns({
-      1: null,
-      2: null,
-      3: null,
-    });
-    //if (moveToLastImage === true && showLastImage !== true) {
-    // measure image times here
-    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
-    setDeltaImageTime(t_i_f);
-    console.log("done with image after X seconds");
-    console.log(t_i_f);
-
-    // if they moved to the next image and did not edit at all the caption
-    if (edited === false) {
-      console.log("caption not edited at all");
-      setStartEditTime(0);
-      setDeltaEditTime(0);
-    }
-    let data_send = {
-      userID: localStorage["user-id"],
-      startImageTime: startImageTime,
-      deltaImageTime: t_i_f,
-      startEditTime: startEditTime,
-      deltaEditTime: deltaEditTime,
-      image_name: currentImage,
-      trial_number: imageCount + 1,
-      final_caption: captions[imageCount],
-      original_caption: originalCaptions[imageCount],
-    };
-    //senddata(data_send);
-
-    // TODO: record image time again?
-    // let currentTime = Date.now()
-    // setTaskTime(currentTime);
-    console.log(editData);
-    const count = imageCount - 1;
-    // reinitialize variables
-    if (count > -1) {
-      if (count < totalImages - 1) {
-        setMoveToSurvey(false);
-      }
-      updateImage(count);
-      console.log("save curr");
-      console.log(editData);
-      setDataNow(editData);
-      setShowPrevCaption(true);
-    } else {
-      count += 1;
-    }
-    //setEditMode(() => false);
-    setMoveToLastImage(false);
-    //} else {
-    //alert("You can only go back once!");
-    //}
-  };
 
   const returnOriginalText = () => {
     console.log("changed caption!");
@@ -741,27 +729,23 @@ function Main1Container() {
             }}
           >
           <div style={{fontSize: "20px", width: "80%", marginLeft: "15%", textAlign: "left"}}>
-            Considering the image on the left and each caption, rank the three 
-            captions in order of quality, with <b>1 being the lowest quality</b> and <b>3 being the highest quality</b>.
-            To evaluate caption quality, consider the correctness of the details
-            contained in the captions and the amount of details provided. 
+            Rank the three according to the aspects mentioned in each question. 
+
           </div>
 
-          <Row type="flex" justify="center">
+          <Row type="flex" justify="left">
 
-          <Col span={8} type="flex" >
+          <Col span={11} type="flex" >
             <img
               src={baseImgUrl + currentImage}
               alt={currentImage}
-              style={{ maxWidth: "100%", height: "auto", marginTop: "10%", marginLeft: "30%"}}
+              style={{ maxWidth: "100%", height: "auto", marginTop: "5%", marginLeft: "30%"}}
             />
             <p style={{ marginTop: "5px", marginLeft: "50%", fontSize: "18px" }}>
               {" "}
               {imageCount + 1} / {totalImages} Images
             </p>
-          </Col>
-         
-          <Col span={15} align="left">
+
             {Array.isArray(captionsInfo) ? (
               captionsInfo.map((captionInfo, index) => {
                 const allImageIds = captionsInfo.map(
@@ -844,11 +828,18 @@ function Main1Container() {
             ) : (
               <p>No captionsInfo available</p>
             )}
+          </Col>
+         
+          <Col span={12} align="left">
+            
             {/* Centering the survey-container */}
+            <div style={{ marginTop: "auto", width: "70%", fontSize: "18px", marginLeft: "20%" }}> 
+              <b> 1. Considering the image and each caption, rank the three captions in order of accuracy, with 1 being the most accurate and 3 being the least accurate, based solely on the correctness of the details they contain. Ignore length and amount of detail.</b>
+            </div> 
             <div
-              className="survey-container"
               style={{ margin: "auto", width: "fit-content" }}
             >
+
               <table style={{ borderCollapse: 'separate' }}>
                 <thead>
                   <tr>
@@ -862,23 +853,52 @@ function Main1Container() {
                   {["Highest", "Intermediate", "Lowest"].map((label, index) => (
                     <tr key={index + 1}>
                       <td style={{ fontSize: "18px", padding: '0 10px' }}>{`${index + 1} (${label})`}</td>
-                      {renderRadioButtons(index + 1)}
+                      {renderRadioButtons(index + 1, selectedColumnsA, setSelectedColumnsA, 'A')}
                     </tr>
                   ))}
                 </tbody>
               </table>
 
+              </div>
 
-            </div>
+              <div style={{margin: "auto", width: "70%", fontSize: "18px", marginLeft: "20%" }}> 
+                <b> 2. Now, considering the descriptions only, rank the three captions in order of the quantity of detail they contain, with 1 being the most detailed and 3 being the least detailed, regardless of its accuracy or relevance.</b>
+              </div> 
+
+              <div
+              style={{ margin: "auto", width: "fit-content" }}
+              >
+
+              <table style={{ borderCollapse: 'separate' }}>
+                <thead>
+                  <tr>
+                    <th></th>
+                    {["Caption A ", "Caption B ", "Caption C"].map((label) => (
+                      <th key={label} style={{ padding: '0 10px', textAlign: 'center' }}>{label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {["Highest", "Intermediate", "Lowest"].map((label, index) => (
+                    <tr key={index + 1}>
+                      <td style={{ fontSize: "18px", padding: '0 10px' }}>{`${index + 1} (${label})`}</td>
+                      {renderRadioButtons(index + 1, selectedColumnsD, setSelectedColumnsD, 'D')}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              </div>
+
+              <div className="back-buttons">
+
+                <button onClick={nextChange} className="undo-clear btn">
+                  Next
+                </button>
+              </div>
+
+            
             </Col>
             </Row>
-
-            <div className="back-buttons">
-
-              <button onClick={nextChange} className="undo-clear btn">
-                Next
-              </button>
-            </div>
           </div>
         </div>
       ) : (
