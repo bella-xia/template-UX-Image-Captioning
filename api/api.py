@@ -17,7 +17,7 @@ cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-csv_file_path = "captions_eval_assign.csv"
+csv_file_path = "output_captions_edited.csv"
 
 
 # db = SQLAlchemy(app)
@@ -48,31 +48,35 @@ def get_current_time():
 def setup():
     # randomly select a combination from the list
     df = pd.read_csv(csv_file_path)
-    combinations = ["D1E1", "D2E2", "D3E3", "D4E4", "D1E5"]
+    combinations = get_possible_users()  # ["D1E1", "D2E2", "D3E3", "D4E4", "D1E5"]
     unmatched = "E5"
-
+    print("combinations", combinations)
     eval_combinations = db.child("annotations").get()
 
     # only if eval_comb is not empty
     # iterate over pyrebase objects
-    if eval_combinations.val(): 
+    if eval_combinations.val():
         for comb in eval_combinations.each():
-            comb_str =  comb.key()
+            comb_str = comb.key()
             if len(combinations) > 1:
                 combinations.remove(comb_str)
-            else: 
-                
-                comb_extra = df[df['combination'].str.contains(unmatched)]
-                result_df = comb_extra.groupby('image_name').apply(lambda x: x.sample(1)).reset_index(drop=True)
+            else:
 
-            print('comb list', combinations)
+                comb_extra = df[df["userID"].str.contains(unmatched)]
+                result_df = (
+                    comb_extra.groupby("image_name")
+                    .apply(lambda x: x.sample(1))
+                    .reset_index(drop=True)
+                )
+
+            print("comb list", combinations)
     else:
-        print('no combinations have been recorded')
+        print("no combinations have been recorded")
 
     selected_combination = random.choice(combinations)
     # get captions and image IDs based on the selected combination
     captions_info = get_captions_info(selected_combination)
-    print('selected combination', selected_combination)
+    print("selected combination", captions_info)
 
     # assign a random task to the current user
     now = datetime.now()
@@ -87,22 +91,35 @@ def setup():
     return jsonify(response)
 
 
+def get_possible_users():
+    try:
+        df = pd.read_csv(csv_file_path)
+        users = list(df["userID"].unique())
+        str_users = []
+        for u in users:
+            str_users.append(str(u))
+        return str_users
+    except Exception as e:
+        return {"error": str(e)}
+
+
 def get_captions_info(combination):
     # read the CSV file and get captions and image IDs for the specified combination
     try:
         df = pd.read_csv(csv_file_path)
-        rows = df[df["combination"] == combination]
+        rows = df[df["userID"] == int(combination)]
 
         captions_info = []
         for index, row in rows.iterrows():
             caption_info = {
+                "userID": row["userID"],
                 "image_id": row["image_name"],
-                "default_caption": row["default_caption"],
-                "effort_caption": row["effort_caption"],
-                "original_caption": row["original_caption"],
+                "default_caption": row["original_caption"],
+                "edited_caption": row["final_caption"],
             }
             captions_info.append(caption_info)
-
+        print("backend check")
+        print(captions_info)
         return captions_info
 
     except Exception as e:
@@ -123,7 +140,9 @@ def annotationData():
     data = request_data["content"]
     print(data)
     user_id = request_data["userID"]
-    db.child(request_data["folder"]).child(request_data["comb"]).child(user_id).push(data)
+    db.child(request_data["folder"]).child(request_data["comb"]).child(user_id).push(
+        data
+    )
     response_body = {"user_id": user_id}
     return jsonify(response_body)
 

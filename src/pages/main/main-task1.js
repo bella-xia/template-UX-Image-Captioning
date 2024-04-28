@@ -13,6 +13,11 @@ function Main1Container() {
     2: null,
     3: null,
   });
+  const [sliderValues, setSliderValues] = useState({
+    accuracy: 0,
+    detail: 0,
+  });
+  const [currentCaption, setCurrentCaption] = useState(""); // Caption for current image
 
   const [columnDisabledA, setColumnDisabledA] = useState({
     1: false,
@@ -82,19 +87,32 @@ function Main1Container() {
   const [effortCaption, setEffortCaption] = useState("");
   const [originalCaption, setOriginalCaption] = useState("");
   const [captionsInfo, setCaptionsInfo] = useState("");
-  const [shuffledIndices, setShuffledIndices] = useState([]);
   const [currACaption, setCurrACaption] = useState([]);
   const [currBCaption, setCurrBCaption] = useState([]);
   const [currCCaption, setCurrCCaption] = useState([]);
   const [imageCountBackend, setImageCountBackend] = useState(0);
 
-  const renderRadioButtons = (rowNumber, selectedColumns, setColumns, setIdentifier) => {
+  const renderRadioButtons = (
+    rowNumber,
+    selectedColumns,
+    setColumns,
+    setIdentifier
+  ) => {
     const handleInputChange = (columnNumber) => {
-      handleRadioChange(rowNumber, columnNumber, selectedColumns, setColumns, setIdentifier);
+      handleRadioChange(
+        rowNumber,
+        columnNumber,
+        selectedColumns,
+        setColumns,
+        setIdentifier
+      );
     };
 
-    return [1, 2, 3].map((columnNumber) => (
-      <td key={columnNumber} style={{ marginRight: "10px", textAlign: 'center' }}>
+    return [1].map((columnNumber) => (
+      <td
+        key={columnNumber}
+        style={{ marginRight: "10px", textAlign: "center" }}
+      >
         <input
           type="radio"
           name={`radio${setIdentifier}Row${rowNumber}`}
@@ -118,7 +136,7 @@ function Main1Container() {
       method: "POST",
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
-        userID: localStorage["user-id"], 
+        userID: localStorage["user-id"],
         folder: "annotations",
         content: obj,
       }),
@@ -237,7 +255,12 @@ function Main1Container() {
     );
   };
 
-  const handleRadioChange = (rowNumber, columnNumber, selectedColumns, setColumns) => {
+  const handleRadioChange = (
+    rowNumber,
+    columnNumber,
+    selectedColumns,
+    setColumns
+  ) => {
     // console.log(
     //   `Survey Selection: Row ${rowNumber}, Column ${columnNumber} (${label})`
     // );
@@ -321,124 +344,61 @@ function Main1Container() {
 
   const nextChange = () => {
     // console.log(selectedColumns);
-    if (
-      selectedColumnsA[1] == null ||
-      selectedColumnsA[2] == null ||
-      selectedColumnsA[3] == null
-    ) {
-      alert("All captions must be ranked for accuracy.");
-    } else if (
-      selectedColumnsA[1] == selectedColumnsA[2] ||
-      selectedColumnsA[1] == selectedColumnsA[3] ||
-      selectedColumnsA[2] == selectedColumnsA[3]
-    ) {
-      alert("All accuracy rankings must be unique.");
-    } else if (
-      selectedColumnsD[1] == null ||
-      selectedColumnsD[2] == null ||
-      selectedColumnsD[3] == null
-    ) {
-      alert("All captions must be ranked for details.");
-    } else if (
-      selectedColumnsD[1] == selectedColumnsD[2] ||
-      selectedColumnsD[1] == selectedColumnsD[3] ||
-      selectedColumnsD[2] == selectedColumnsD[3]
-    ) {
-      alert("All details rankings must be unique.");
-    } else {
-      const idxToCaption = ["A", "B", "C"];
-      const rowData = {
-        image_name: currentImage,
-        highestCaptionA: idxToCaption[selectedColumnsA[1] - 1],
-        intermediateCaptionA: idxToCaption[selectedColumnsA[2] - 1],
-        lowestCaptionA: idxToCaption[selectedColumnsA[3] - 1],
-        highestCaptionD: idxToCaption[selectedColumnsD[1] - 1],
-        intermediateCaptionD: idxToCaption[selectedColumnsD[2] - 1],
-        lowestCaptionD: idxToCaption[selectedColumnsD[3] - 1],
-        captionA: captionsList[shuffledIndices[imageCountBackend][0]],
-        captionA_group: captionsGroups[shuffledIndices[imageCountBackend][0]], 
-        captionB: captionsList[shuffledIndices[imageCountBackend][1]],
-        captionB_group:  captionsGroups[shuffledIndices[imageCountBackend][1]], 
-        captionC: captionsList[shuffledIndices[imageCountBackend][2]],
-        captionC_group: captionsGroups[shuffledIndices[imageCountBackend][2]], 
-        defaultCaption: captionsList[0],
-        effortCaption: captionsList[2],
-        originalCaption: captionsList[1],
-      };
-      console.log("getting ready to send data", rowData);
-      console.log(selectedColumnsA);
+    const rowData = {
+      image_name: currentImage,
+      defaultCaption: captionsList[0],
+      editedCaption: captionsList[1],
+      accuracyLevel: sliderValues.accuracy,
+      detailLevel: sliderValues.detail,
+    };
+    console.log("getting ready to send data", rowData);
+    console.log(selectedColumnsA);
 
-      //updateAnnotationData(rowData);
-      sendAnnotationData(rowData);
-      // measure image times here
-      let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
-      setDeltaImageTime(t_i_f);
-      console.log("done with image after X seconds");
-      console.log(t_i_f);
+    //updateAnnotationData(rowData);
+    sendAnnotationData(rowData);
+    // measure image times here
+    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
+    setDeltaImageTime(t_i_f);
+    console.log("done with image after X seconds");
+    console.log(t_i_f);
 
-      // if they moved to the next image and did not edit at all the caption
-      if (edited === false) {
-        setStartEditTime(0);
-        setDeltaEditTime(0);
-      }
-
-      const count = imageCount + 1;
-      let data_send = {
-        userID: localStorage["user-id"],
-        startImageTime: startImageTime,
-        deltaImageTime: t_i_f,
-        startEditTime: startEditTime,
-        deltaEditTime: deltaEditTime,
-        image_name: currentImage,
-        trial_number: imageCount + 1,
-        final_caption: captions[imageCount],
-        original_caption: originalCaptions[imageCount],
-      };
-
-      // save data to backend
-      //sendData(data_send);
-
-      if (count < totalImages) {
-        console.log(editData);
-        // reinitialize variables
-        setDataPrev(editData);
-        setShowPrevCaption(false);
-        updateImage(count);
-      } else {
-        alert(
-          "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
-        );
-        routeChange();
-      }
-      setSelectedColumnsA({
-        1: null,
-        2: null,
-        3: null,
-      });
-
-      setColumnDisabledA({
-        1: false,
-        2: false,
-        3: false,
-      });
-
-      setSelectedColumnsD({
-        1: null,
-        2: null,
-        3: null,
-      });
-
-      setColumnDisabledD({
-        1: false,
-        2: false,
-        3: false,
-      });
-
-      //setEditMode(() => false);
-      setMoveToLastImage(true);
+    // if they moved to the next image and did not edit at all the caption
+    if (edited === false) {
+      setStartEditTime(0);
+      setDeltaEditTime(0);
     }
-  };
 
+    const count = imageCount + 1;
+    let data_send = {
+      userID: localStorage["user-id"],
+      startImageTime: startImageTime,
+      deltaImageTime: t_i_f,
+      startEditTime: startEditTime,
+      deltaEditTime: deltaEditTime,
+      image_name: currentImage,
+      trial_number: imageCount + 1,
+      edited_caption: captions[imageCount],
+      original_caption: originalCaptions[imageCount],
+    };
+
+    // save data to backend
+    //sendData(data_send);
+
+    if (count < totalImages) {
+      console.log(editData);
+      // reinitialize variables
+      setDataPrev(editData);
+      setShowPrevCaption(false);
+      updateImage(count);
+    } else {
+      alert(
+        "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
+      );
+      routeChange();
+    }
+    //setEditMode(() => false);
+    setMoveToLastImage(true);
+  };
 
   const returnOriginalText = () => {
     console.log("changed caption!");
@@ -524,6 +484,9 @@ function Main1Container() {
     console.log(data);
   };
 
+  const handleSliderChange = (name, value) => {
+    setSliderValues((prev) => ({ ...prev, [name]: value }));
+  };
   const modifyCaption = (modCap) => {
     console.log("changed caption!");
     if (edited === false) {
@@ -623,27 +586,6 @@ function Main1Container() {
   //   }, []);
 
   useEffect(() => {
-    // Shuffle captions when the component mounts or when image paths change
-    const shuffleCaptions = () => {
-      if (Array.isArray(captionsInfo)) {
-        const shuffledIndicesList = captionsInfo.map(() => {
-          const indicesList = [0, 1, 2];
-          const shuffledList = [...indicesList].sort(() => Math.random() - 0.5);
-          return shuffledList;
-        });
-        setShuffledIndices(shuffledIndicesList);
-      }
-    };
-
-    shuffleCaptions(); // Initial shuffle
-
-    // Clean up function
-    return () => {
-      // Clean up if necessary
-    };
-  }, [captionsInfo]);
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         // Replace with your asynchronous operation
@@ -699,25 +641,24 @@ function Main1Container() {
         const currCaptionsAnnot = captionsInfo[imgIndex];
         const captionsList = [
           currCaptionsAnnot.default_caption,
-          currCaptionsAnnot.original_caption,
-          currCaptionsAnnot.effort_caption,
+          currCaptionsAnnot.edited_caption,
         ];
         setCaptionsList(captionsList);
-        const groups = [
-          "default", "original", "effort"
-        ]
-        setCaptionsGroups(groups)
-        
+        console.log(captionsList);
+        const groups = ["default", "edited"];
+        setCaptionsGroups(groups);
       }
       setImageCountBackend(imgIndex);
     }
   }, [captionsInfo, imagePath]);
 
+  const handleImageChange = (newImagePath) => {
+    setCurrentImage(newImagePath); // Function to change the current image
+  };
+
   return (
     <>
-
       {render ? (
-        
         <div className="container">
           <div
             style={{
@@ -728,176 +669,125 @@ function Main1Container() {
               textAlign: "center",
             }}
           >
-          <div style={{fontSize: "20px", width: "80%", marginLeft: "15%", textAlign: "left"}}>
-            Rank the three according to the aspects mentioned in each question. 
-
-          </div>
-
-          <Row type="flex" justify="left">
-
-          <Col span={11} type="flex" >
-            <img
-              src={baseImgUrl + currentImage}
-              alt={currentImage}
-              style={{ maxWidth: "100%", height: "auto", marginTop: "5%", marginLeft: "30%"}}
-            />
-            <p style={{ marginTop: "5px", marginLeft: "50%", fontSize: "18px" }}>
-              {" "}
-              {imageCount + 1} / {totalImages} Images
-            </p>
-
-            {Array.isArray(captionsInfo) ? (
-              captionsInfo.map((captionInfo, index) => {
-                const allImageIds = captionsInfo.map(
-                  (captionInfo) => captionInfo.image_id
-                );
-
-                // Find the index of the matching image_id in img_paths
-
-                //console.log(captionsInfo);
-                const imgIndex = allImageIds.findIndex((imageId) => {
-                  return imageId === imagePath;
-                });
-                console.log("imgIndex:", imgIndex);
-
-                // Check if the image_id is found in img_paths
-                if (imgIndex !== -1) {
-                  const curr_captions_annot = captionsInfo[imgIndex];
-                  const captionsList = [
-                    curr_captions_annot.default_caption,
-                    curr_captions_annot.original_caption,
-                    curr_captions_annot.effort_caption,
-                  ];
-                  //console.log("Before shuffle:", captionsList);
-
-                  const shuffledCaptionsList = [...captionsList]; // Creating a copy of the original list
-                  for (let i = shuffledCaptionsList.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [shuffledCaptionsList[i], shuffledCaptionsList[j]] = [
-                      shuffledCaptionsList[j],
-                      shuffledCaptionsList[i],
-                    ];
-                  }
-
-                  //console.log("Original Captions List:", captionsList);
-                  //console.log("Shuffled Captions List:", shuffledCaptionsList);
-                  if (index === 0) {
-                    console.log("shuffled indicies", shuffledIndices[imgIndex]);
-                    return (
-                      <div key={index}>
-                        <div className="box-container">
-                          <div className="box">
-                            <span className="caption-text">
-                              {" "}
-                              <b>Caption A:</b>
-                            </span>{" "}
-                            <span className="caption-text">
-                              {captionsList[shuffledIndices[imgIndex][0]]}
-                            </span>{" "}
-                          </div>
-                        </div>
-                        <div className="box-container">
-                          <div className="box">
-                            <span className="caption-text">
-                              {" "}
-                              <b>Caption B:</b>
-                            </span>{" "}
-                            <span className="caption-text">
-                              {captionsList[shuffledIndices[imgIndex][1]]}
-                            </span>{" "}
-                          </div>
-                        </div>
-                        <div className="box-container">
-                          <div className="box">
-                            <span className="caption-text">
-                              {" "}
-                              <b>Caption C:</b>
-                            </span>{" "}
-                            <span className="caption-text">
-                              {captionsList[shuffledIndices[imgIndex][2]]}
-                            </span>{" "}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  }
-                }
-
-                return null;
-              })
-            ) : (
-              <p>No captionsInfo available</p>
-            )}
-          </Col>
-         
-          <Col span={12} align="left">
-            
-            {/* Centering the survey-container */}
-            <div style={{ marginTop: "auto", width: "70%", fontSize: "18px", marginLeft: "20%" }}> 
-              <b> 1. Considering the image and each caption, rank the three captions in order of accuracy, with 1 being the most accurate and 3 being the least accurate, based solely on the correctness of the details they contain. Ignore length and amount of detail.</b>
-            </div> 
             <div
-              style={{ margin: "auto", width: "fit-content" }}
+              style={{
+                fontSize: "20px",
+                width: "80%",
+                marginLeft: "15%",
+                textAlign: "left",
+              }}
             >
+              Rank the three according to the aspects mentioned in each
+              question.
+            </div>
 
-              <table style={{ borderCollapse: 'separate' }}>
-                <thead>
-                  <tr>
-                    <th></th>
-                    {["Caption A ", "Caption B ", "Caption C"].map((label) => (
-                      <th key={label} style={{ padding: '0 10px', textAlign: 'center' }}>{label}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {["Highest", "Intermediate", "Lowest"].map((label, index) => (
-                    <tr key={index + 1}>
-                      <td style={{ fontSize: "18px", padding: '0 10px' }}>{`${index + 1} (${label})`}</td>
-                      {renderRadioButtons(index + 1, selectedColumnsA, setSelectedColumnsA, 'A')}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <Row type="flex" justify="left">
+              <Col span={11} type="flex">
+                <img
+                  src={baseImgUrl + currentImage}
+                  alt={currentImage}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    marginTop: "5%",
+                    marginLeft: "30%",
+                  }}
+                />
+                <p
+                  style={{
+                    marginTop: "5px",
+                    marginLeft: "50%",
+                    fontSize: "18px",
+                  }}
+                >
+                  {" "}
+                  {imageCount + 1} / {totalImages} Images
+                </p>
+                <div>
+                  <div className="box-container">
+                    <div className="box">
+                      <span className="caption-text">
+                        {" "}
+                        <b> Caption:</b>
+                      </span>{" "}
+                      <span className="caption-text">{captionsList[1]} </span>{" "}
+                    </div>
+                  </div>
+                </div>
+              </Col>
 
-              </div>
+              <Col span={12} align="left">
+                {/* Centering the survey-container */}
+                <div
+                  style={{
+                    marginTop: "auto",
+                    width: "70%",
+                    fontSize: "18px",
+                    marginLeft: "20%",
+                  }}
+                >
+                  <b>
+                    {" "}
+                    1. Considering the image and each caption, rank the caption
+                    in order of accuracy, with 1 being the most accurate and 3
+                    being the least accurate, based solely on the correctness of
+                    the details they contain. Ignore length and amount of
+                    detail.
+                  </b>
+                </div>
+                <div style={{ textAlign: "center", margin: "20px 0" }}>
+                  <label>
+                    Accuracy (0 = least accurate, 3 = most accurate):
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="5"
+                    value={sliderValues.accuracy}
+                    onChange={(e) =>
+                      handleSliderChange("accuracy", e.target.value)
+                    }
+                  />
+                  <span>{sliderValues.accuracy}</span>
+                </div>
 
-              <div style={{margin: "auto", width: "70%", fontSize: "18px", marginLeft: "20%" }}> 
-                <b> 2. Now, considering the descriptions only, rank the three captions in order of the quantity of detail they contain, with 1 being the most detailed and 3 being the least detailed, regardless of its accuracy or relevance.</b>
-              </div> 
+                <div
+                  style={{
+                    margin: "auto",
+                    width: "70%",
+                    fontSize: "18px",
+                    marginLeft: "20%",
+                  }}
+                >
+                  <b>
+                    {" "}
+                    2. Now, considering the descriptions only, rank the caption
+                    in order of the quantity of detail they contain, with 1
+                    being the most detailed and 3 being the least detailed,
+                    regardless of its accuracy or relevance.
+                  </b>
+                </div>
 
-              <div
-              style={{ margin: "auto", width: "fit-content" }}
-              >
+                <div style={{ textAlign: "center", margin: "20px 0" }}>
+                  <label>Detail (0 = least detailed, 3 = most detailed):</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="5"
+                    value={sliderValues.detail}
+                    onChange={(e) =>
+                      handleSliderChange("detail", e.target.value)
+                    }
+                  />
+                  <span>{sliderValues.detail}</span>
+                </div>
 
-              <table style={{ borderCollapse: 'separate' }}>
-                <thead>
-                  <tr>
-                    <th></th>
-                    {["Caption A ", "Caption B ", "Caption C"].map((label) => (
-                      <th key={label} style={{ padding: '0 10px', textAlign: 'center' }}>{label}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {["Highest", "Intermediate", "Lowest"].map((label, index) => (
-                    <tr key={index + 1}>
-                      <td style={{ fontSize: "18px", padding: '0 10px' }}>{`${index + 1} (${label})`}</td>
-                      {renderRadioButtons(index + 1, selectedColumnsD, setSelectedColumnsD, 'D')}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              </div>
-
-              <div className="back-buttons">
-
-                <button onClick={nextChange} className="undo-clear btn">
-                  Next
-                </button>
-              </div>
-
-            
-            </Col>
+                <div className="back-buttons">
+                  <button onClick={nextChange} className="undo-clear btn">
+                    Next
+                  </button>
+                </div>
+              </Col>
             </Row>
           </div>
         </div>
