@@ -293,22 +293,11 @@ function Main1Container() {
   };
 
   const updateImage = (count) => {
-    setSelectedColumnsA({
-      1: null,
-      2: null,
-      3: null,
-    });
-    setSelectedColumnsD({
-      1: null,
-      2: null,
-      3: null,
-    });
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
-    radioButtons.forEach((radioButton) => {
-      radioButton.checked = false;
+    setSliderValues({
+      accuracy: 0,
+      detail: 0,
     });
 
-    console.log("reset radio");
     const usedTime = Date.now() - taskTime;
 
     //We can get the amount of time for each image
