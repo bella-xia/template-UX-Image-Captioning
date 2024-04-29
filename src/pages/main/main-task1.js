@@ -725,19 +725,31 @@ function Main1Container() {
                   </b>
                 </div>
                 <div style={{ textAlign: "center", margin: "20px 0" }}>
-                  <label>
-                    Accuracy (0 = least accurate, 3 = most accurate):
-                  </label>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "5px",
+                      fontSize: "12px",
+                      width: "80%",
+                      margin: "0 auto",
+                    }}
+                  >
+                    <span>Very inaccurate</span>
+                    <span>Inaccurate</span>
+                    <span>Accurate</span>
+                    <span>Very accurate</span>
+                  </div>
                   <input
                     type="range"
                     min="0"
-                    max="5"
+                    max="3"
                     value={sliderValues.accuracy}
                     onChange={(e) =>
                       handleSliderChange("accuracy", e.target.value)
                     }
+                    style={{ width: "80%", margin: "0 auto" }}
                   />
-                  <span>{sliderValues.accuracy}</span>
                 </div>
 
                 <div
@@ -756,21 +768,33 @@ function Main1Container() {
                     regardless of its accuracy or relevance.
                   </b>
                 </div>
-
                 <div style={{ textAlign: "center", margin: "20px 0" }}>
-                  <label>Detail (0 = least detailed, 3 = most detailed):</label>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "5px",
+                      fontSize: "12px",
+                      width: "80%",
+                      margin: "0 auto",
+                    }}
+                  >
+                    <span>Very poor detail</span>
+                    <span>Poor detail</span>
+                    <span>Good detail</span>
+                    <span>Very good detail</span>
+                  </div>
                   <input
                     type="range"
                     min="0"
-                    max="5"
+                    max="3"
                     value={sliderValues.detail}
                     onChange={(e) =>
                       handleSliderChange("detail", e.target.value)
                     }
+                    style={{ width: "80%", margin: "0 auto" }}
                   />
-                  <span>{sliderValues.detail}</span>
                 </div>
-
                 <div className="back-buttons">
                   <button onClick={nextChange} className="undo-clear btn">
                     Next
