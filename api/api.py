@@ -55,6 +55,7 @@ def setup():
 
     # only if eval_comb is not empty
     # iterate over pyrebase objects
+    """
     if eval_combinations.val():
         for comb in eval_combinations.each():
             comb_str = comb.key()
@@ -72,7 +73,7 @@ def setup():
             print("comb list", combinations)
     else:
         print("no combinations have been recorded")
-
+    """
     selected_combination = random.choice(combinations)
     # get captions and image IDs based on the selected combination
     captions_info = get_captions_info(selected_combination)
