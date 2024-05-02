@@ -87,6 +87,8 @@ function Main1Container() {
   const [effortCaption, setEffortCaption] = useState("");
   const [originalCaption, setOriginalCaption] = useState("");
   const [captionsInfo, setCaptionsInfo] = useState("");
+  const [captionTag, setCaptionTag] = useState("");
+  const [captionGroup, setCaptionGroup] = useState("");
   const [currACaption, setCurrACaption] = useState([]);
   const [currBCaption, setCurrBCaption] = useState([]);
   const [currCCaption, setCurrCCaption] = useState([]);
@@ -335,10 +337,11 @@ function Main1Container() {
     // console.log(selectedColumns);
     const rowData = {
       image_name: currentImage,
-      defaultCaption: captionsList[0],
-      editedCaption: captionsList[1],
+      eval_caption: captionsList[0],
       accuracyLevel: sliderValues.accuracy,
       detailLevel: sliderValues.detail,
+      caption_group: captionGroup,
+      caption_tag: captionTag
     };
     console.log("getting ready to send data", rowData);
     console.log(selectedColumnsA);
@@ -629,10 +632,11 @@ function Main1Container() {
       if (imgIndex !== -1) {
         const currCaptionsAnnot = captionsInfo[imgIndex];
         const captionsList = [
-          currCaptionsAnnot.default_caption,
-          currCaptionsAnnot.edited_caption,
+          currCaptionsAnnot.caption,
         ];
         setCaptionsList(captionsList);
+        setCaptionTag(currCaptionsAnnot.tag);
+        setCaptionGroup(currCaptionsAnnot.group);
         console.log(captionsList);
         const groups = ["default", "edited"];
         setCaptionsGroups(groups);
@@ -666,8 +670,7 @@ function Main1Container() {
                 textAlign: "left",
               }}
             >
-              Rank the three according to the aspects mentioned in each
-              question.
+              Consider the image and the caption below to answer the following questions.
             </div>
 
             <Row type="flex" justify="left">
@@ -699,7 +702,7 @@ function Main1Container() {
                         {" "}
                         <b> Caption:</b>
                       </span>{" "}
-                      <span className="caption-text">{captionsList[1]} </span>{" "}
+                      <span className="caption-text">{captionsList[0]} </span>{" "}
                     </div>
                   </div>
                 </div>
@@ -709,7 +712,7 @@ function Main1Container() {
                 {/* Centering the survey-container */}
                 <div
                   style={{
-                    marginTop: "auto",
+                    marginTop: "20px",
                     width: "70%",
                     fontSize: "18px",
                     marginLeft: "20%",
@@ -717,11 +720,8 @@ function Main1Container() {
                 >
                   <b>
                     {" "}
-                    1. Considering the image and each caption, rank the caption
-                    in order of accuracy, with 1 being the most accurate and 3
-                    being the least accurate, based solely on the correctness of
-                    the details they contain. Ignore length and amount of
-                    detail.
+                    1. Rate how accurate is the caption, considering 
+                    whether the caption is related to the target image without distortion. 
                   </b>
                 </div>
                 <div style={{ textAlign: "center", margin: "20px 0" }}>
@@ -762,10 +762,7 @@ function Main1Container() {
                 >
                   <b>
                     {" "}
-                    2. Now, considering the descriptions only, rank the caption
-                    in order of the quantity of detail they contain, with 1
-                    being the most detailed and 3 being the least detailed,
-                    regardless of its accuracy or relevance.
+                    2. Rate how detailed is the caption, considering how much image gist (major event in the image) the captions conveys.
                   </b>
                 </div>
                 <div style={{ textAlign: "center", margin: "20px 0" }}>

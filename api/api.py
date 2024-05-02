@@ -17,7 +17,8 @@ cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-csv_file_path = "output_captions_edited.csv"
+# csv_file_path = "output_captions_edited.csv"
+csv_file_path = 'captions_evaluator.csv' 
 
 
 # db = SQLAlchemy(app)
@@ -53,6 +54,16 @@ def setup():
     print("combinations", combinations)
     eval_combinations = db.child("annotations").get()
 
+    if eval_combinations.val():
+        for comb in eval_combinations.each():
+            comb_str = comb.key()
+            if len(combinations) > 1:
+                combinations.remove(comb_str)
+            else:
+                print('All the evaluations have been completed')
+
+    # TODO: make sure not to repeat one evaluator 
+
     # only if eval_comb is not empty
     # iterate over pyrebase objects
     """
@@ -75,9 +86,9 @@ def setup():
         print("no combinations have been recorded")
     """
     selected_combination = random.choice(combinations)
+    print("selected combination", selected_combination)
     # get captions and image IDs based on the selected combination
     captions_info = get_captions_info(selected_combination)
-    print("selected combination", captions_info)
 
     # assign a random task to the current user
     now = datetime.now()
@@ -95,9 +106,10 @@ def setup():
 def get_possible_users():
     try:
         df = pd.read_csv(csv_file_path)
-        users = list(df["userID"].unique())
+        users = list(df["evaluator"].unique()) # replace userID 
         str_users = []
         for u in users:
+            # str_users.append(str(u))
             str_users.append(str(u))
         return str_users
     except Exception as e:
@@ -108,15 +120,16 @@ def get_captions_info(combination):
     # read the CSV file and get captions and image IDs for the specified combination
     try:
         df = pd.read_csv(csv_file_path)
-        rows = df[df["userID"] == int(combination)]
+        rows = df[df["evaluator"] == int(combination)] # userID
 
         captions_info = []
         for index, row in rows.iterrows():
             caption_info = {
                 "userID": row["userID"],
                 "image_id": row["image_name"],
-                "default_caption": row["original_caption"],
-                "edited_caption": row["final_caption"],
+                "caption": row["caption"],
+                "group": row["group"],
+                "tag": row["tag"]
             }
             captions_info.append(caption_info)
         print("backend check")

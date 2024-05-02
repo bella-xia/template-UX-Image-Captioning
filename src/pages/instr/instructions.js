@@ -58,7 +58,7 @@ function InstructionsContainer() {
         <p>
           Welcome to this evaluation exercise. In this task, you will be
           presented with 12 images and captions acquired in an initial study. 
-          Your role is to rank these captions based on specific
+          Your role is to rate these captions based on specific
           criteria provided for each set. It's important to approach this task
           with your first instinct. We value your initial perceptions and
           judgments, so please avoid overthinking your responses. 
