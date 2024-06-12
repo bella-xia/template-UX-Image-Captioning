@@ -7,6 +7,10 @@ import Papa from "papaparse";
 
 function Main1Container() {
   //const history = useHistory();
+  const [sliderInteracted, setSliderInteracted] = useState({
+    accuracy: false,
+    detail: false,
+  });
   const [surveyData, setSurveyData] = useState([]);
   const [selectedColumnsA, setSelectedColumnsA] = useState({
     1: null,
@@ -299,6 +303,7 @@ function Main1Container() {
       accuracy: 0,
       detail: 0,
     });
+    setSliderInteracted({ accuracy: false, detail: false });
 
     const usedTime = Date.now() - taskTime;
 
@@ -335,13 +340,29 @@ function Main1Container() {
 
   const nextChange = () => {
     // console.log(selectedColumns);
+    if (!sliderInteracted.accuracy && !sliderInteracted.detail) {
+      alert(
+        "Please move all sliders before proceeding even if assigning very poor detail/inaccurate."
+      );
+      return; // Stop the function if sliders haven't been interacted with
+    } else if (!sliderInteracted.accuracy) {
+      alert(
+        "Please adjust the accuracy slider before proceeding even if assigning very inaccurate."
+      );
+      return; // Stop the function if sliders haven't been interacted with
+    } else if (!sliderInteracted.detail) {
+      alert(
+        "Please adjust the detail slider before proceeding even if assigning very poor detail."
+      );
+      return; // Stop the function if sliders haven't been interacted with
+    }
     const rowData = {
       image_name: currentImage,
       eval_caption: captionsList[0],
       accuracyLevel: sliderValues.accuracy,
       detailLevel: sliderValues.detail,
       caption_group: captionGroup,
-      caption_tag: captionTag
+      caption_tag: captionTag,
     };
     console.log("getting ready to send data", rowData);
     console.log(selectedColumnsA);
@@ -477,7 +498,8 @@ function Main1Container() {
   };
 
   const handleSliderChange = (name, value) => {
-    setSliderValues((prev) => ({ ...prev, [name]: value }));
+    setSliderValues((prev) => ({ ...prev, [name]: parseInt(value) }));
+    setSliderInteracted((prev) => ({ ...prev, [name]: true }));
   };
   const modifyCaption = (modCap) => {
     console.log("changed caption!");
@@ -631,9 +653,7 @@ function Main1Container() {
       );
       if (imgIndex !== -1) {
         const currCaptionsAnnot = captionsInfo[imgIndex];
-        const captionsList = [
-          currCaptionsAnnot.caption,
-        ];
+        const captionsList = [currCaptionsAnnot.caption];
         setCaptionsList(captionsList);
         setCaptionTag(currCaptionsAnnot.tag);
         setCaptionGroup(currCaptionsAnnot.group);
@@ -670,7 +690,8 @@ function Main1Container() {
                 textAlign: "left",
               }}
             >
-              Consider the image and the caption below to answer the following questions.
+              Consider the image and the caption below to answer the following
+              questions.
             </div>
 
             <Row type="flex" justify="left">
@@ -720,8 +741,8 @@ function Main1Container() {
                 >
                   <b>
                     {" "}
-                    1. Rate how accurate is the caption, considering 
-                    whether the caption is related to the target image without distortion. 
+                    1. Rate how accurate is the caption, considering whether the
+                    caption is related to the target image without distortion.
                   </b>
                 </div>
                 <div style={{ textAlign: "center", margin: "20px 0" }}>
@@ -762,7 +783,8 @@ function Main1Container() {
                 >
                   <b>
                     {" "}
-                    2. Rate how detailed is the caption, considering how much image gist (major event in the image) the captions conveys.
+                    2. Rate how detailed is the caption, considering how much
+                    image gist (major event in the image) the captions conveys.
                   </b>
                 </div>
                 <div style={{ textAlign: "center", margin: "20px 0" }}>
