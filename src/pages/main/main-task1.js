@@ -340,22 +340,22 @@ function Main1Container() {
 
   const nextChange = () => {
     // console.log(selectedColumns);
-    if (!sliderInteracted.accuracy && !sliderInteracted.detail) {
-      alert(
-        "Please move all sliders before proceeding even if assigning very poor detail/inaccurate."
-      );
-      return; // Stop the function if sliders haven't been interacted with
-    } else if (!sliderInteracted.accuracy) {
-      alert(
-        "Please adjust the accuracy slider before proceeding even if assigning very inaccurate."
-      );
-      return; // Stop the function if sliders haven't been interacted with
-    } else if (!sliderInteracted.detail) {
-      alert(
-        "Please adjust the detail slider before proceeding even if assigning very poor detail."
-      );
-      return; // Stop the function if sliders haven't been interacted with
-    }
+    // if (!sliderInteracted.accuracy && !sliderInteracted.detail) {
+    //   alert(
+    //     "Please move all sliders before proceeding even if assigning very poor detail/inaccurate."
+    //   );
+    //   return; // Stop the function if sliders haven't been interacted with
+    // } else if (!sliderInteracted.accuracy) {
+    //   alert(
+    //     "Please adjust the accuracy slider before proceeding even if assigning very inaccurate."
+    //   );
+    //   return; // Stop the function if sliders haven't been interacted with
+    // } else if (!sliderInteracted.detail) {
+    //   alert(
+    //     "Please adjust the detail slider before proceeding even if assigning very poor detail."
+    //   );
+    //   return; // Stop the function if sliders haven't been interacted with
+    // }
     const rowData = {
       image_name: currentImage,
       eval_caption: captionsList[0],
