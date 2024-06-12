@@ -17,6 +17,10 @@ function InstructionsContainer() {
     console.log("moving to eye gaze start page");
   };
 
+  const moreChange =  () => {
+    setAcceptFirst(true);
+  }
+
   const exampleChange = () => {
     let path = "/#/EyeGazeStart"; // change back
     window.location.assign(path);
@@ -55,6 +59,8 @@ function InstructionsContainer() {
           marginLeft: "10%",
         }}
       >
+        {!acceptFirst ? 
+        <>
         <p>
           Welcome to this evaluation exercise. In this task, you will be
           presented with 12 images and captions acquired in an initial study. 
@@ -63,11 +69,59 @@ function InstructionsContainer() {
           with your first instinct. We value your initial perceptions and
           judgments, so please avoid overthinking your responses. 
           Do not reload the website or try to go back since you will have to start again. 
+
         </p>
+
+          <Button style={{ marginLeft: "40%" }} variant="btn btn-success" onClick={moreChange}>
+            Read more 
+          </Button>
+        </>
+        : 
+        <>
+
+          Before you start, let's consider some examples of captions with different levels of accuracy and details.
+
+          <Row type="flex" justify="center">
+        <Col span={11} type="flex" align="middle" >
+            <img src={'./image_folder/Image_30.png'} width="400" height="auto"/>
+
+        </Col>
+
+
+        <Col span={10} align="left">
+            <div className="text">
+            <b>Very Low:</b> A boy fishes by a river with a city skyline in the background. 
+            </div>
+
+            <div className="text">
+            <b>Low quality:</b> A child throws pebbles into a river on a sunny day, with a cathedral in the background. 
+            </div>
+            <div className="text">
+            <b>Good quality</b> A boy in a blue shirt is skimming stones at a riverbank with a historic cathedral and a bridge in the background on a sunny day.
+            </div>
+
+            <div className="text">
+            <b>High quality</b> A young boy wearing a blue sleeveless shirt stands at the river's edge, poised to throw a stone. In the background, the silhouette of a cathedral with twin spires rises above the cityscape, with a bridge spanning the river to the right. The sky is partly cloud
+            
+            </div>
+
+        </Col>
+        </Row>
+
+        <Button style={{ marginLeft: "60%" }} variant="btn btn-success" onClick={routeChange}>
+            Next
+        </Button>
+
+
+
+
+        </>
+        }
       </div>
-      <Button variant="btn btn-success" onClick={routeChange}>
-        Next
-      </Button>
+
+
+
+
     </div>
   );
 }

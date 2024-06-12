@@ -18,7 +18,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # csv_file_path = "output_captions_edited.csv"
-csv_file_path = 'captions_evaluator.csv' 
+csv_file_path = 'captions_evaluator_8.csv' 
 
 
 # db = SQLAlchemy(app)
@@ -52,13 +52,20 @@ def setup():
     combinations = get_possible_users()  # ["D1E1", "D2E2", "D3E3", "D4E4", "D1E5"]
     unmatched = "E5"
     print("combinations", combinations)
-    eval_combinations = db.child("annotations").get()
+    eval_combinations = db.child("testing").get()
 
     if eval_combinations.val():
         for comb in eval_combinations.each():
+            print(comb)
             comb_str = comb.key()
+            print('found str:', comb_str)
             if len(combinations) > 1:
-                combinations.remove(comb_str)
+                try: 
+                    combinations.remove(comb_str)
+                    print('evaluator removed')
+                    print(combinations)
+                except:
+                    print('nothing removed')
             else:
                 print('All the evaluations have been completed')
 
@@ -110,7 +117,7 @@ def get_possible_users():
         str_users = []
         for u in users:
             # str_users.append(str(u))
-            str_users.append(str(u))
+            str_users.append("E{}".format(str(u)))
         return str_users
     except Exception as e:
         return {"error": str(e)}
@@ -120,7 +127,7 @@ def get_captions_info(combination):
     # read the CSV file and get captions and image IDs for the specified combination
     try:
         df = pd.read_csv(csv_file_path)
-        rows = df[df["evaluator"] == int(combination)] # userID
+        rows = df[df["evaluator"] == int(combination[1])] # userID
 
         captions_info = []
         for index, row in rows.iterrows():
@@ -133,7 +140,7 @@ def get_captions_info(combination):
             }
             captions_info.append(caption_info)
         print("backend check")
-        print(captions_info)
+        # print(captions_info)
         return captions_info
 
     except Exception as e:

@@ -139,7 +139,7 @@ function Main1Container() {
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
         userID: localStorage["user-id"],
-        folder: "annotations",
+        folder: "testing",
         content: obj,
       }),
       headers: {
