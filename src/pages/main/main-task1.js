@@ -143,7 +143,7 @@ function Main1Container() {
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
         userID: localStorage["user-id"],
-        folder: "testing",
+        folder: "one",
         content: obj,
       }),
       headers: {
@@ -609,6 +609,15 @@ function Main1Container() {
         if (isMounted.current) {
           localStorage.setItem("user-id", data["user_id"]);
           localStorage.setItem("combination", data["selected_combination"]);
+          if (localStorage["combination"] ==='NA') {
+            localStorage.setItem("block_user", true);
+            console.log(localStorage["block_user"])
+            console.log('blocking user...')
+            let path = "/#/End";
+            window.location.assign(path);
+          } else {
+            localStorage.setItem("block_user", false)
+          }
           // Update state with received data
           console.log("combination information");
           console.log(data.captions_info);
@@ -628,7 +637,6 @@ function Main1Container() {
       isMounted.current = false;
     };
   }, [imageCount, imagePath]);
-
   // initialize image
   useEffect(() => {
     //console.log("getting images");

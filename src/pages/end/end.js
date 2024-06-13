@@ -15,6 +15,8 @@ const formItemLayout = {
 
 function EndContainer() {
   const [submit, setSubmit] = useState(false);
+  var display = localStorage["block_user"];
+  console.log(display)
   const [userid, setUserID] = useState(
     JSON.parse(localStorage.getItem("user-id")) || ""
   );
@@ -50,7 +52,12 @@ function EndContainer() {
   return (
     <div className="container">
       <div className="title">
-        <h2>Thank you for completing the caption quality assessment! </h2>
+        {!display ? 
+          <h2>Thank you for completing the caption quality assessment! </h2>
+        : 
+          <h2>Thank you for your interest. This form is not accepting responses anymore. </h2>
+        
+        }
       </div>
     </div>
   );

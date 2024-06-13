@@ -19,6 +19,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # csv_file_path = "output_captions_edited.csv"
 csv_file_path = 'captions_evaluator_8.csv' 
+number_evaluators = 1
 
 
 # db = SQLAlchemy(app)
@@ -52,24 +53,43 @@ def setup():
     combinations = get_possible_users()  # ["D1E1", "D2E2", "D3E3", "D4E4", "D1E5"]
     unmatched = "E5"
     print("combinations", combinations)
-    eval_combinations = db.child("testing").get()
+    eval_combinations = db.child("one").get()
 
     if eval_combinations.val():
+        # for the existing entries in the database
         for comb in eval_combinations.each():
-            print(comb)
             comb_str = comb.key()
             print('found str:', comb_str)
-            if len(combinations) > 1:
+            number_of_children = len(comb.val())
+            print('number of elements', number_of_children)
+            # check that there are still evaluations to try
+            if len(combinations) > 0:
                 try: 
-                    combinations.remove(comb_str)
-                    print('evaluator removed')
-                    print(combinations)
+                    # remove the combination when there are at most 3 responses
+                    if number_of_children > number_evaluators - 1: 
+                        combinations.remove(comb_str)
+                        print('evaluator removed')
+                        print(combinations)
+
+                    selected_combination = random.choice(combinations)
+                    print("selected combination", selected_combination)
+                    # get captions and image IDs based on the selected combination
+                    captions_info = get_captions_info(selected_combination)
                 except:
                     print('nothing removed')
+                    selected_combination = 'NA'
+                    captions_info = []
             else:
                 print('All the evaluations have been completed')
+                selected_combination = 'NA'
+                captions_info = []
 
     # TODO: make sure not to repeat one evaluator 
+    else:
+        selected_combination = random.choice(combinations)
+        print("selected combination", selected_combination)
+        # get captions and image IDs based on the selected combination
+        captions_info = get_captions_info(selected_combination)
 
     # only if eval_comb is not empty
     # iterate over pyrebase objects
@@ -92,15 +112,10 @@ def setup():
     else:
         print("no combinations have been recorded")
     """
-    selected_combination = random.choice(combinations)
-    print("selected combination", selected_combination)
-    # get captions and image IDs based on the selected combination
-    captions_info = get_captions_info(selected_combination)
 
     # assign a random task to the current user
     now = datetime.now()
     user_id = now.strftime("%Y%m%d%H%M%S")
-    csv_data = read_csv_file(csv_file_path)
 
     response = {
         "user_id": user_id,
