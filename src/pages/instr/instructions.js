@@ -25,9 +25,8 @@ function InstructionsContainer() {
   }
 
   const exampleChange = () => {
-    let path = "/#/EyeGazeStart"; // change back
+    let path = "/#/Start"; // change back
     window.location.assign(path);
-    console.log('opening popup')
     // if (task % 2 === 0) {
     //     let path = '/#/Main2';
     //     window.location.assign(path);

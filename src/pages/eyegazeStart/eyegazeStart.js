@@ -7,16 +7,23 @@ let messages = [
   "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study.",
 ];
 let group_names = ["effort", "default"];
+// new way to assign conditions
+let conditions = {
+  effort: "Thank you for participating. You will be paid $ 3.0 dollars for the next six images you evaluate.",
+  default: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."
+
+}
 var showCompensation = Math.floor(Math.random() * 2);
-localStorage.setItem("group", group_names[showCompensation]);
-var displayedMessage = messages[showCompensation];
+var key = String(Object.keys(conditions)[showCompensation]); 
+var msg = conditions[Object.keys(conditions)[showCompensation]];
+localStorage.setItem("group", key);
+var displayedMessage = msg;
 
 function EyegazeStartContainer() {
-  const [recording, setRecording] = useState(false);
-
-  const recordChange = () => {
-    setRecording(true);
-  };
+  console.log(showCompensation)
+  console.log(key)
+  console.log(msg)
+  console.log('-----------')
 
   const routeChange = () => {
     localStorage.setItem("start_eye", Date.now());
@@ -33,26 +40,15 @@ function EyegazeStartContainer() {
 
   return (
     <div className="container">
-      {!recording ? (
-        <>
-          <div className="title">
-            <h1> We will start recording data now. </h1>
-            <Button onClick={recordChange}> Start </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <div style={{ fontSize: "23px", width: "75%", margin: "auto" }}>
-            {displayedMessage}
-          </div>
+        <div style={{ fontSize: "23px", width: "75%", margin: "auto" }}>
+          {displayedMessage}
+        </div>
 
-          <div>
-            <Button variant="btn btn-success" onClick={routeChange}>
-              Continue
-            </Button>
-          </div>
-        </>
-      )}
+        <div>
+          <Button variant="btn btn-success" onClick={routeChange}>
+            Continue
+          </Button>
+        </div>
     </div>
   );
 }

@@ -24,7 +24,7 @@ const formItemLayout = {
 };
 
 const questions1 = [
-  "I was fully concentrating on the task of editing captions.",
+  "I was fully concentrated on the task of editing captions.",
   "Improving the captions for visually impaired audiences gave me a sense of personal involvement or contribution to a larger cause.",
   "I found the task of providing detailed and accurate captions for each image extremely rewarding.",
   "I found the task of editing AI captions to improve captions for visually impaired audiences very unique.",
@@ -102,7 +102,7 @@ const SurveyContainer = () => {
       };
       sendData(data_send);
       console.log("Survey Data sent:", data_send);
-      let path = "/#/EyeGazeEnd";
+      let path = "/#/SurveyEnd";
       window.location.assign(path);
     } else {
       let copySaveArray = Object.assign({}, answers, values);

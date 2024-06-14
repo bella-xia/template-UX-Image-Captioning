@@ -54,7 +54,11 @@ function EndContainer() {
       </div>
       
       <div className="text"> 
-        You have succesfully completed the study and will receive a compensation of $5 USD Amazon gift card. Please enter your contact details and click <b>Submit </b> (the personal information you enter here will not be associated with your responses in any way).
+        You have succesfully completed the study and will receive a compensation of $6 USD Amazon gift card. 
+      </div>
+
+      <div className="text">
+      Please enter your contact details and click <b>Submit </b> (the personal information you enter here will not be associated with your responses in any way).
       </div>
 
       <Form {...formItemLayout} layout='vertical'

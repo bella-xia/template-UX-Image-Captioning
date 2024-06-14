@@ -13,6 +13,12 @@ import EyegazeStartContainer from "./pages/eyegazeStart/eyegazeStart";
 import eyegazeEndContainer from "./pages/eyegazeEnd/eyegazeEnd";
 import InterventionContainer from "./pages/instr/primer";
 
+import AnnotateContainer from "./pages/annotate/annotate_main";
+import AnnotateInstructionsContainer from "./pages/annotate/instructions";
+import AnnotateStartContainer from "./pages/annotate/start";
+import AnnotateEndContainer from "./pages/annotate/end";
+
+
 export default class Routes extends Component {
   render() {
     return (
@@ -26,8 +32,16 @@ export default class Routes extends Component {
           <Route path="/Mid" component={InterventionContainer} />
           <Route path="/Demo" component={PaymentSurveyContainer} />
           <Route path="/End" component={EndContainer} />
-          <Route path="/EyeGazeStart" component={EyegazeStartContainer} />
-          <Route path="/EyeGazeEnd" component={eyegazeEndContainer} />
+          <Route path="/Start" component={EyegazeStartContainer} />
+          <Route path="/SurveyEnd" component={eyegazeEndContainer} />
+
+          <Route path="/Assessment" exact component={AnnotateStartContainer} />
+          <Route path="/InstrEval" exact component={AnnotateInstructionsContainer} />
+          <Route path="/Eval" exact component={AnnotateContainer} />
+          <Route path="/EndEval" component={AnnotateEndContainer} />
+
+
+          
         </Switch>
       </HashRouter>
     );
