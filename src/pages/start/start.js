@@ -13,10 +13,23 @@ function StartContainer() {
     }
   
     const routeChange = () =>{ 
-      let path = '/#/Instructions'; 
-      // history.push(path);
-      window.location.assign(path);
-      console.log('moving to instructions page')
+      fetch('http://127.0.0.1:8080/checkusers')
+      .then(response => response.json())
+      .then(message => {
+          console.log(message)
+          if (message['warning']===true){
+            localStorage.setItem('block_user', true)
+            let path = "/#/EndEval"
+            window.location.assign(path)
+          } else {
+            let path = '/#/Instructions'; 
+            // history.push(path);
+            window.location.assign(path);
+            console.log('moving to instructions page')
+          }
+
+          
+      });
     }
 
     return (

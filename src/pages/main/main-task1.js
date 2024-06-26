@@ -173,7 +173,7 @@ function Main1Container() {
   localStorage.setItem("img_paths", JSON.stringify(img_paths));
 
   const routeChange = () => {
-    let path = "/#/EyeGazeEnd";
+    let path = "/#/Survey";
     window.location.assign(path);
   };
 

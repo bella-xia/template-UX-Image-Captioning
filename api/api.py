@@ -18,7 +18,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/test.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 csv_file_path = 'captions_evaluator.csv' 
-number_evaluators = 1
+number_evaluators = 2
+number_images = 12
+exp_groups = ["default", "effort"]
+max_users = 9
 
 # db = SQLAlchemy(app)
 firebaseConfig = {
@@ -49,7 +52,24 @@ def setup():
     now = datetime.now() 
     user_id = now.strftime("%Y%m%d%H%M%S")
     response = {'user_id': user_id}
+
     return jsonify(response)
+
+@app.route('/checkusers', methods=['GET'])
+def checkusers():
+    # TODO: verify number of users
+    # count number of entries in default/effort-emails field
+    # redirect if no more users are needed
+    count_participants = 0
+    for group in exp_groups:
+        count_participants += len(db.child(group).child("emails").get().val())
+        print(count_participants)
+
+    warning_continue = count_participants >= max_users
+    response_body = {'warning': warning_continue}
+    print('number of users validated')
+    return jsonify(response_body)
+
 
 @app.route('/captionInfo', methods=['GET'])
 def getImageInfo():
@@ -58,13 +78,34 @@ def getImageInfo():
     return jsonify(response_body)
 
 
+@app.route('/validateResponses', methods=['POST'])
+def validateResponses():
+    # receive userID, group from local storage
+    # connect with the database: in group-captions-userID
+    # iterate in all entries: read deltaEditTime
+    request_data = json.loads(request.data)
+    exp_group = request_data['group']
+    user_id = request_data['userID']
+    user_entries = db.child(exp_group).child("captions").child(user_id).get()
+    list_edits = []
+    for row in user_entries.each():
+       # print(row.val())
+       list_edits.append(row.val()["deltaEditTime"])
+    print(list_edits)
+    # depending on the edit times, define the path to continue the study 
+    warning_continue =  list_edits.count(0) >= 10
+    response_body = {'warning': warning_continue}
+    print('user responses validated')
+    return jsonify(response_body)
+
+
 # send data from frontend to backend
 @app.route('/surveyData', methods=['POST'])
 def surveyData():
-    print("receiving data from frontend")
+    # print("receiving data from frontend")
     request_data = json.loads(request.data)
     data = request_data['content']
-    print(data)
+    # print(data)
     user_id = data['userID']
     db.child(request_data['group']).child(request_data['folder']).child(user_id).push(data)
     response_body = {'user_id': user_id}

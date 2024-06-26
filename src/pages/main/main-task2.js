@@ -176,8 +176,30 @@ function Main2Container() {
   console.log(retrievedList);
 
   const routeChange = () => {
-    let path = "/#/Survey";
-    window.location.assign(path);
+    console.log('Validating user responses ...')
+    // validate user responses here
+    fetch("http://127.0.0.1:8080/validateResponses", {
+      method: "POST",
+      body: JSON.stringify({
+        group: localStorage["group"],
+        userID: localStorage["user-id"],
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((message) => {
+        console.log(message);
+      if (message['warning']===true){
+        alert("We reviewed your task progress and found the majority of the captions unmodified. The study cannot be completed. Clic the OK button.")
+        let path = "/#/terminate"
+        window.location.assign(path)
+      }  else {
+        let path = "/#/Survey";
+        window.location.assign(path);
+      }
+      }); 
   };
 
   const updateImage = (count) => {

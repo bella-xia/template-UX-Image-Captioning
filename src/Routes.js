@@ -17,6 +17,7 @@ import AnnotateContainer from "./pages/annotate/annotate_main";
 import AnnotateInstructionsContainer from "./pages/annotate/instructions";
 import AnnotateStartContainer from "./pages/annotate/start";
 import AnnotateEndContainer from "./pages/annotate/end";
+import TaskEndContainer from "./pages/taskEnd/taskEnd"
 
 
 export default class Routes extends Component {
@@ -34,6 +35,7 @@ export default class Routes extends Component {
           <Route path="/End" component={EndContainer} />
           <Route path="/Start" component={EyegazeStartContainer} />
           <Route path="/SurveyEnd" component={eyegazeEndContainer} />
+          <Route path="/terminate" component={TaskEndContainer} />
 
           <Route path="/Assessment" exact component={AnnotateStartContainer} />
           <Route path="/InstrEval" exact component={AnnotateInstructionsContainer} />
