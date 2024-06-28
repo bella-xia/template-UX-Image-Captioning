@@ -14,25 +14,12 @@ function AnnotateInstructionsContainer() {
     let path = "/#/Eval";
     // history.push(path);
     window.location.assign(path);
-    console.log("moving to eye gaze start page");
+    console.log("moving to main evaluation page");
   };
 
   const moreChange =  () => {
     setAcceptFirst(true);
   }
-
-  const exampleChange = () => {
-    let path = "/#/EyeGazeStart"; // change back
-    window.location.assign(path);
-    console.log("opening popup");
-    // if (task % 2 === 0) {
-    //     let path = '/#/Main2';
-    //     window.location.assign(path);
-    // } else {
-    //     let path = '/#/Main1';
-    //     window.location.assign(path);
-    // }
-  };
 
   // connect with the backend to get a user ID and randomize agent
   // useEffect(() => {

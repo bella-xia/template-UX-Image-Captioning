@@ -22,6 +22,7 @@ number_evaluators = 2
 number_images = 12
 exp_groups = ["default", "effort"]
 max_users = 9
+eval_folder = "two_annotations"
 
 # db = SQLAlchemy(app)
 firebaseConfig = {
@@ -131,7 +132,7 @@ def setEvals():
     combinations = get_possible_users()  # ["D1E1", "D2E2", "D3E3", "D4E4", "D1E5"]
     unmatched = "E5"
     print("combinations", combinations)
-    eval_combinations = db.child("one").get()
+    eval_combinations = db.child(eval_folder).get()
 
     if eval_combinations.val():
         # for the existing entries in the database
@@ -140,6 +141,12 @@ def setEvals():
             print('found str:', comb_str)
             number_of_children = len(comb.val())
             print('number of elements', number_of_children)
+            
+            # iterate over the evaluators saved and check that valid evaluators include 12 entries
+            for each_eval in db.child(eval_folder).child(comb_str).get().each():
+                n_entries = len(each_eval.val())
+                if n_entries < number_images:
+                    number_of_children -= 1
             # check that there are still evaluations to try
             if len(combinations) > 0:
                 try: 
@@ -197,6 +204,7 @@ def setEvals():
 
     response = {
         "user_id": user_id,
+        "eval_folder": eval_folder,
         "selected_combination": selected_combination,
         "captions_info": captions_info,
     }

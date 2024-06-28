@@ -25,7 +25,7 @@ export default class Routes extends Component {
     return (
       <HashRouter>
         <Switch>
-          <Route path="/" exact component={StartContainer} />
+          <Route path="/Study" exact component={StartContainer} />
           <Route path="/Instructions" component={InstructionsContainer} />
           <Route path="/Main1" component={Main1Container} />
           <Route path="/Main2" component={Main2Container} />

@@ -143,7 +143,7 @@ function AnnotateContainer() {
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
         userID: localStorage["user-id"],
-        folder: "one",
+        folder: localStorage["eval_folder"],
         content: obj,
       }),
       headers: {
@@ -569,26 +569,6 @@ function AnnotateContainer() {
     }
   };
 
-  const sendData = (obj) => {
-    fetch("http://127.0.0.1:8080/surveyData", {
-      // This bit needs to be changed
-      method: "POST",
-      body: JSON.stringify({
-        group: localStorage["group"],
-        folder: "captions",
-        content: obj,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((message) => {
-        console.log(message);
-        // getLastestTodos();
-      });
-  };
-
   // testing communication with backend
   //   useEffect(() => {
   //     fetch("http://0.0.0.0:8080/time")
@@ -608,6 +588,7 @@ function AnnotateContainer() {
 
         if (isMounted.current) {
           localStorage.setItem("user-id", data["user_id"]);
+          localStorage.setItem("eval_folder", data["eval_folder"]);
           localStorage.setItem("combination", data["selected_combination"]);
           if (localStorage["combination"] ==='NA') {
             localStorage.setItem("block_user", true);

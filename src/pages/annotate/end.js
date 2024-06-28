@@ -15,7 +15,8 @@ const formItemLayout = {
 
 function AnnotateEndContainer() {
   const [submit, setSubmit] = useState(false);
-  var display = localStorage["block_user"];
+  // var display = localStorage["block_user"];
+  var display = localStorage.getItem("block_user") === "true";
   console.log(display)
   const [userid, setUserID] = useState(
     JSON.parse(localStorage.getItem("user-id")) || ""
