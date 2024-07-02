@@ -136,9 +136,9 @@ function AnnotateContainer() {
     newData.push(rowData);
     setSurveyData(newData);
   };
-
+  // 127.0.0.1
   const sendAnnotationData = (obj) => {
-    fetch("http://127.0.0.1:8080/annotationData", {
+    fetch("https://backend-7lis24xilq-ue.a.run.app/annotationData", {
       method: "POST",
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
@@ -583,7 +583,9 @@ function AnnotateContainer() {
     const fetchData = async () => {
       try {
         // Replace with your asynchronous operation
-        const response = await fetch("http://127.0.0.1:8080/setEvals");
+        // 127.0.0.1 
+        // https://backend-7lis24xilq-ue.a.run.app
+        const response = await fetch("https://backend-7lis24xilq-ue.a.run.app/setEvals");
         const data = await response.json();
 
         if (isMounted.current) {
@@ -709,9 +711,9 @@ function AnnotateContainer() {
                   <div className="box-container">
                     <div className="box">
                       <span className="caption-text">
-                        {" "}
+                       
                         <b> Caption:</b>
-                      </span>{" "}
+                      </span>
                       <span className="caption-text">{captionsList[0]} </span>{" "}
                     </div>
                   </div>

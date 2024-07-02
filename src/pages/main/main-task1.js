@@ -490,7 +490,8 @@ function Main1Container() {
   };
 
   const sendData = (obj) => {
-    fetch("http://127.0.0.1:8080/surveyData", {
+    // 127.0.0.1 
+    fetch("https://backend-7lis24xilq-ue.a.run.app/surveyData", {
       // This bit needs to be changed
       method: "POST",
       body: JSON.stringify({
@@ -523,7 +524,8 @@ function Main1Container() {
     const fetchData = async () => {
       try {
         // Replace with your asynchronous operation
-        const response = await fetch("http://127.0.0.1:8080/captionInfo");
+        // 127.0.0.1
+        const response = await fetch("https://backend-7lis24xilq-ue.a.run.app/captionInfo");
         const data = await response.json();
 
         if (isMounted.current) {

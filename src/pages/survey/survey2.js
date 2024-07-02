@@ -94,7 +94,8 @@ const SurveyContainer2 = () => {
   };
 
   const sendData = (obj) => {
-    fetch("http://localhost:8080/surveyData", {
+    // 127.0.0.1
+    fetch("https://backend-7lis24xilq-ue.a.run.app/surveyData", {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {

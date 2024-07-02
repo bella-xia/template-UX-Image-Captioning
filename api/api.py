@@ -2,12 +2,12 @@ import os
 import time
 import random
 import pandas as pd
-from urllib import response
+# from urllib import response
 from datetime import datetime
 
 from flask import Flask, jsonify, json, request
-from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
+# from flask_sqlalchemy import SQLAlchemy
 
 import pyrebase
 
@@ -17,12 +17,14 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/test.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-csv_file_path = 'captions_evaluator.csv' 
+csv_file_path = 'captions_evaluator_combined.csv' 
 number_evaluators = 2
 number_images = 12
 exp_groups = ["default", "effort"]
 max_users = 9
-eval_folder = "two_annotations"
+eval_folder = "debug"
+
+
 
 # db = SQLAlchemy(app)
 firebaseConfig = {
@@ -40,6 +42,11 @@ db = firebase.database()
 
 with open('captions_gpt.json') as f:
     all_captions = json.load(f)
+
+# @app.route("/data")
+# @cross_origin(origin='gaze-engage.web.app') 
+# def get_data():
+#     return {"msg": "Hello from Flask with CORS!"}
 
 # check that the backend is connected
 @app.route('/time')
@@ -227,7 +234,8 @@ def get_captions_info(combination):
     # read the CSV file and get captions and image IDs for the specified combination
     try:
         df = pd.read_csv(csv_file_path)
-        rows = df[df["evaluator"] == int(combination[1])] # userID
+        evaluator_number = ''.join([char for char in combination if char.isdigit()])
+        rows = df[df["evaluator"] == int(evaluator_number)] # userID
 
         captions_info = []
         for index, row in rows.iterrows():
@@ -262,5 +270,5 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, ssl_context='adhoc', host="0.0.0.0", port=8080)# int(os.environ.get("PORT", 8080)))
 

@@ -27,25 +27,58 @@ margin-top: 10px;
 
 }
 
+.container {
+    margin-top: 20px;
+    width: 60%;
+    margin-left: 10%;
+}
+
 
 .box-container {
     display: flex;
     justify-content: space-around;
+    width: 110%; 
     margin-top: 20px;
-}
-
-.caption-text {
-    font-size: 17px; 
-}
-
-.box {
-    border: 1px solid #121010;
+    
+  }
+  
+/* .box {
+    border: 1px solid #ccc;
     padding: 5px;
     width: 100%; 
     text-align: center;
     margin-left: 20%;
     margin-right: 5px; 
+  } */
+
+.box {
+    display: flex;          /* This activates Flexbox, which is needed for align-items to work */
+    flex-direction: column; /* Stacks the child elements vertically */
+    align-items: flex-start; /* Aligns children (content) to the start of the flex direction (top) */
+    border: 1px solid #121010;
+    padding: 5px;
+    width: 100%;
+    text-align: center;     /* This will center the text inside each flex item */
+    margin-left: 10%;
+    margin-right: 5px;
+    height: auto;           /* You might want to set a height if you want to control the box size */
 }
+  
+.caption-container {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    margin-top: 10px; 
+  }
+
+
+
+.caption-text {
+    font-size: 17px; 
+    width: 100%;
+    text-align: center;
+  }
+  
 
 .back-buttons {
     width: 200px;
