@@ -18,8 +18,8 @@ function AnnotateContainer() {
     3: null,
   });
   const [sliderValues, setSliderValues] = useState({
-    accuracy: 0,
-    detail: 0,
+    accuracy: -1,
+    detail: -1,
   });
   const [sliderTimes, setSliderTimes] = useState({
     accuracy: 0,
@@ -305,8 +305,8 @@ function AnnotateContainer() {
   const updateImage = (count) => {
     // restart variables
     setSliderValues({
-      accuracy: 0,
-      detail: 0,
+      accuracy: -1,
+      detail: -1,
     });
 
     setSliderTimes({
@@ -351,22 +351,22 @@ function AnnotateContainer() {
 
   const nextChange = () => {
     // console.log(selectedColumns);
-    // if (!sliderInteracted.accuracy && !sliderInteracted.detail) {
-    //   alert(
-    //     "Please move all sliders before proceeding even if assigning very poor detail/inaccurate."
-    //   );
-    //   return; // Stop the function if sliders haven't been interacted with
-    // } else if (!sliderInteracted.accuracy) {
-    //   alert(
-    //     "Please adjust the accuracy slider before proceeding even if assigning very inaccurate."
-    //   );
-    //   return; // Stop the function if sliders haven't been interacted with
-    // } else if (!sliderInteracted.detail) {
-    //   alert(
-    //     "Please adjust the detail slider before proceeding even if assigning very poor detail."
-    //   );
-    //   return; // Stop the function if sliders haven't been interacted with
-    // }
+    if (!sliderInteracted.accuracy && !sliderInteracted.detail) {
+      alert(
+        "Please select one response for each slider before proceeding even if assigning very poor detail/inaccurate."
+      );
+      return; // Stop the function if sliders haven't been interacted with
+    } else if (!sliderInteracted.accuracy) {
+      alert(
+        "Please select one response in the accuracy slider before proceeding even if assigning very inaccurate."
+      );
+      return; // Stop the function if sliders haven't been interacted with
+    } else if (!sliderInteracted.detail) {
+      alert(
+        "Please select one response in the detail slider before proceeding even if assigning very poor detail."
+      );
+      return; // Stop the function if sliders haven't been interacted with
+    }
     // measure image times here
     let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
     setDeltaImageTime(t_i_f);
@@ -512,6 +512,7 @@ function AnnotateContainer() {
   };
 
   const handleSliderChange = (name, value) => {
+    console.log('calling slider change')
     setSliderValues((prev) => ({ ...prev, [name]: parseInt(value) }));
     setSliderInteracted((prev) => ({ ...prev, [name]: true }));
 
@@ -519,6 +520,14 @@ function AnnotateContainer() {
     let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
     setSliderTimes((prev) => ({ ...prev, [name]: t_i_f }));
   };
+
+  const handleSliderClick = (name, value) => {
+    console.log('calling slider click')
+    if (sliderValues[name] !== 0) { // Check if the value has never been set
+      handleSliderChange(name, value);
+    }
+  };
+
   const modifyCaption = (modCap) => {
     console.log("changed caption!");
     if (edited === false) {
@@ -778,6 +787,7 @@ function AnnotateContainer() {
                     onChange={(e) =>
                       handleSliderChange("accuracy", e.target.value)
                     }
+                    onClick={(e) => handleSliderClick("accuracy", e.target.value)}
                     style={{ width: "80%", margin: "0 auto" }}
                   />
                 </div>
@@ -820,6 +830,7 @@ function AnnotateContainer() {
                     onChange={(e) =>
                       handleSliderChange("detail", e.target.value)
                     }
+                    onClick={(e) => handleSliderClick("detail", e.target.value)}
                     style={{ width: "80%", margin: "0 auto" }}
                   />
                 </div>
