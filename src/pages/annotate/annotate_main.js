@@ -21,6 +21,10 @@ function AnnotateContainer() {
     accuracy: 0,
     detail: 0,
   });
+  const [sliderTimes, setSliderTimes] = useState({
+    accuracy: 0,
+    detail: 0,
+  });
   const [currentCaption, setCurrentCaption] = useState(""); // Caption for current image
 
   const [columnDisabledA, setColumnDisabledA] = useState({
@@ -299,10 +303,17 @@ function AnnotateContainer() {
   };
 
   const updateImage = (count) => {
+    // restart variables
     setSliderValues({
       accuracy: 0,
       detail: 0,
     });
+
+    setSliderTimes({
+      accuracy: 0,
+      detail: 0,
+    });
+
     setSliderInteracted({ accuracy: false, detail: false });
 
     const usedTime = Date.now() - taskTime;
@@ -356,24 +367,27 @@ function AnnotateContainer() {
     //   );
     //   return; // Stop the function if sliders haven't been interacted with
     // }
+    // measure image times here
+    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
+    setDeltaImageTime(t_i_f);
+    console.log("done with image after X seconds");
+    console.log(t_i_f);
     const rowData = {
       image_name: currentImage,
       eval_caption: captionsList[0],
       accuracyLevel: sliderValues.accuracy,
+      accuracyTime: sliderTimes.accuracy,
       detailLevel: sliderValues.detail,
+      detailTime: sliderTimes.detail,
       caption_group: captionGroup,
       caption_tag: captionTag,
+      image_time: t_i_f
     };
     console.log("getting ready to send data", rowData);
     console.log(selectedColumnsA);
 
     //updateAnnotationData(rowData);
     sendAnnotationData(rowData);
-    // measure image times here
-    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
-    setDeltaImageTime(t_i_f);
-    console.log("done with image after X seconds");
-    console.log(t_i_f);
 
     // if they moved to the next image and did not edit at all the caption
     if (edited === false) {
@@ -500,6 +514,10 @@ function AnnotateContainer() {
   const handleSliderChange = (name, value) => {
     setSliderValues((prev) => ({ ...prev, [name]: parseInt(value) }));
     setSliderInteracted((prev) => ({ ...prev, [name]: true }));
+
+    // record after how many seconds the slider response was provided
+    let t_i_f = ((Date.now() - taskTime) / 1000).toFixed(3);
+    setSliderTimes((prev) => ({ ...prev, [name]: t_i_f }));
   };
   const modifyCaption = (modCap) => {
     console.log("changed caption!");

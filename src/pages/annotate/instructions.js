@@ -49,14 +49,23 @@ function AnnotateInstructionsContainer() {
         {!acceptFirst ? 
         <>
         <p>
+          
           Welcome to this evaluation exercise. In this task, you will be
           presented with 12 images and captions acquired in an initial study. 
           Your role is to rate these captions based on specific
           criteria provided for each set. It's important to approach this task
           with your first instinct. We value your initial perceptions and
           judgments, so please avoid overthinking your responses. 
-          Do not reload the website or try to go back since you will have to start again. 
+        </p>
 
+        <p> 
+          Do not reload the website or try to go back since you will have to start again. 
+          Please use <b>full screen</b> mode in <b>Chrome browser</b>.
+        </p>
+
+        <p> 
+          You may need to wait for a few seconds for the first caption to load. Please do not start
+          until the caption appears in the box. Allow for the images to load when you go to the next one.
         </p>
 
           <Button style={{ marginLeft: "40%" }} variant="btn btn-success" onClick={moreChange}>
@@ -96,7 +105,7 @@ function AnnotateInstructionsContainer() {
         </Row>
 
         <Button style={{ marginLeft: "60%" }} variant="btn btn-success" onClick={routeChange}>
-            Next
+            Start
         </Button>
 
 
