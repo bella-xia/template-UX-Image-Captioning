@@ -28,8 +28,7 @@ function EndContainer() {
     };
 
     const sendData = (obj) => {
-      // 127.0.0.1
-      fetch('https://backend-7lis24xilq-ue.a.run.app/emailData', {
+      fetch('http://127.0.0.1:8080/emailData', {
         method: 'POST',
         body: JSON.stringify({
           group: localStorage['group'], 

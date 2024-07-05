@@ -142,7 +142,7 @@ function AnnotateContainer() {
   };
   // 127.0.0.1
   const sendAnnotationData = (obj) => {
-    fetch("https://backend-7lis24xilq-ue.a.run.app/annotationData", {
+    fetch("http://127.0.0.1:8080/annotationData", {
       method: "POST",
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
@@ -610,9 +610,7 @@ function AnnotateContainer() {
     const fetchData = async () => {
       try {
         // Replace with your asynchronous operation
-        // 127.0.0.1 
-        // https://backend-7lis24xilq-ue.a.run.app
-        const response = await fetch("https://backend-7lis24xilq-ue.a.run.app/setEvals");
+        const response = await fetch("http://127.0.0.1:8080/setEvals");
         const data = await response.json();
 
         if (isMounted.current) {

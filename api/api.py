@@ -22,7 +22,7 @@ number_evaluators = 2
 number_images = 12
 exp_groups = ["default", "effort"]
 max_users = 9
-eval_folder = "debug"
+eval_folder = "test_folder"
 
 
 
@@ -270,5 +270,5 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, ssl_context='adhoc', host="0.0.0.0", port=8080)# int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=8080)# int(os.environ.get("PORT", 8080)))
 

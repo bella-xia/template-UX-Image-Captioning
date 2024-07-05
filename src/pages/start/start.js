@@ -13,7 +13,7 @@ function StartContainer() {
     }
   
     const routeChange = () =>{ 
-      fetch('https://backend-7lis24xilq-ue.a.run.app/checkusers') // http://127.0.0.1:8080/checkusers
+      fetch('http://127.0.0.1:8080/checkusers') // http://127.0.0.1:8080/checkusers
       .then(response => response.json())
       .then(message => {
           console.log(message)

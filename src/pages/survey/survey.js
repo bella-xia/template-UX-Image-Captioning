@@ -113,8 +113,7 @@ const SurveyContainer = () => {
   };
 
   const sendData = (obj) => {
-    // 127.0.0.1
-    fetch("https://backend-7lis24xilq-ue.a.run.app/surveyData", {
+    fetch("http://127.0.0.1:8080/surveyData", {
       method: "POST",
       body: JSON.stringify({
         group: localStorage["group"],

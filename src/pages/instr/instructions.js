@@ -41,7 +41,7 @@ function InstructionsContainer() {
 
     // connect with the backend to get a user ID and randomize agent  
     useEffect(() => {
-      fetch('https://backend-7lis24xilq-ue.a.run.app/setup') //  http://127.0.0.1:8080/setup
+      fetch('http://127.0.0.1:8080/setup')
       .then(response => response.json())
       .then(data => {
           console.log(data)
