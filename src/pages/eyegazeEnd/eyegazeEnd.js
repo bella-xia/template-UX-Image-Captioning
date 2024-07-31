@@ -9,6 +9,7 @@ function EyegazeEndContainer() {
   const [code, setCode] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const [responses, setResponses] = useState({});
+  const [allAnswered, setAllAnswered] = useState(false);
 
   useEffect(() => {
     // Function to randomly select 6 images
@@ -36,6 +37,14 @@ function EyegazeEndContainer() {
     fetchImages();
   }, []);
 
+  useEffect(() => {
+    // Check if all selected images have responses and those responses are not empty
+    const answeredAll = selectedImages.every(
+      (image) => responses.hasOwnProperty(image) && responses[image].length > 0
+    );
+    setAllAnswered(answeredAll);
+  }, [responses, selectedImages]);
+
   const handleResponseChange = (image, value) => {
     setResponses((prevResponses) => ({
       ...prevResponses,
@@ -47,7 +56,7 @@ function EyegazeEndContainer() {
     if (true) {
       //(code === "password123") {
       let path = "/#/Demo";
-      window.locatiosn.assign(path);
+      window.location.assign(path);
     } else {
       alert("The code doesn't match and you can't continue.");
     }
@@ -117,9 +126,8 @@ function EyegazeEndContainer() {
     <div className="formatting">
       <div>
         <h1>
-          {" "}
           Please answer these questions about the images that you have seen
-          before.{" "}
+          before.
         </h1>
         {selectedImages.map((image) => (
           <div key={image} className="image-container">
@@ -159,7 +167,9 @@ function EyegazeEndContainer() {
       </div>
 
       <div>
-        <Button onClick={routeChange}>Continue</Button>
+        <Button onClick={routeChange} disabled={!allAnswered}>
+          Continue
+        </Button>
       </div>
     </div>
   );
