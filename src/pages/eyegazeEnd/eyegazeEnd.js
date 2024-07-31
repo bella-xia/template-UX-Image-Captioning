@@ -157,7 +157,7 @@ const EyegazeEndContainer = () => {
             Please answer these questions about the images that you have seen
             before.
           </h1>
-          {selectedImages.map((image) => (
+          {selectedImages.map((image, index) => (
             <div key={image} className="image-container">
               <img
                 src={`${imageFolder}/${image}`}
@@ -165,7 +165,11 @@ const EyegazeEndContainer = () => {
                 className="attention-check-image"
               />
               <div>
-                <p>{imageQuestions[image].question}</p>
+                <p>
+                  <strong>{`${index + 1}. ${
+                    imageQuestions[image].question
+                  }`}</strong>
+                </p>
                 {[
                   "image3.png",
                   "image7.png",
