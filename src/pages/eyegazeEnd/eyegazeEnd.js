@@ -1,4 +1,4 @@
-import { Button, Radio } from "antd";
+import { Button, Radio, Checkbox } from "antd";
 import React, { useState, useEffect } from "react";
 import "./eyegazeEnd.css";
 
@@ -58,58 +58,69 @@ function EyegazeEndContainer() {
 
   const imageQuestions = {
     "image1.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question:
+        "What color jerseys were the soccer players that are blocked out wearing?",
+      options: ["Red", "Blue", "Yellow", "Orange"],
     },
     "image2.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "How many people are sitting on the bench?",
+      options: ["1", "2", "3", "4"],
     },
     "image3.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "Select all the items that showed up in the image.",
+      options: ["Bike", "Red Car", "Traffic Light"],
     },
     "image4.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "What is the boy on in the picture?",
+      options: ["Bicyle", "Scooter", "Skateboard", "Roller Skates"],
     },
     "image5.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "Is the person wearing a backpack?",
+      options: ["Yes", "No"],
     },
     "image6.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "How many people are fishing?",
+      options: ["1", "2", "3", "4"],
     },
     "image7.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "Select all the items in the picture.",
+      options: [
+        "White hat",
+        "Silver cooking bowl",
+        "White shorts",
+        "Yellow shoes",
+      ],
     },
     "image8.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "What color is the car?",
+      options: ["Red", "Orange", "Yellow", "Green"],
     },
     "image9.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "How many people standing in the red box?",
+      options: ["1", "2", "3", "4"],
     },
     "image10.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "Select all the items that appear in the red boxes.",
+      options: ["Woman", "Plant", "Fish", "Flowers", "Grey Rocks"],
     },
     "image11.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "What/Who is sitting next to the man in the bench?",
+      options: ["Dog", "Cat", "Man", "Woman"],
     },
     "image12.png": {
-      question: "What is shown in this image?",
-      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      question: "Select the all items that appear in the red boxes.",
+      options: ["Man", "Horse", "Fire", "Tree", "Rabbit"],
     },
   };
 
   return (
     <div className="formatting">
       <div>
+        <h1>
+          {" "}
+          Please answer these questions about the images that you have seen
+          before.{" "}
+        </h1>
         {selectedImages.map((image) => (
           <div key={image} className="image-container">
             <img
@@ -119,15 +130,29 @@ function EyegazeEndContainer() {
             />
             <div>
               <p>{imageQuestions[image].question}</p>
-              <Radio.Group
-                onChange={(e) => handleResponseChange(image, e.target.value)}
-              >
-                {imageQuestions[image].options.map((option, index) => (
-                  <Radio key={index} value={option}>
-                    {option}
-                  </Radio>
-                ))}
-              </Radio.Group>
+              {[
+                "image3.png",
+                "image7.png",
+                "image10.png",
+                "image12.png",
+              ].includes(image) ? (
+                <Checkbox.Group
+                  options={imageQuestions[image].options}
+                  onChange={(checkedValues) =>
+                    handleResponseChange(image, checkedValues)
+                  }
+                />
+              ) : (
+                <Radio.Group
+                  onChange={(e) => handleResponseChange(image, e.target.value)}
+                >
+                  {imageQuestions[image].options.map((option, index) => (
+                    <Radio key={index} value={option}>
+                      {option}
+                    </Radio>
+                  ))}
+                </Radio.Group>
+              )}
             </div>
           </div>
         ))}
