@@ -1,20 +1,18 @@
-import { Button, Radio, Checkbox } from "antd";
+import { Button, Radio, Checkbox, Form } from "antd";
 import React, { useState, useEffect } from "react";
 import "./eyegazeEnd.css";
 
 const imageFolder = "/attention_check_image_folder";
 
-function EyegazeEndContainer() {
-  const [agree, setAgree] = useState(false);
-  const [code, setCode] = useState("");
+const EyegazeEndContainer = () => {
+  const [form] = Form.useForm();
   const [selectedImages, setSelectedImages] = useState([]);
   const [responses, setResponses] = useState({});
   const [allAnswered, setAllAnswered] = useState(false);
+  const [answers, setAnswers] = useState({});
 
   useEffect(() => {
-    // Function to randomly select 6 images
     const fetchImages = async () => {
-      // Fetch all image file names from the folder
       const images = [
         "image1.png",
         "image2.png",
@@ -28,7 +26,7 @@ function EyegazeEndContainer() {
         "image10.png",
         "image11.png",
         "image12.png",
-      ]; // Mock image names
+      ];
       const shuffledImages = images.sort(() => 0.5 - Math.random());
       const selected = shuffledImages.slice(0, 6);
       setSelectedImages(selected);
@@ -38,7 +36,6 @@ function EyegazeEndContainer() {
   }, []);
 
   useEffect(() => {
-    // Check if all selected images have responses and those responses are not empty
     const answeredAll = selectedImages.every(
       (image) => responses.hasOwnProperty(image) && responses[image].length > 0
     );
@@ -52,18 +49,43 @@ function EyegazeEndContainer() {
     }));
   };
 
-  const routeChange = () => {
-    if (true) {
-      //(code === "password123") {
-      let path = "/#/Demo";
-      window.location.assign(path);
-    } else {
-      alert("The code doesn't match and you can't continue.");
-    }
+  const sendData = (obj) => {
+    console.log(
+      JSON.stringify({
+        group: localStorage["group"],
+        folder: "attention",
+        content: obj,
+      })
+    );
+    fetch("http://127.0.0.1:8080", {
+      method: "POST",
+      body: JSON.stringify({
+        group: localStorage["group"],
+        folder: "attention",
+        content: obj,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((message) => {
+        console.log(message);
+      });
   };
 
-  // Retrieve the user-id from localStorage
-  const userId = localStorage.getItem("user-id");
+  const onFinish = (values) => {
+    console.log("values", values);
+    let copySaveArray = Object.assign({}, answers, values);
+    setAnswers(copySaveArray);
+    let data_send = {
+      userID: localStorage["user-id"],
+      attention_data: copySaveArray,
+    };
+    sendData(data_send);
+    let path = "/#/Demo";
+    window.location.assign(path);
+  };
 
   const imageQuestions = {
     "image1.png": {
@@ -124,55 +146,77 @@ function EyegazeEndContainer() {
 
   return (
     <div className="formatting">
-      <div>
-        <h1>
-          Please answer these questions about the images that you have seen
-          before.
-        </h1>
-        {selectedImages.map((image) => (
-          <div key={image} className="image-container">
-            <img
-              src={`${imageFolder}/${image}`}
-              alt={image}
-              className="attention-check-image"
-            />
-            <div>
-              <p>{imageQuestions[image].question}</p>
-              {[
-                "image3.png",
-                "image7.png",
-                "image10.png",
-                "image12.png",
-              ].includes(image) ? (
-                <Checkbox.Group
-                  options={imageQuestions[image].options}
-                  onChange={(checkedValues) =>
-                    handleResponseChange(image, checkedValues)
-                  }
-                />
-              ) : (
-                <Radio.Group
-                  onChange={(e) => handleResponseChange(image, e.target.value)}
-                >
-                  {imageQuestions[image].options.map((option, index) => (
-                    <Radio key={index} value={option}>
-                      {option}
-                    </Radio>
-                  ))}
-                </Radio.Group>
-              )}
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        initialValues={{}}
+      >
+        <div>
+          <h1>
+            Please answer these questions about the images that you have seen
+            before.
+          </h1>
+          {selectedImages.map((image) => (
+            <div key={image} className="image-container">
+              <img
+                src={`${imageFolder}/${image}`}
+                alt={image}
+                className="attention-check-image"
+              />
+              <div>
+                <p>{imageQuestions[image].question}</p>
+                {[
+                  "image3.png",
+                  "image7.png",
+                  "image10.png",
+                  "image12.png",
+                ].includes(image) ? (
+                  <Form.Item
+                    name={image}
+                    rules={[
+                      { required: true, message: "Please select an option" },
+                    ]}
+                  >
+                    <Checkbox.Group
+                      options={imageQuestions[image].options}
+                      onChange={(checkedValues) =>
+                        handleResponseChange(image, checkedValues)
+                      }
+                    />
+                  </Form.Item>
+                ) : (
+                  <Form.Item
+                    name={image}
+                    rules={[
+                      { required: true, message: "Please select an option" },
+                    ]}
+                  >
+                    <Radio.Group
+                      onChange={(e) =>
+                        handleResponseChange(image, e.target.value)
+                      }
+                    >
+                      {imageQuestions[image].options.map((option, index) => (
+                        <Radio key={index} value={option}>
+                          {option}
+                        </Radio>
+                      ))}
+                    </Radio.Group>
+                  </Form.Item>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      <div>
-        <Button onClick={routeChange} disabled={!allAnswered}>
-          Continue
-        </Button>
-      </div>
+          ))}
+        </div>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" disabled={!allAnswered}>
+            Continue
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
-}
+};
 
 export default EyegazeEndContainer;
