@@ -2,22 +2,24 @@ import os
 import time
 import random
 import pandas as pd
+
 # from urllib import response
 from datetime import datetime
 
 from flask import Flask, jsonify, json, request
 from flask_cors import CORS, cross_origin
+
 # from flask_sqlalchemy import SQLAlchemy
 
 import pyrebase
 
 app = Flask(__name__)
 cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/test.db'
+app.config["CORS_HEADERS"] = "Content-Type"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-csv_file_path = 'captions_evaluator_combined.csv' 
+csv_file_path = "captions_evaluator_combined.csv"
 number_evaluators = 2
 number_images = 12
 exp_groups = ["default", "effort"]
@@ -25,45 +27,46 @@ max_users = 9
 eval_folder = "test_folder"
 
 
-
 # db = SQLAlchemy(app)
 firebaseConfig = {
-  "apiKey": "AIzaSyD5-rkzlf29hAmfG-39JrY69SelgU3p0Q0",
-  "authDomain": "gaze-engage.firebaseapp.com",
-  "databaseURL": "https://gaze-engage-default-rtdb.firebaseio.com",
-  "projectId": "gaze-engage",
-  "storageBucket": "gaze-engage.appspot.com",
-  "messagingSenderId": "612082376120",
-  "appId": "1:612082376120:web:cb8effd926a5966d9ec34d",
-  "measurementId": "G-DWMQ4EBNL2"
+    "apiKey": "AIzaSyD5-rkzlf29hAmfG-39JrY69SelgU3p0Q0",
+    "authDomain": "gaze-engage.firebaseapp.com",
+    "databaseURL": "https://gaze-engage-default-rtdb.firebaseio.com",
+    "projectId": "gaze-engage",
+    "storageBucket": "gaze-engage.appspot.com",
+    "messagingSenderId": "612082376120",
+    "appId": "1:612082376120:web:cb8effd926a5966d9ec34d",
+    "measurementId": "G-DWMQ4EBNL2",
 }
 firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 
-with open('captions_gpt.json') as f:
+with open("captions_gpt.json") as f:
     all_captions = json.load(f)
 
 # @app.route("/data")
-# @cross_origin(origin='gaze-engage.web.app') 
+# @cross_origin(origin='gaze-engage.web.app')
 # def get_data():
 #     return {"msg": "Hello from Flask with CORS!"}
 
+
 # check that the backend is connected
-@app.route('/time')
+@app.route("/time")
 def get_current_time():
-    return jsonify({'time': time.strftime("%I:%M:%S %p", time.localtime())})
+    return jsonify({"time": time.strftime("%I:%M:%S %p", time.localtime())})
 
 
-@app.route('/setup', methods=['GET'])
+@app.route("/setup", methods=["GET"])
 def setup():
     # assign a random task to the current user
-    now = datetime.now() 
+    now = datetime.now()
     user_id = now.strftime("%Y%m%d%H%M%S")
-    response = {'user_id': user_id}
+    response = {"user_id": user_id}
 
     return jsonify(response)
 
-@app.route('/checkusers', methods=['GET'])
+
+@app.route("/checkusers", methods=["GET"])
 def checkusers():
     # TODO: verify number of users
     # count number of entries in default/effort-emails field
@@ -74,63 +77,66 @@ def checkusers():
         print(count_participants)
 
     warning_continue = count_participants >= max_users
-    response_body = {'warning': warning_continue}
-    print('number of users validated')
+    response_body = {"warning": warning_continue}
+    print("number of users validated")
     return jsonify(response_body)
 
 
-@app.route('/captionInfo', methods=['GET'])
+@app.route("/captionInfo", methods=["GET"])
 def getImageInfo():
     # define the order of the images to be loaded
-    response_body = {'captions': all_captions}
+    response_body = {"captions": all_captions}
     return jsonify(response_body)
 
 
-@app.route('/validateResponses', methods=['POST'])
+@app.route("/validateResponses", methods=["POST"])
 def validateResponses():
     # receive userID, group from local storage
     # connect with the database: in group-captions-userID
     # iterate in all entries: read deltaEditTime
     request_data = json.loads(request.data)
-    exp_group = request_data['group']
-    user_id = request_data['userID']
+    exp_group = request_data["group"]
+    user_id = request_data["userID"]
     user_entries = db.child(exp_group).child("captions").child(user_id).get()
     list_edits = []
     for row in user_entries.each():
-       # print(row.val())
-       list_edits.append(row.val()["deltaEditTime"])
+        # print(row.val())
+        list_edits.append(row.val()["deltaEditTime"])
     print(list_edits)
-    # depending on the edit times, define the path to continue the study 
-    warning_continue =  list_edits.count(0) >= 10
-    response_body = {'warning': warning_continue}
-    print('user responses validated')
+    # depending on the edit times, define the path to continue the study
+    warning_continue = list_edits.count(0) >= 10
+    response_body = {"warning": warning_continue}
+    print("user responses validated")
     return jsonify(response_body)
 
 
 # send data from frontend to backend
-@app.route('/surveyData', methods=['POST'])
+@app.route("/surveyData", methods=["POST"])
 def surveyData():
     # print("receiving data from frontend")
     request_data = json.loads(request.data)
-    data = request_data['content']
+    data = request_data["content"]
     # print(data)
-    user_id = data['userID']
-    db.child(request_data['group']).child(request_data['folder']).child(user_id).push(data)
-    response_body = {'user_id': user_id}
-    return jsonify(response_body) 
+    user_id = data["userID"]
+    db.child(request_data["group"]).child(request_data["folder"]).child(user_id).push(
+        data
+    )
+    response_body = {"user_id": user_id}
+    return jsonify(response_body)
 
 
-@app.route('/emailData', methods=['POST'])
+@app.route("/emailData", methods=["POST"])
 def emailData():
     print("receiving data from frontend")
     request_data = json.loads(request.data)
-    data = request_data['content']
-    user_id = data['userID']
-    response_body = {'date': user_id // (10 ** 6)}
-    response_body.update(data['survey_data'])
+    data = request_data["content"]
+    user_id = data["userID"]
+    response_body = {"date": user_id // (10**6)}
+    response_body.update(data["survey_data"])
     print(data)
-    db.child(request_data['group']).child(request_data['folder']).push(response_body) 
-    return jsonify(response_body) 
+    db.child(request_data["group"]).child(request_data["folder"]).push(response_body)
+    return jsonify(response_body)
+
 
 @app.route("/setEvals", methods=["GET"])
 def setEvals():
@@ -145,10 +151,10 @@ def setEvals():
         # for the existing entries in the database
         for comb in eval_combinations.each():
             comb_str = comb.key()
-            print('found str:', comb_str)
+            print("found str:", comb_str)
             number_of_children = len(comb.val())
-            print('number of elements', number_of_children)
-            
+            print("number of elements", number_of_children)
+
             # iterate over the evaluators saved and check that valid evaluators include 12 entries
             for each_eval in db.child(eval_folder).child(comb_str).get().each():
                 n_entries = len(each_eval.val())
@@ -156,11 +162,11 @@ def setEvals():
                     number_of_children -= 1
             # check that there are still evaluations to try
             if len(combinations) > 0:
-                try: 
+                try:
                     # remove the combination when there are at most 3 responses
-                    if number_of_children > number_evaluators - 1: 
+                    if number_of_children > number_evaluators - 1:
                         combinations.remove(comb_str)
-                        print('evaluator removed')
+                        print("evaluator removed")
                         print(combinations)
 
                     selected_combination = random.choice(combinations)
@@ -168,15 +174,15 @@ def setEvals():
                     # get captions and image IDs based on the selected combination
                     captions_info = get_captions_info(selected_combination)
                 except:
-                    print('nothing removed')
-                    selected_combination = 'NA'
+                    print("nothing removed")
+                    selected_combination = "NA"
                     captions_info = []
             else:
-                print('All the evaluations have been completed')
-                selected_combination = 'NA'
+                print("All the evaluations have been completed")
+                selected_combination = "NA"
                 captions_info = []
 
-    # TODO: make sure not to repeat one evaluator 
+    # TODO: make sure not to repeat one evaluator
     else:
         selected_combination = random.choice(combinations)
         print("selected combination", selected_combination)
@@ -221,7 +227,7 @@ def setEvals():
 def get_possible_users():
     try:
         df = pd.read_csv(csv_file_path)
-        users = list(df["evaluator"].unique()) # replace userID 
+        users = list(df["evaluator"].unique())  # replace userID
         str_users = []
         for u in users:
             # str_users.append(str(u))
@@ -229,13 +235,14 @@ def get_possible_users():
         return str_users
     except Exception as e:
         return {"error": str(e)}
-    
+
+
 def get_captions_info(combination):
     # read the CSV file and get captions and image IDs for the specified combination
     try:
         df = pd.read_csv(csv_file_path)
-        evaluator_number = ''.join([char for char in combination if char.isdigit()])
-        rows = df[df["evaluator"] == int(evaluator_number)] # userID
+        evaluator_number = "".join([char for char in combination if char.isdigit()])
+        rows = df[df["evaluator"] == int(evaluator_number)]  # userID
 
         captions_info = []
         for index, row in rows.iterrows():
@@ -244,7 +251,7 @@ def get_captions_info(combination):
                 "image_id": row["image_name"],
                 "caption": row["caption"],
                 "group": row["group"],
-                "tag": row["tag"]
+                "tag": row["tag"],
             }
             captions_info.append(caption_info)
         print("backend check")
@@ -253,6 +260,7 @@ def get_captions_info(combination):
 
     except Exception as e:
         return {"error": str(e)}
+
 
 @app.route("/annotationData", methods=["POST"])
 def annotationData():
@@ -270,5 +278,4 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, host="0.0.0.0", port=8080)# int(os.environ.get("PORT", 8080)))
-
+    app.run(debug=True, host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))
