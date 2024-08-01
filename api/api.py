@@ -22,8 +22,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 csv_file_path = "captions_evaluator_combined.csv"
 number_evaluators = 2
 number_images = 12
-exp_groups = ["default", "effort"]
-max_users = 9
+exp_groups = ["default_online", "effort_online"]
+max_users = 10
 eval_folder = "test_folder"
 
 

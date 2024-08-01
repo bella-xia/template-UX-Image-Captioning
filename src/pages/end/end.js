@@ -54,69 +54,15 @@ function EndContainer() {
       </div>
       
       <div className="text"> 
-        You have succesfully completed the study and will receive a compensation of $6 USD Amazon gift card. 
+        You have succesfully completed the study and will receive a compensation of $6 USD. 
       </div>
 
       <div className="text">
-      Please enter your contact details and click <b>Submit </b> (the personal information you enter here will not be associated with your responses in any way).
+      Please click on the link below to be redirected to Prolific's website and finalize the study. 
       </div>
 
-      <Form {...formItemLayout} layout='vertical'
-        onFinish={onFinish}
-        initialValues={{
-        }}
-      >
+      <a href=""> </a>
 
-      <Form.Item
-        name="email"
-        label="E-mail"
-        rules={[
-            {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        name="confirm"
-        label="Confirm Email"
-        dependencies={['email']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Please confirm your E-mail!',
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('email') === value) {
-                return Promise.resolve();
-              }
-
-              return Promise.reject(new Error('The two emails that you entered do not match!'));
-            },
-          }),
-        ]}
-      >
-        <Input />
-      </Form.Item>  
-
-      <Form.Item >
-        <Button type="primary" htmlType="submit" disabled={submit}>
-          Submit
-        </Button>
-      </Form.Item>
-
-
-      </Form>
 
       </div>
       );
