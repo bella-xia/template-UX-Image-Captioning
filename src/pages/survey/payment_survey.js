@@ -34,7 +34,6 @@ const PaymentSurveyContainer = () => {
     setAnswers(values);
     // save data
     let data_send = {
-      'userID': localStorage['user-id'], 
       'survey_data':values
     };
     sendData(data_send);
@@ -46,6 +45,7 @@ const PaymentSurveyContainer = () => {
     fetch('http://127.0.0.1:8080/surveyData', {
       method: 'POST',
       body: JSON.stringify({
+        userID: localStorage['user-id'], 
         group: localStorage['group'], 
         folder: 'demo',
         content: obj
@@ -137,15 +137,15 @@ const PaymentSurveyContainer = () => {
         <Form.Item 
             name ="check" 
             label= {
-                <p style={{fontSize: "18px"}}>What was the monetary compensation mentioned at the beginning of this study for your participation?</p>}
+                <p style={{fontSize: "18px"}}>Which of the following statements best describes the compensation information you received during the study?</p>}
             rules={[{
                     required: true,
                   },
                 ]}>
             <Select>
-                <Select.Option value="1"> 6 USD </Select.Option>
-                <Select.Option value="2"> 3 USD + bonus </Select.Option>
-                <Select.Option value="3"> No compensation </Select.Option>
+                <Select.Option value="1"> I was told I would earn $6 and how many images were left </Select.Option>
+                <Select.Option value="2"> My $6.0 could be reduced for not improving captions </Select.Option>
+                <Select.Option value="3"> I don't remember </Select.Option>
             </Select>
         </Form.Item>
 

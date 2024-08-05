@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { HashRouter, Router, Switch, Route } from "react-router-dom";
 
 import StartContainer from "./pages/start/start";
+import IDContainer from "./pages/start/identify";
 import InstructionsContainer from "./pages/instr/instructions";
 import Main1Container from "./pages/main/main-task1";
 import Main2Container from "./pages/main/main-task2";
@@ -26,6 +27,7 @@ export default class Routes extends Component {
       <HashRouter>
         <Switch>
           <Route path="/Study" exact component={StartContainer} />
+          <Route path="/Check" component={IDContainer} />
           <Route path="/Instructions" component={InstructionsContainer} />
           <Route path="/Main1" component={Main1Container} />
           <Route path="/Main2" component={Main2Container} />

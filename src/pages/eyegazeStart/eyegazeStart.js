@@ -9,19 +9,18 @@ let messages = [
 let group_names = ["effort", "default"];
 // new way to assign conditions
 let conditions = {
-  effort: "Thank you for participating. You will be paid $ 3.0 dollars for the next six images you evaluate.",
+  effort: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study.",
   default: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."
 
 }
-var showCompensation = Math.floor(Math.random() * 2);
-var key = String(Object.keys(conditions)[showCompensation]); 
-var msg = conditions[Object.keys(conditions)[showCompensation]];
-localStorage.setItem("group", key);
+// var showCompensation = Math.floor(Math.random() * 2);
+// var key = String(Object.keys(conditions)[showCompensation]); 
+var msg = conditions[localStorage['group']];
+// localStorage.setItem("group", key);
 var displayedMessage = msg;
 
 function EyegazeStartContainer() {
-  console.log(showCompensation)
-  console.log(key)
+  console.log(localStorage['group'])
   console.log(msg)
   console.log('-----------')
 
@@ -40,7 +39,7 @@ function EyegazeStartContainer() {
 
   return (
     <div className="container">
-        <div style={{ fontSize: "23px", width: "75%", margin: "auto" }}>
+        <div style={{ fontSize: "25px", width: "75%", margin: "auto" }}>
           {displayedMessage}
         </div>
 

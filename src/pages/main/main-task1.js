@@ -216,6 +216,7 @@ function Main1Container() {
   };
 
   const nextChange = () => {
+    window.scrollTo(0, 0);
     // // if (choice < 1) {
     // //   alert("Please make sure to complete all the fields!");
     // // } else {
@@ -300,7 +301,6 @@ function Main1Container() {
         setDeltaEditTime(0);
       }
       let data_send = {
-        userID: localStorage["user-id"],
         startImageTime: startImageTime,
         deltaImageTime: t_i_f,
         startEditTime: startEditTime,
@@ -494,6 +494,7 @@ function Main1Container() {
       // This bit needs to be changed
       method: "POST",
       body: JSON.stringify({
+        userID: localStorage["user-id"],
         group: localStorage["group"],
         folder: "captions",
         content: obj,

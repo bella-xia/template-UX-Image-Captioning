@@ -22,7 +22,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 csv_file_path = "captions_evaluator_combined.csv"
 number_evaluators = 2
 number_images = 12
-exp_groups = ["default_online", "effort_online"]
+# exp_groups = ["default_online", "effort_online"]
+exp_groups = {"default": "default_online", "effort": "effort_online"}
 max_users = 10
 eval_folder = "test_folder"
 
@@ -71,6 +72,26 @@ def checkusers():
     # TODO: verify number of users
     # count number of entries in default/effort-emails field
     # redirect if no more users are needed
+    cond_field1 = (db.child(list(exp_groups.values())[0]).get().val() is not None)
+    cond_field2 = (db.child(list(exp_groups.values())[1]).get().val() is not None)
+    if cond_field1 and cond_field2:
+        print('if any of the fields exists')
+        count_participants = 0
+        for group in exp_groups.values():
+            if db.child(group).child("emails").get().val() is not None: 
+                count_participants += len(db.child(group).child("emails").get().val())
+            print(count_participants)
+
+        warning_continue = count_participants >= max_users
+    else:
+        print('No data saved yet')
+        warning_continue = False
+
+    response_body = {'warning': warning_continue}
+    print('number of users validated')
+    return jsonify(response_body)
+
+
     count_participants = 0
     for group in exp_groups:
         count_participants += len(db.child(group).child("emails").get().val())
@@ -95,16 +116,16 @@ def validateResponses():
     # connect with the database: in group-captions-userID
     # iterate in all entries: read deltaEditTime
     request_data = json.loads(request.data)
-    exp_group = request_data["group"]
+    group = request_data["group"]
     user_id = request_data["userID"]
-    user_entries = db.child(exp_group).child("captions").child(user_id).get()
+    user_entries = db.child(exp_groups[group]).child("captions").child(user_id).get()
     list_edits = []
     for row in user_entries.each():
         # print(row.val())
         list_edits.append(row.val()["deltaEditTime"])
     print(list_edits)
     # depending on the edit times, define the path to continue the study
-    warning_continue = list_edits.count(0) >= 10
+    warning_continue = list_edits.count(0) >= 9
     response_body = {"warning": warning_continue}
     print("user responses validated")
     return jsonify(response_body)
@@ -117,11 +138,48 @@ def surveyData():
     request_data = json.loads(request.data)
     data = request_data["content"]
     # print(data)
-    user_id = data["userID"]
-    db.child(request_data["group"]).child(request_data["folder"]).child(user_id).push(
+    user_id = request_data["userID"]
+    group = request_data["group"]
+    db.child(exp_groups[group]).child(request_data["folder"]).child(user_id).push(
         data
     )
     response_body = {"user_id": user_id}
+    return jsonify(response_body)
+
+@app.route("/validateID", methods=["POST"])
+def validateID():
+    # print("receiving data from frontend")
+    request_data = json.loads(request.data)
+    data = request_data["content"]
+    print(data)
+    user_id = data["userID"]
+    # group = request_data["group"]
+    given_id = data["id_value"]
+    print('Retrieved new id', given_id)
+
+    # for IDs recorded so far in both groups
+    id_lists = []
+    for group in exp_groups.values():
+        print(group)
+        entries = db.child(group).child("IDs").get()
+        if entries.val() is not None:
+            for user in entries.each():
+                user_dict = user.val()
+                list_obj = list(user_dict.values())
+                first_dict = list_obj[0]
+                id_value = first_dict['id']
+                id_lists.append(id_value)
+    print('list of users', id_lists)
+    if given_id['id'] not in id_lists:
+        db.child(group).child(request_data["folder"]).child(user_id).push(
+            given_id
+        )
+        print('recording new ID')
+        warning_continue = False 
+    else:
+        print('failed to record')
+        warning_continue = True
+    response_body = {"warning": warning_continue}
     return jsonify(response_body)
 
 
@@ -134,7 +192,8 @@ def emailData():
     response_body = {"date": user_id // (10**6)}
     response_body.update(data["survey_data"])
     print(data)
-    db.child(request_data["group"]).child(request_data["folder"]).push(response_body)
+    group = request_data["group"]
+    db.child(exp_groups[group]).child(request_data["folder"]).push(response_body)
     return jsonify(response_body)
 
 

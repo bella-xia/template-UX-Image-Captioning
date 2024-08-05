@@ -18,11 +18,12 @@ function StartContainer() {
       .then(message => {
           console.log(message)
           if (message['warning']===true){
-            localStorage.setItem('block_user', true)
+            // not needed here
+            // localStorage.setItem('block_user', true)
             let path = "/#/EndEval"
             window.location.assign(path)
           } else {
-            let path = '/#/Instructions'; 
+            let path = '/#/Check'; 
             // history.push(path);
             window.location.assign(path);
             console.log('moving to instructions page')

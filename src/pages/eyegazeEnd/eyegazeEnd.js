@@ -14,18 +14,18 @@ const EyegazeEndContainer = () => {
   useEffect(() => {
     const fetchImages = async () => {
       const images = [
-        "image1.png",
-        "image2.png",
-        "image3.png",
-        "image4.png",
-        "image5.png",
-        "image6.png",
-        "image7.png",
-        "image8.png",
-        "image9.png",
-        "image10.png",
-        "image11.png",
-        "image12.png",
+        "image1",
+        "image2",
+        "image3",
+        "image4",
+        "image5",
+        "image6",
+        "image7",
+        "image8",
+        "image9",
+        "image10",
+        "image11",
+        "image12",
       ];
       const shuffledImages = images.sort(() => 0.5 - Math.random());
       const selected = shuffledImages.slice(0, 6);
@@ -45,21 +45,15 @@ const EyegazeEndContainer = () => {
   const handleResponseChange = (image, value) => {
     setResponses((prevResponses) => ({
       ...prevResponses,
-      [image]: value,
+      [image.split('.')[0]]: value,
     }));
   };
 
   const sendData = (obj) => {
-    console.log(
-      JSON.stringify({
-        group: localStorage["group"],
-        folder: "attention",
-        content: obj,
-      })
-    );
-    fetch("http://127.0.0.1:8080", {
+    fetch("http://127.0.0.1:8080/surveyData", {
       method: "POST",
       body: JSON.stringify({
+        userID: localStorage["user-id"],
         group: localStorage["group"],
         folder: "attention",
         content: obj,
@@ -76,44 +70,55 @@ const EyegazeEndContainer = () => {
 
   const onFinish = (values) => {
     console.log("values", values);
-    let copySaveArray = Object.assign({}, answers, values);
+
+    // formatting values to str
+    const stringifiedValues = {};
+    for (const key in values) {
+      if (values.hasOwnProperty(key)) {
+        stringifiedValues[key] = Array.isArray(values[key])
+          ? values[key].join(", ") // Join array values into a single string
+          : values[key].toString(); // Convert non-array values to strings
+      }
+    }
+    console.log("all strings", stringifiedValues)
+    let copySaveArray = Object.assign({}, answers, stringifiedValues);
     setAnswers(copySaveArray);
     let data_send = {
-      userID: localStorage["user-id"],
-      attention_data: copySaveArray,
+      'survey_data': copySaveArray,
     };
     sendData(data_send);
     let path = "/#/Demo";
     window.location.assign(path);
+    window.scrollTo(0, 0);
   };
 
   const imageQuestions = {
-    "image1.png": {
+    "image1": {
       question:
         "What color jerseys were the soccer players that are blocked out wearing?",
       options: ["Red", "Blue", "Yellow", "Orange"],
     },
-    "image2.png": {
+    "image2": {
       question: "How many people are sitting on the bench?",
       options: ["1", "2", "3", "4"],
     },
-    "image3.png": {
+    "image3": {
       question: "Select all the items that showed up in the image.",
       options: ["Bike", "Red Car", "Traffic Light"],
     },
-    "image4.png": {
+    "image4": {
       question: "What is the boy on in the picture?",
       options: ["Bicyle", "Scooter", "Skateboard", "Roller Skates"],
     },
-    "image5.png": {
+    "image5": {
       question: "Is the person wearing a backpack?",
       options: ["Yes", "No"],
     },
-    "image6.png": {
+    "image6": {
       question: "How many people are fishing?",
       options: ["1", "2", "3", "4"],
     },
-    "image7.png": {
+    "image7": {
       question: "Select all the items in the picture.",
       options: [
         "White hat",
@@ -122,23 +127,23 @@ const EyegazeEndContainer = () => {
         "Yellow shoes",
       ],
     },
-    "image8.png": {
+    "image8": {
       question: "What color is the car?",
       options: ["Red", "Orange", "Yellow", "Green"],
     },
-    "image9.png": {
+    "image9": {
       question: "How many people standing in the red box?",
       options: ["1", "2", "3", "4"],
     },
-    "image10.png": {
+    "image10": {
       question: "Select all the items that appear in the red boxes.",
       options: ["Woman", "Plant", "Fish", "Flowers", "Grey Rocks"],
     },
-    "image11.png": {
+    "image11": {
       question: "What/Who is sitting next to the man in the bench?",
       options: ["Dog", "Cat", "Man", "Woman"],
     },
-    "image12.png": {
+    "image12": {
       question: "Select the all items that appear in the red boxes.",
       options: ["Man", "Horse", "Fire", "Tree", "Rabbit"],
     },
@@ -160,7 +165,7 @@ const EyegazeEndContainer = () => {
           {selectedImages.map((image, index) => (
             <div key={image} className="image-container">
               <img
-                src={`${imageFolder}/${image}`}
+                src={`${imageFolder}/${image}.png`}
                 alt={image}
                 className="attention-check-image"
               />
@@ -171,10 +176,10 @@ const EyegazeEndContainer = () => {
                   }`}</strong>
                 </p>
                 {[
-                  "image3.png",
-                  "image7.png",
-                  "image10.png",
-                  "image12.png",
+                  "image3",
+                  "image7",
+                  "image10",
+                  "image12",
                 ].includes(image) ? (
                   <Form.Item
                     name={image}
@@ -183,6 +188,7 @@ const EyegazeEndContainer = () => {
                     ]}
                   >
                     <Checkbox.Group
+                      className="checkbox-group"
                       options={imageQuestions[image].options}
                       onChange={(checkedValues) =>
                         handleResponseChange(image, checkedValues)
@@ -197,6 +203,7 @@ const EyegazeEndContainer = () => {
                     ]}
                   >
                     <Radio.Group
+                      className="radio-group"
                       onChange={(e) =>
                         handleResponseChange(image, e.target.value)
                       }

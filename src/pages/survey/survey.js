@@ -97,7 +97,6 @@ const SurveyContainer = () => {
       let copySaveArray = Object.assign({}, answers, values);
       setAnswers(copySaveArray);
       let data_send = {
-        userID: localStorage["user-id"],
         survey_data: copySaveArray, // values
       };
       sendData(data_send);
@@ -116,6 +115,7 @@ const SurveyContainer = () => {
     fetch("http://127.0.0.1:8080/surveyData", {
       method: "POST",
       body: JSON.stringify({
+        userID: localStorage["user-id"],
         group: localStorage["group"],
         folder: "survey",
         content: obj,

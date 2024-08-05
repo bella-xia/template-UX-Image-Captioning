@@ -5,10 +5,18 @@
   .image-container {
     margin-bottom: 20px;
   }
-  
+
   .attention-check-image {
-    width: 200px; /* Set desired width */
-    height: 200px; /* Set desired height */
-    object-fit: cover; /* Ensures images maintain aspect ratio and fill the space */
+    width: 400px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+    display: block;
+    margin: 0 auto 20px auto; /* Center the image and add space below */
   }
-  
+
+.radio-group, 
+.checkbox-group 
+ {
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Add space between radio buttons */
+}

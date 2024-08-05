@@ -36,7 +36,7 @@ function InterventionContainer() {
     <div className="container">
       <h1>Announcement</h1>
 
-      <div style={{ fontSize: "23px", width: "75%", margin: "auto" }}>
+      <div style={{ fontSize: "25px", width: "75%", margin: "auto" }}>
         {displayedMessage}
       </div>
       <div>
