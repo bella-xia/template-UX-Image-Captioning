@@ -89,7 +89,7 @@ const IDContainer = () => {
 
   return (
     <div className="container"> 
-      <div className="title"> Let's gets started</div>
+      <div className="title"> Let's get started</div>
       <Form {...formItemLayout} layout='vertical'
         name="validate_other"
         onFinish={onFinish}

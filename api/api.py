@@ -69,19 +69,19 @@ def setup():
 
 @app.route("/checkusers", methods=["GET"])
 def checkusers():
+    field = "demo"
     # TODO: verify number of users
     # count number of entries in default/effort-emails field
     # redirect if no more users are needed
-    cond_field1 = (db.child(list(exp_groups.values())[0]).get().val() is not None)
-    cond_field2 = (db.child(list(exp_groups.values())[1]).get().val() is not None)
-    if cond_field1 and cond_field2:
+    cond_group1 = (db.child(list(exp_groups.values())[0]).get().val() is not None)
+    cond_group2 = (db.child(list(exp_groups.values())[1]).get().val() is not None)
+    if cond_group1 and cond_group2:
         print('if any of the fields exists')
         count_participants = 0
         for group in exp_groups.values():
-            if db.child(group).child("emails").get().val() is not None: 
-                count_participants += len(db.child(group).child("emails").get().val())
-            print(count_participants)
-
+            if db.child(group).child(field).get().val() is not None: 
+                count_participants += len(db.child(group).child(field).get().val())
+        # print('Current number of valid participants', count_participants)
         warning_continue = count_participants >= max_users
     else:
         print('No data saved yet')
@@ -151,6 +151,7 @@ def validateID():
     # print("receiving data from frontend")
     request_data = json.loads(request.data)
     data = request_data["content"]
+    assigned_group = request_data["group"]
     print(data)
     user_id = data["userID"]
     # group = request_data["group"]
@@ -171,7 +172,7 @@ def validateID():
                 id_lists.append(id_value)
     print('list of users', id_lists)
     if given_id['id'] not in id_lists:
-        db.child(group).child(request_data["folder"]).child(user_id).push(
+        db.child(exp_groups[assigned_group]).child(request_data["folder"]).child(user_id).push(
             given_id
         )
         print('recording new ID')

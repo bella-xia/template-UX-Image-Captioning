@@ -88,7 +88,7 @@ function InstructionsContainer() {
         </p>
 
         <p> 
-          Do not reload the website or try to go back since you will have to start again. 
+          Do not reload the website or use the back button since you will have to start again. 
           Please use <b>full screen</b> mode in <b>Chrome browser</b>.
         </p>
         <Checkbox

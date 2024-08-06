@@ -3,7 +3,6 @@ import { Button, Col, Row } from "antd";
 import "antd/dist/antd.css";
 import "./styling.css";
 import { TextField } from "@mui/material";
-import Papa from "papaparse";
 
 function AnnotateContainer() {
   //const history = useHistory();
