@@ -192,6 +192,7 @@ function Main2Container() {
       .then((message) => {
         console.log(message);
       if (message['warning']===true){
+        localStorage.setItem('finished', true);
         alert("We reviewed your task progress and found the majority of the captions unmodified. The study cannot be completed. Clic the OK button.")
         let path = "/#/terminate"
         window.location.assign(path)

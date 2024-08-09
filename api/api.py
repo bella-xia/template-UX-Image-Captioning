@@ -19,12 +19,14 @@ app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-csv_file_path = "captions_evaluator_combined.csv"
-number_evaluators = 2
-number_images = 12
 # exp_groups = ["default_online", "effort_online"]
 exp_groups = {"default": "default_online", "effort": "effort_online"}
 max_users = 10
+
+# for human-based caption evaluation
+csv_file_path = "captions_evaluator_combined.csv"
+number_evaluators = 2
+number_images = 12
 eval_folder = "test_folder"
 
 
@@ -125,7 +127,7 @@ def validateResponses():
         list_edits.append(row.val()["deltaEditTime"])
     print(list_edits)
     # depending on the edit times, define the path to continue the study
-    warning_continue = list_edits.count(0) >= 9
+    warning_continue = list_edits.count(0) >= 7
     response_body = {"warning": warning_continue}
     print("user responses validated")
     return jsonify(response_body)

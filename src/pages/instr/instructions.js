@@ -87,10 +87,6 @@ function InstructionsContainer() {
         <p>NOTE: As you write the captions, <b>DO NOT</b> speculate about what people in the image might be saying or thinking, or events that might have happened in the past or future.
         </p>
 
-        <p> 
-          Do not reload the website or use the back button since you will have to start again. 
-          Please use <b>full screen</b> mode in <b>Chrome browser</b>.
-        </p>
         <Checkbox
           onChange={checkboxHandler}
           style={{ fontSize: "20px", textAlign: "left", alignSelf: "stretch" }}

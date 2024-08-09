@@ -103,7 +103,7 @@ const EyegazeEndContainer = () => {
       options: ["1", "2", "3", "4"],
     },
     "image3": {
-      question: "Select all the items that showed up in the image.",
+      question: "Select all the items that appear in the red boxes.",
       options: ["Bike", "Red Car", "Traffic Light"],
     },
     "image4": {
@@ -119,7 +119,7 @@ const EyegazeEndContainer = () => {
       options: ["1", "2", "3", "4"],
     },
     "image7": {
-      question: "Select all the items in the picture.",
+      question: "Select all the items that appear in the red boxes.",
       options: [
         "White hat",
         "Silver cooking bowl",

@@ -61,7 +61,7 @@ function EndContainer() {
       Please click on the link below to be redirected to Prolific's website and finalize the study. 
       </div>
 
-      <a href=""> </a>
+      <a href="https://app.prolific.com/submissions/complete?cc=C11ET5GO" target="_blank" className="text">https://app.prolific.com/submissions/complete?cc=C11ET5GO </a>
 
 
       </div>

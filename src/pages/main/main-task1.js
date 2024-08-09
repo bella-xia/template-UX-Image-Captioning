@@ -3,7 +3,6 @@ import { Button } from "antd";
 import "antd/dist/antd.css";
 import "./main.css";
 import { TextField } from "@mui/material";
-import useIdle from "../hooks/useIdleTimer.js";
 
 function Main1Container() {
   var showLastImage = localStorage.getItem("lastImage");
@@ -47,19 +46,6 @@ function Main1Container() {
   const [maxChange, setMaxChange] = useState(-1);
   const [originalCaptions, setOriginalCaptions] = useState([]); // shuffle_idx[0].map(i => allCaptions[i]));
   //console.log(originalCaptions)
-
-  const [showModal, setShowModal] = useState(true);
-  const [remainingTime, setRemainingTime] = useState(60);
-  const [clickTimeOut, setClickTimeOut] = useState(false);
-
-  // not being called on time ...
-  const handleIdle = () => {
-    setShowModal(true); //show modal
-    setRemainingTime(60); //set 15 seconds as time remaining
-    console.log('modal set to true and set remaining time')
-  };
-  const { isIdle } = useIdle({ onIdle: handleIdle, idleTime: 1});
-  console.log("is user idle?", isIdle);
 
   //console.log(showLastImage)
   const setOriginalCaptionDict = (caption) => {
@@ -581,75 +567,9 @@ function Main1Container() {
     console.log(t_i_s);
   }, []);
 
-  // session time-out
-  // Render the modal based on the idle state
-    useEffect(() => {
-      if (isIdle) {
-        console.log('setting modal to true')
-        setShowModal(true);
-        console.log(showModal);
-        console.log(isIdle);
-      }
-    }, [isIdle]);
-  
-
-  useEffect(() => {
-    let interval;
-
-    if (isIdle && showModal) {
-      console.log('beginning countdown...')
-      interval = setInterval(() => {
-        setRemainingTime(
-          (prevRemainingTime) =>
-            prevRemainingTime > 0 ? prevRemainingTime - 1 : 0 //reduces the second by 1
-        );
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isIdle, showModal]);
-
-  useEffect(() => {
-    if (remainingTime === 0 && showModal) {
-      alert("Time out! You cannot complete the study. Clic the OK button.");
-      setShowModal(false);
-      let path = "/#/terminate"
-      window.location.assign(path)
-    }
-  }, [remainingTime, showModal]); // this is responsible for logging user out after timer is down to zero and they have not clicked anything
-
-  const handleStayLoggedIn = () => {
-    setClickTimeOut(true);
-    setShowModal(false);
-  };
-
-  function millisToMinutesAndSeconds(millis) {
-    var minutes = Math.floor(millis / 60000);
-    var seconds = ((millis % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-  };
-
 
   return (
     <>
-      { isIdle  && showModal && (
-          <div className="modal">
-            <div className="modal-content">
-            <h2>Idle Timeout Warning</h2>
-            <p className="t">You are about to be timed out due to inactivity. You will not be able to continue the study when the countdown ends.</p>
-            <br />
-            <p className="t"> 
-            Time remaining: {millisToMinutesAndSeconds(remainingTime * 1000)}
-            </p>
-            <br />
-            <button className="btn btn-primary " onClick={handleStayLoggedIn}>
-              Continue the study
-            </button>
-            </div>
-          </div>
-      )}
       {render ? (
         
         <div className="container">

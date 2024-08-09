@@ -20,9 +20,11 @@ function StartContainer() {
           if (message['warning']===true){
             // not needed here
             // localStorage.setItem('block_user', true)
+            localStorage.setItem('finished', true);
             let path = "/#/EndEval"
             window.location.assign(path)
           } else {
+            localStorage.setItem('study_time', Date.now())
             let path = '/#/Check'; 
             // history.push(path);
             window.location.assign(path);

@@ -65,6 +65,7 @@ const IDContainer = () => {
       .then(message => {
         console.log(message)
         if (message['warning']===true){
+            localStorage.setItem('finished', true);
             alert("Our records indicate that the provided Prolific ID has been used before. The study cannot be completed. Clic the OK button.")
             let path = "/#/terminate"
             window.location.assign(path)
@@ -103,6 +104,10 @@ const IDContainer = () => {
             rules={[{
               required: true,
             },
+            {
+                pattern: /^[a-zA-Z0-9]{24}$/,
+                message: 'Prolific ID must be exactly 24 alphanumeric characters.'
+              }
           ]}
             style={{marginTop:"20px", fontSize:'20px'}}
         >

@@ -29,7 +29,13 @@ const PaymentSurveyContainer = () => {
   const [answers, setAnswers] = useState({});
 
   const onFinish = (values) => {
+    // define total time of study 
+    let currentTime = Date.now();
+    let totalTime = ((currentTime - localStorage['study_time']) / 1000).toFixed(3);
+    // mark as completed
+    localStorage.setItem('finished', true);
     console.log("Received values of form: ", values);
+    values.total_time = totalTime;
     let copySaveArray = values;
     setAnswers(values);
     // save data
