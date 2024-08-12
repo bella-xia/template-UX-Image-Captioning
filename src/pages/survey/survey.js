@@ -33,6 +33,7 @@ const questions1 = [
 
 const questions2 = [
   "I had to work hard to accomplish better captions.",
+  "Please select 'strongly agree' to show you are paying attention to this question.",
   "I was really drawn into this captioning experience with AI assistance.",
   "I felt involved in this captioning experience with AI assistance.",
   "I was very focused on the task of editing the captions for accuracy and detail.",
@@ -112,7 +113,7 @@ const SurveyContainer = () => {
   };
 
   const sendData = (obj) => {
-    fetch("http://127.0.0.1:8080/surveyData", {
+    fetch(localStorage['backend_path'].concat('/surveyData'), {
       method: "POST",
       body: JSON.stringify({
         userID: localStorage["user-id"],

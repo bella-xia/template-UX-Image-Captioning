@@ -18,7 +18,7 @@ function App() {
       console.log('modal set to true and set remaining time')
     }
   };
-  const { isIdle } = useIdle({ onIdle: handleIdle, idleTime: 2});
+  const { isIdle } = useIdle({ onIdle: handleIdle, idleTime: 5});
   console.log("is user idle?", isIdle);
 
   // session time-out

@@ -50,7 +50,7 @@ const IDContainer = () => {
   };
 
   const sendData = (obj) => {
-    fetch('http://127.0.0.1:8080/validateID', {
+    fetch(localStorage['backend_path'].concat('/validateID'), {
         // check that they haven't done it before
       method: 'POST',
       body: JSON.stringify({
@@ -78,7 +78,7 @@ const IDContainer = () => {
 
     // connect with the backend to get a user ID and randomize agent  
     useEffect(() => {
-        fetch('http://127.0.0.1:8080/setup')
+        fetch(localStorage['backend_path'].concat('/setup')) // http://127.0.0.1:8080
         .then(response => response.json())
         .then(data => {
             console.log(data)

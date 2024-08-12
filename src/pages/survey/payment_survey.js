@@ -48,7 +48,7 @@ const PaymentSurveyContainer = () => {
   };
 
   const sendData = (obj) => {
-    fetch('http://127.0.0.1:8080/surveyData', {
+    fetch(localStorage['backend_path'].concat('/surveyData'), {
       method: 'POST',
       body: JSON.stringify({
         userID: localStorage['user-id'], 

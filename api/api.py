@@ -21,7 +21,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # exp_groups = ["default_online", "effort_online"]
 exp_groups = {"default": "default_online", "effort": "effort_online"}
-max_users = 10
+max_users = 6
 
 # for human-based caption evaluation
 csv_file_path = "captions_evaluator_combined.csv"
@@ -75,8 +75,10 @@ def checkusers():
     # TODO: verify number of users
     # count number of entries in default/effort-emails field
     # redirect if no more users are needed
-    cond_group1 = (db.child(list(exp_groups.values())[0]).get().val() is not None)
-    cond_group2 = (db.child(list(exp_groups.values())[1]).get().val() is not None)
+    field_g1 = list(exp_groups.values())[0]
+    field_g2 = list(exp_groups.values())[1]
+    cond_group1 = (db.child(field_g1).get().val() is not None)
+    cond_group2 = (db.child(field_g2).get().val() is not None)
     if cond_group1 and cond_group2:
         print('if any of the fields exists')
         count_participants = 0
@@ -85,6 +87,15 @@ def checkusers():
                 count_participants += len(db.child(group).child(field).get().val())
         # print('Current number of valid participants', count_participants)
         warning_continue = count_participants >= max_users
+
+    elif cond_group1: 
+        if db.child(field_g1).child(field).get().val() is not None: 
+            count_participants += len(db.child(field_g1).child(field).get().val())
+        warning_continue = count_participants >= max_users 
+    elif cond_group2: 
+        if db.child(field_g2).child(field).get().val() is not None: 
+            count_participants += len(db.child(field_g2).child(field).get().val())
+        warning_continue = count_participants >= max_users 
     else:
         print('No data saved yet')
         warning_continue = False
@@ -340,4 +351,4 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, ssl_context='adhoc', host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))

@@ -178,7 +178,7 @@ function Main2Container() {
   const routeChange = () => {
     console.log('Validating user responses ...')
     // validate user responses here
-    fetch("http://127.0.0.1:8080/validateResponses", {
+    fetch(localStorage['backend_path'].concat('/validateResponses'), {
       method: "POST",
       body: JSON.stringify({
         group: localStorage["group"],
@@ -523,7 +523,7 @@ function Main2Container() {
   };
 
   const sendData = (obj) => {
-    fetch("http://127.0.0.1:8080/surveyData", {
+    fetch(localStorage['backend_path'].concat('/surveyData'), {
       // This bit needs to be changed
       method: "POST",
       body: JSON.stringify({
@@ -558,7 +558,7 @@ function Main2Container() {
       try {
         // Replace with your asynchronous operation
         // 127.0.0.1
-        const response = await fetch("http://127.0.0.1:8080/captionInfo");
+        const response = await fetch(localStorage['backend_path'].concat('/captionInfo'));
         const data = await response.json();
 
         if (isMounted.current) {

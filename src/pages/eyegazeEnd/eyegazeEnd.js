@@ -50,7 +50,7 @@ const EyegazeEndContainer = () => {
   };
 
   const sendData = (obj) => {
-    fetch("http://127.0.0.1:8080/surveyData", {
+    fetch(localStorage['backend_path'].concat('/surveyData'), {
       method: "POST",
       body: JSON.stringify({
         userID: localStorage["user-id"],
@@ -144,7 +144,7 @@ const EyegazeEndContainer = () => {
       options: ["Dog", "Cat", "Man", "Woman"],
     },
     "image12": {
-      question: "Select the all items that appear in the red boxes.",
+      question: "Select all the items that appear in the red boxes.",
       options: ["Man", "Horse", "Fire", "Tree", "Rabbit"],
     },
   };
@@ -164,17 +164,17 @@ const EyegazeEndContainer = () => {
           </h1>
           {selectedImages.map((image, index) => (
             <div key={image} className="image-container">
+              <p>
+                  <strong>{`${index + 1}. ${
+                    imageQuestions[image].question
+                  }`}</strong>
+              </p>
               <img
                 src={`${imageFolder}/${image}.png`}
                 alt={image}
                 className="attention-check-image"
               />
               <div>
-                <p>
-                  <strong>{`${index + 1}. ${
-                    imageQuestions[image].question
-                  }`}</strong>
-                </p>
                 {[
                   "image3",
                   "image7",

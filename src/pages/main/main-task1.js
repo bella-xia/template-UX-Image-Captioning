@@ -490,7 +490,7 @@ function Main1Container() {
   };
 
   const sendData = (obj) => {
-    fetch("http://127.0.0.1:8080/surveyData", {
+    fetch(localStorage['backend_path'].concat('/surveyData'), {
       // This bit needs to be changed
       method: "POST",
       body: JSON.stringify({
@@ -525,7 +525,7 @@ function Main1Container() {
       try {
         // Replace with your asynchronous operation
         // 127.0.0.1
-        const response = await fetch("http://127.0.0.1:8080/captionInfo");
+        const response = await fetch(localStorage['backend_path'].concat('/captionInfo'));
         const data = await response.json();
 
         if (isMounted.current) {

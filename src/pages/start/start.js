@@ -7,13 +7,15 @@ import "./start.css";
 function StartContainer() {
     // let history = useHistory();
     const [agree, setAgree] = useState(false);
+    localStorage.setItem('backend_path', 'https://backend-7lis24xilq-ue.a.run.app')
+
 
     const checkboxHandler = () => {
       setAgree(!agree);
     }
   
     const routeChange = () =>{ 
-      fetch('http://127.0.0.1:8080/checkusers') // http://127.0.0.1:8080/checkusers
+      fetch(localStorage['backend_path'].concat('/checkusers')) // http://127.0.0.1:8080/checkusers
       .then(response => response.json())
       .then(message => {
           console.log(message)
