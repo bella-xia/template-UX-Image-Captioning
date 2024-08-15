@@ -104,11 +104,11 @@ const SurveyContainer = () => {
       console.log("Survey Data sent:", data_send);
       let path = "/#/SurveyEnd";
       window.location.assign(path);
+      window.scrollTo(0, 0);
     } else {
       let copySaveArray = Object.assign({}, answers, values);
       setAnswers(copySaveArray);
       setNext(true);
-      window.scrollTo(0, 0);
     }
   };
 

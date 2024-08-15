@@ -476,7 +476,6 @@ function Main1Container() {
 
   const handleSelect = (e) => {
     e.preventDefault();
-    return false;
   };
 
   const handleKeyDown = (e) => {
@@ -606,7 +605,6 @@ function Main1Container() {
             <img className="arrow" src={"arrow.png"} />
             <div className="caption-edits">
               <textarea
-                onSelect={handleSelect}
                 onCut={handleChange}
                 onCopy={handleChange}
                 onPaste={handleChange}

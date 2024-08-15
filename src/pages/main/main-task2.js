@@ -638,7 +638,6 @@ function Main2Container() {
               <img className="arrow" src={"arrow.png"} />
               <div className="caption-edits">
                 <textarea
-                  onSelect={handleSelect}
                   onCut={handleChange}
                   onCopy={handleChange}
                   onPaste={handleChange}

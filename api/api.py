@@ -79,15 +79,14 @@ def checkusers():
     field_g2 = list(exp_groups.values())[1]
     cond_group1 = (db.child(field_g1).get().val() is not None)
     cond_group2 = (db.child(field_g2).get().val() is not None)
+    count_participants = 0
     if cond_group1 and cond_group2:
         print('if any of the fields exists')
-        count_participants = 0
         for group in exp_groups.values():
             if db.child(group).child(field).get().val() is not None: 
                 count_participants += len(db.child(group).child(field).get().val())
         # print('Current number of valid participants', count_participants)
         warning_continue = count_participants >= max_users
-
     elif cond_group1: 
         if db.child(field_g1).child(field).get().val() is not None: 
             count_participants += len(db.child(field_g1).child(field).get().val())
