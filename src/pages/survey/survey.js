@@ -1,15 +1,9 @@
 import { React, useState } from "react";
 import ReactDOM from "react-dom";
 import { useParams } from "react-router-dom";
-import {
-  Form,
-  Select,
-  // Radio,
-  // Input,
-  Button,
-  Radio,
-} from "antd";
+import { Form, Select, Button, Radio } from "antd";
 import "./survey.css";
+
 const { Option } = Select;
 
 const formItemLayout = {
@@ -42,12 +36,27 @@ const questions2 = [
 
 const FormItem = ({ question, idx }) => {
   const style = { fontSize: "15px", marginLeft: "14px", marginRight: "14px" };
+
+  // Define the options for the agreement scale
+  const options = [
+    { value: "strongly disagree", label: "1 - strongly disagree" },
+    { value: "disagree", label: "2 - disagree" },
+    { value: "somewhat disagree", label: "3 - somewhat disagree" },
+    { value: "neutral", label: "4 - neutral" },
+    { value: "somewhat agree", label: "5 - somewhat agree" },
+    { value: "agree", label: "6 - agree" },
+    { value: "strongly agree", label: "7 - strongly agree" },
+  ];
+
+  // Randomly decide to reverse the options or not
+  const shuffledOptions =
+    Math.random() > 0.5 ? options : [...options].reverse();
+
   return (
     <Form.Item
       name={`Q${idx + 1}`}
       label={
         <p style={{ fontSize: "19px" }}>
-          {" "}
           {idx + 1}. {question}
         </p>
       }
@@ -58,27 +67,11 @@ const FormItem = ({ question, idx }) => {
       ]}
     >
       <Radio.Group>
-        <Radio value="1" style={style}>
-          1 - strongly disagree
-        </Radio>
-        <Radio value="2" style={style}>
-          2 - disagree
-        </Radio>
-        <Radio value="3" style={style}>
-          3 - somewhat disagree
-        </Radio>
-        <Radio value="4" style={style}>
-          4 - neutral
-        </Radio>
-        <Radio value="5" style={style}>
-          5 - somewhat agree
-        </Radio>
-        <Radio value="6" style={style}>
-          6 - agree
-        </Radio>
-        <Radio value="7" style={style}>
-          7 - strongly agree
-        </Radio>
+        {shuffledOptions.map((option) => (
+          <Radio key={option.value} value={option.value} style={style}>
+            {option.label}
+          </Radio>
+        ))}
       </Radio.Group>
     </Form.Item>
   );
@@ -87,18 +80,21 @@ const FormItem = ({ question, idx }) => {
 const SurveyContainer = () => {
   const [form] = Form.useForm();
   const [answers, setAnswers] = useState({});
-
   const [next, setNext] = useState(false);
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
-    //let copySaveArray = values
-    // save data
+
+    // Print each question and its corresponding answer
+    Object.keys(values).forEach((key) => {
+      console.log(`${key}: ${values[key]}`);
+    });
+
     if (next) {
       let copySaveArray = Object.assign({}, answers, values);
       setAnswers(copySaveArray);
       let data_send = {
-        survey_data: copySaveArray, // values
+        survey_data: copySaveArray,
       };
       sendData(data_send);
       console.log("Survey Data sent:", data_send);
@@ -113,7 +109,7 @@ const SurveyContainer = () => {
   };
 
   const sendData = (obj) => {
-    fetch(localStorage['backend_path'].concat('/surveyData'), {
+    fetch(localStorage["backend_path"].concat("/surveyData"), {
       method: "POST",
       body: JSON.stringify({
         userID: localStorage["user-id"],
@@ -188,4 +184,5 @@ const SurveyContainer = () => {
     </div>
   );
 };
+
 export default SurveyContainer;
