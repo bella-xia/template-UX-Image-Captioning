@@ -14,18 +14,19 @@ const EyegazeEndContainer = () => {
   useEffect(() => {
     const fetchImages = async () => {
       const images = [
-        "image1",
-        "image2",
-        "image3",
-        "image4",
-        "image5",
-        "image6",
-        "image7",
-        "image8",
-        "image9",
-        "image10",
-        "image11",
-        "image12",
+        "Image_1",
+        "Image_2",
+        "Image_3",
+        "Image_5",
+        "Image_6",
+        "Image_7",
+        "Image_8",
+        "Image_9",
+        "Image_10",
+        "Image_11",
+        "Image_12",
+        "Image_13",
+        "Image_15",
       ];
       const shuffledImages = images.sort(() => 0.5 - Math.random());
       const selected = shuffledImages.slice(0, 6);
@@ -45,12 +46,12 @@ const EyegazeEndContainer = () => {
   const handleResponseChange = (image, value) => {
     setResponses((prevResponses) => ({
       ...prevResponses,
-      [image.split('.')[0]]: value,
+      [image.split(".")[0]]: value,
     }));
   };
 
   const sendData = (obj) => {
-    fetch(localStorage['backend_path'].concat('/surveyData'), {
+    fetch(localStorage["backend_path"].concat("/surveyData"), {
       method: "POST",
       body: JSON.stringify({
         userID: localStorage["user-id"],
@@ -71,20 +72,19 @@ const EyegazeEndContainer = () => {
   const onFinish = (values) => {
     console.log("values", values);
 
-    // formatting values to str
     const stringifiedValues = {};
     for (const key in values) {
       if (values.hasOwnProperty(key)) {
         stringifiedValues[key] = Array.isArray(values[key])
-          ? values[key].join(", ") // Join array values into a single string
-          : values[key].toString(); // Convert non-array values to strings
+          ? values[key].join(", ")
+          : values[key].toString();
       }
     }
-    console.log("all strings", stringifiedValues)
+    console.log("all strings", stringifiedValues);
     let copySaveArray = Object.assign({}, answers, stringifiedValues);
     setAnswers(copySaveArray);
     let data_send = {
-      'survey_data': copySaveArray,
+      survey_data: copySaveArray,
     };
     sendData(data_send);
     let path = "/#/Demo";
@@ -93,59 +93,67 @@ const EyegazeEndContainer = () => {
   };
 
   const imageQuestions = {
-    "image1": {
-      question:
-        "What color jerseys were the soccer players that are blocked out wearing?",
-      options: ["Red", "Blue", "Yellow", "Orange"],
+    Image_1: {
+      question: "Is the color of the covered horse?",
+      options: [
+        "Same as the horse next to the girl",
+        "Lighter than the horse next to the girl",
+        "Darker than the horse next to the girl",
+      ],
     },
-    "image2": {
-      question: "How many people are sitting on the bench?",
+    Image_2: {
+      question: "How many fish are in the pond?",
       options: ["1", "2", "3", "4"],
     },
-    "image3": {
-      question: "Select all the items that appear in the red boxes.",
-      options: ["Bike", "Red Car", "Traffic Light"],
+    Image_3: {
+      question: "What is the person doing?",
+      options: ["Standing", "Taking a photo", "Fishing"],
     },
-    "image4": {
-      question: "What is the boy on in the picture?",
-      options: ["Bicyle", "Scooter", "Skateboard", "Roller Skates"],
+    Image_5: {
+      question: "What type of flag is covered?",
+      options: [
+        "U.S.A Flag",
+        "New York State Flag",
+        "U.N. Flag",
+        "Canadian Flag",
+      ],
     },
-    "image5": {
-      question: "Is the person wearing a backpack?",
-      options: ["Yes", "No"],
+    Image_6: {
+      question: "Select all the things that are covered.",
+      options: ["Person", "Garbage can", "Plants", "Traffic light"],
     },
-    "image6": {
+    Image_7: {
       question: "How many people are fishing?",
       options: ["1", "2", "3", "4"],
     },
-    "image7": {
-      question: "Select all the items that appear in the red boxes.",
+    Image_9: {
+      question: "Does the car have a roof rack?",
+      options: ["Yes", "No"],
+    },
+    Image_10: {
+      question: "What color are the shorts?",
+      options: ["Black", "Grey", "White", "Navy"],
+    },
+    Image_11: {
+      question: "What color is the boat?",
+      options: ["Blue", "Grey", "White", "Black"],
+    },
+    Image_12: {
+      question: "Select all the colors that DO NOT show up on the boy's shirt.",
+      options: ["White", "Yellow", "Blue", "Red"],
+    },
+    Image_13: {
+      question: "What number appears on the jersey?",
+      options: ["11", "23", "21", "13"],
+    },
+    Image_15: {
+      question: "Select all the items that the person is wearing.",
       options: [
-        "White hat",
-        "Silver cooking bowl",
-        "White shorts",
-        "Yellow shoes",
+        "Red backpack",
+        "Black shirt",
+        "White pants",
+        "Light-colored hat ",
       ],
-    },
-    "image8": {
-      question: "What color is the car?",
-      options: ["Red", "Orange", "Yellow", "Green"],
-    },
-    "image9": {
-      question: "How many people standing in the red box?",
-      options: ["1", "2", "3", "4"],
-    },
-    "image10": {
-      question: "Select all the items that appear in the red boxes.",
-      options: ["Woman", "Plant", "Fish", "Flowers", "Grey Rocks"],
-    },
-    "image11": {
-      question: "What/Who is sitting next to the man in the bench?",
-      options: ["Dog", "Cat", "Man", "Woman"],
-    },
-    "image12": {
-      question: "Select all the items that appear in the red boxes.",
-      options: ["Man", "Horse", "Fire", "Tree", "Rabbit"],
     },
   };
 
@@ -165,9 +173,9 @@ const EyegazeEndContainer = () => {
           {selectedImages.map((image, index) => (
             <div key={image} className="image-container">
               <p>
-                  <strong>{`${index + 1}. ${
-                    imageQuestions[image].question
-                  }`}</strong>
+                <strong>{`${index + 1}. ${
+                  imageQuestions[image].question
+                }`}</strong>
               </p>
               <img
                 src={`${imageFolder}/${image}.png`}
@@ -175,12 +183,7 @@ const EyegazeEndContainer = () => {
                 className="attention-check-image"
               />
               <div>
-                {[
-                  "image3",
-                  "image7",
-                  "image10",
-                  "image12",
-                ].includes(image) ? (
+                {["Image_6", "Image_12", "Image_15"].includes(image) ? (
                   <Form.Item
                     name={image}
                     rules={[
