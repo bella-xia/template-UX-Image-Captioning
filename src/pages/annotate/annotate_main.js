@@ -101,6 +101,29 @@ function AnnotateContainer() {
   const [currCCaption, setCurrCCaption] = useState([]);
   const [imageCountBackend, setImageCountBackend] = useState(0);
 
+  const [questions, setQuestions] = useState([]);
+
+  const allQuestions = [
+    {
+      id: "accuracy",
+      text: "Rate how accurate is the caption, considering whether the caption is related to the target image without distortion.",
+      labels: ["Very inaccurate", "Inaccurate", "Accurate", "Very accurate"],
+    },
+    {
+      id: "detail",
+      text: "Rate how detailed is the caption, considering how much image gist (major event in the image) the captions conveys.",
+      labels: ["Very poor detail", "Poor detail", "Good detail", "Very good detail"],
+    },
+  ];
+
+  useEffect(() => {
+    // Randomize question order
+    const shuffledQuestions = allQuestions.sort(() => Math.random() - 0.5);
+    setQuestions(shuffledQuestions);
+  }, [imageCount]);
+
+
+
   const renderRadioButtons = (
     rowNumber,
     selectedColumns,
@@ -746,91 +769,45 @@ function AnnotateContainer() {
 
               <Col span={12} align="left">
                 {/* Centering the survey-container */}
-                <div
-                  style={{
-                    marginTop: "20px",
-                    width: "70%",
-                    fontSize: "18px",
-                    marginLeft: "20%",
-                  }}
-                >
-                  <b>
-                    {" "}
-                    1. Rate how accurate is the caption, considering whether the
-                    caption is related to the target image without distortion.
-                  </b>
-                </div>
-                <div style={{ textAlign: "center", margin: "20px 0" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginTop: "5px",
-                      fontSize: "12px",
-                      width: "80%",
-                      margin: "0 auto",
-                    }}
-                  >
-                    <span>Very inaccurate</span>
-                    <span>Inaccurate</span>
-                    <span>Accurate</span>
-                    <span>Very accurate</span>
+                {questions.map((question) => (
+                  <div key={question.id} style={{ textAlign: "center", margin: "20px 0" }}>
+                        <div
+                          style={{
+                            marginTop: "20px",
+                            width: "70%",
+                            fontSize: "18px",
+                            marginLeft: "20%",
+                          }}
+                        >
+                          <b>{question.text}</b>
+                        </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: "5px",
+                        fontSize: "12px",
+                        width: "80%",
+                        margin: "0 auto",
+                      }}
+                    >
+                      {question.labels.map((label, index) => (
+                        <span key={index}>{label}</span>
+                      ))}
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="3"
+                      step="1"
+                      value={sliderValues[question.id]}
+                      onChange={(e) => handleSliderChange(question.id, e.target.value)}
+                      onClick={(e) => handleSliderClick(question.id, e.target.value)}
+                      style={{ width: "80%", margin: "0 auto" }}
+                    />
                   </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="3"
-                    value={sliderValues.accuracy}
-                    onChange={(e) =>
-                      handleSliderChange("accuracy", e.target.value)
-                    }
-                    onClick={(e) => handleSliderClick("accuracy", e.target.value)}
-                    style={{ width: "80%", margin: "0 auto" }}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    margin: "auto",
-                    width: "70%",
-                    fontSize: "18px",
-                    marginLeft: "20%",
-                  }}
-                >
-                  <b>
-                    {" "}
-                    2. Rate how detailed is the caption, considering how much
-                    image gist (major event in the image) the captions conveys.
-                  </b>
-                </div>
-                <div style={{ textAlign: "center", margin: "20px 0" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginTop: "5px",
-                      fontSize: "12px",
-                      width: "80%",
-                      margin: "0 auto",
-                    }}
-                  >
-                    <span>Very poor detail</span>
-                    <span>Poor detail</span>
-                    <span>Good detail</span>
-                    <span>Very good detail</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="3"
-                    value={sliderValues.detail}
-                    onChange={(e) =>
-                      handleSliderChange("detail", e.target.value)
-                    }
-                    onClick={(e) => handleSliderClick("detail", e.target.value)}
-                    style={{ width: "80%", margin: "0 auto" }}
-                  />
-                </div>
+                ))}
+       
                 <div className="back-buttons">
                   <button onClick={nextChange} className="undo-clear btn">
                     Next
