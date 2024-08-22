@@ -7,6 +7,9 @@ import "./styling.css";
 function AnnotateStartContainer() {
   // let history = useHistory();
   const [agree, setAgree] = useState(false);
+  localStorage.setItem('backend_path', 'https://backend-7lis24xilq-ue.a.run.app')
+  // http://127.0.0.1:8080
+  // https://backend-7lis24xilq-ue.a.run.app
 
   const checkboxHandler = () => {
     setAgree(!agree);

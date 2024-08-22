@@ -21,13 +21,13 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # exp_groups = ["default_online", "effort_online"]
 exp_groups = {"default": "default_online", "effort": "effort_online"}
-max_users = 6
+max_users = 10
 
 # for human-based caption evaluation
-csv_file_path = "captions_evaluator_combined.csv"
-number_evaluators = 2
+csv_file_path = "captions_evaluator_onlinep1.csv"
+number_evaluators = 3
 number_images = 12
-eval_folder = "test_folder"
+eval_folder = "annotations_online"
 
 
 # db = SQLAlchemy(app)
@@ -206,7 +206,10 @@ def emailData():
     response_body.update(data["survey_data"])
     print(data)
     group = request_data["group"]
-    db.child(exp_groups[group]).child(request_data["folder"]).push(response_body)
+    # main study
+    # db.child(exp_groups[group]).child(request_data["folder"]).push(response_body)
+    # human annotations
+    db.child(group).child(request_data["folder"]).push(response_body)
     return jsonify(response_body)
 
 
@@ -223,37 +226,39 @@ def setEvals():
         # for the existing entries in the database
         for comb in eval_combinations.each():
             comb_str = comb.key()
-            print("found str:", comb_str)
-            number_of_children = len(comb.val())
-            print("number of elements", number_of_children)
+            if comb_str.startswith('E'): 
+                print("found str:", comb_str)
+                number_of_children = len(comb.val())
+                print("number of elements", number_of_children)
 
-            # iterate over the evaluators saved and check that valid evaluators include 12 entries
-            for each_eval in db.child(eval_folder).child(comb_str).get().each():
-                n_entries = len(each_eval.val())
-                if n_entries < number_images:
-                    number_of_children -= 1
-            # check that there are still evaluations to try
-            if len(combinations) > 0:
-                try:
-                    # remove the combination when there are at most 3 responses
-                    if number_of_children > number_evaluators - 1:
-                        combinations.remove(comb_str)
-                        print("evaluator removed")
-                        print(combinations)
+                # iterate over the evaluators saved and check that valid evaluators include 12 entries
+                for each_eval in db.child(eval_folder).child(comb_str).get().each():
+                    n_entries = len(each_eval.val())
+                    if n_entries < number_images:
+                        number_of_children -= 1
+                # check that there are still evaluations to try
+                if len(combinations) > 0:
+                    try:
+                        # remove the combination when there are at most 3 responses
+                        if number_of_children > number_evaluators - 1:
+                            combinations.remove(comb_str)
+                            print("evaluator removed")
+                            print(combinations)
 
-                    selected_combination = random.choice(combinations)
-                    print("selected combination", selected_combination)
-                    # get captions and image IDs based on the selected combination
-                    captions_info = get_captions_info(selected_combination)
-                except:
-                    print("nothing removed")
+                        selected_combination = random.choice(combinations)
+                        print("selected combination", selected_combination)
+                        # get captions and image IDs based on the selected combination
+                        captions_info = get_captions_info(selected_combination)
+                    except:
+                        print("nothing removed")
+                        selected_combination = "NA"
+                        captions_info = []
+                else:
+                    print("All the evaluations have been completed")
                     selected_combination = "NA"
                     captions_info = []
             else:
-                print("All the evaluations have been completed")
-                selected_combination = "NA"
-                captions_info = []
-
+                continue
     # TODO: make sure not to repeat one evaluator
     else:
         selected_combination = random.choice(combinations)
@@ -350,4 +355,4 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, ssl_context='adhoc', host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))

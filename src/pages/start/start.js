@@ -21,7 +21,7 @@ function StartContainer() {
           console.log(message)
           if (message['warning']===true){
             // not needed here
-            // localStorage.setItem('block_user', true)
+            localStorage.setItem('block_user', true)
             localStorage.setItem('finished', true);
             let path = "/#/EndEval"
             window.location.assign(path)

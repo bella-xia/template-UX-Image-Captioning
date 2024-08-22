@@ -28,7 +28,7 @@ let conditions = {
     default: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."
   
   }
-  var showCompensation = Math.floor(Math.random() * 2);
+  var showCompensation = 0 // Math.floor(Math.random() * 2);
   var key = String(Object.keys(conditions)[showCompensation]); 
   var msg = conditions[Object.keys(conditions)[showCompensation]];
   localStorage.setItem("group", key);

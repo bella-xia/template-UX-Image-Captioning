@@ -132,7 +132,7 @@ const EyegazeEndContainer = () => {
       options: ["Red", "Orange", "Yellow", "Green"],
     },
     "image9": {
-      question: "How many people standing in the red box?",
+      question: "How many people are standing in the red box?",
       options: ["1", "2", "3", "4"],
     },
     "image10": {

@@ -141,7 +141,7 @@ function AnnotateContainer() {
   };
   // 127.0.0.1
   const sendAnnotationData = (obj) => {
-    fetch("http://127.0.0.1:8080/annotationData", {
+    fetch(localStorage['backend_path'].concat("/annotationData"), {
       method: "POST",
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
@@ -609,7 +609,7 @@ function AnnotateContainer() {
     const fetchData = async () => {
       try {
         // Replace with your asynchronous operation
-        const response = await fetch("http://127.0.0.1:8080/setEvals");
+        const response = await fetch(localStorage['backend_path'].concat("/setEvals"));
         const data = await response.json();
 
         if (isMounted.current) {

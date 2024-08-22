@@ -55,7 +55,7 @@ function AnnotateInstructionsContainer() {
           Your role is to rate these captions based on specific
           criteria provided for each set. It's important to approach this task
           with your first instinct. We value your initial perceptions and
-          judgments, so please avoid overthinking your responses. 
+          judgments, so please avoid overthinking your responses.  
         </p>
 
         <p> 
