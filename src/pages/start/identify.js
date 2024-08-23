@@ -28,7 +28,7 @@ let conditions = {
     default: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."
   
   }
-  var showCompensation = 0 // Math.floor(Math.random() * 2);
+  var showCompensation = Math.floor(Math.random() * 2); // modify here to get more for certain group
   var key = String(Object.keys(conditions)[showCompensation]); 
   var msg = conditions[Object.keys(conditions)[showCompensation]];
   localStorage.setItem("group", key);
@@ -114,11 +114,13 @@ const IDContainer = () => {
             <Input style={{ width: '30%', float:'left'}}/>
         </Form.Item>
 
-
+        <div className="text">
+          As a reminder, this study was designed to take no more than 30 minutes. We estimated the study completion time from an initial data collection in person. Your submission may <b>not be approved</b> if your completion time does not fall within an acceptable range. 
+        </div>
 
          <Form.Item >
          
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" style={{display: "flex"}}>
         Submit
         </Button>
         </Form.Item>

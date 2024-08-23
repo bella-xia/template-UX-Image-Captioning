@@ -70,7 +70,7 @@ function InstructionsContainer() {
 
         <b>Your task</b> today is to describe the <b>information an image conveys</b> and the <b>visual details</b> that may be important to a person with visual impairments,  enabling them to build memories and experiences from the photographs they encounter. 
 
-        You will collaborate with an Artificial Intelligence (AI) model that generates captions automatically to provide the best quality captions. 
+        You will collaborate with an Artificial Intelligence (AI) model that generates captions automatically, allowing you to provide the best quality captions. 
  
 
         Read the following instructions to complete the study:
@@ -86,6 +86,7 @@ function InstructionsContainer() {
 
         <p>NOTE: As you write the captions, <b>DO NOT</b> speculate about what people in the image might be saying or thinking, or events that might have happened in the past or future.
         </p>
+        
 
         <Checkbox
           onChange={checkboxHandler}

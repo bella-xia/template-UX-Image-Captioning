@@ -123,16 +123,16 @@ const EyegazeEndContainer = () => {
       options: ["Person", "Garbage can", "Plants", "Traffic light"],
     },
     Image_7: {
-      question: "How many people are fishing?",
-      options: ["1", "2", "3", "4"],
+      question: "What color are the shorts?",
+      options: ["Black", "Grey", "White", "Navy"],
     },
     Image_9: {
       question: "Does the car have a roof rack?",
       options: ["Yes", "No"],
     },
     Image_10: {
-      question: "What color are the shorts?",
-      options: ["Black", "Grey", "White", "Navy"],
+      question: "What color is the dog on the bench?",
+      options: ["White", "Black", "Brown", "Tan"],
     },
     Image_11: {
       question: "What color is the boat?",

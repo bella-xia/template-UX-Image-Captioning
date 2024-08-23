@@ -33,6 +33,7 @@ const PaymentSurveyContainer = () => {
     let currentTime = Date.now();
     let totalTime = ((currentTime - localStorage['study_time']) / 1000).toFixed(3);
     // mark as completed
+    localStorage.setItem('total_time', totalTime)
     localStorage.setItem('finished', true);
     console.log("Received values of form: ", values);
     values.total_time = totalTime;

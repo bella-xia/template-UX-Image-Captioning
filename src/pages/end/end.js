@@ -18,6 +18,17 @@ function EndContainer() {
     const [submit, setSubmit] = useState(false);
     const [userid, setUserID] = useState(JSON.parse(localStorage.getItem("user-id")) || "");
 
+    const totalTime = localStorage['total_time'] / 60;
+    let alertMessage = "";
+
+
+    if (totalTime > 45) {
+      alertMessage = `Warning: It took you ${Math.round(totalTime)} minutes to complete the task, which is longer than expected. We will carefully review your submission to consider approval. If approved, you will still receive a compensation of $6 USD.`
+
+    } else {
+      alertMessage = `You have successfully completed the study and will receive a compensation of $6 USD. You completed the task in ${Math.round(totalTime)} minutes.`;
+    }
+
     const onFinish = (values) => {
       let data_send = {
         'userID': userid,
@@ -52,9 +63,13 @@ function EndContainer() {
         <div className="title">
         <h1>Thank you for completing the study! </h1>
       </div>
-      
+
       <div className="text"> 
-        You have succesfully completed the study and will receive a compensation of $6 USD. 
+        {alertMessage}
+      </div>
+
+      <div className="text"> 
+        <b>Debrief:</b> You may have been misled by the survey. We were investigating the influence of compensation strategies in your approach to the task. Regardless of the condition you were assigned to, your compensation was going to be $6 USD and independent of your performance. 
       </div>
 
       <div className="text">

@@ -26,3 +26,9 @@
     width: 75%;
     margin-left: 13%;
   }
+
+  .text{
+    font-size: 18px;
+    text-align: left;
+    margin-right: 20px;
+}

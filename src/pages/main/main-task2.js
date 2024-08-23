@@ -12,7 +12,7 @@ function Main2Container() {
   // timer for when users move to the next image
   const [deltaImageTime, setDeltaImageTime] = useState(0);
   // The time when we first edit the caption
-  const [startEditTime, setStartEditTime] = useState(Date.now());
+  const [startEditTime, setStartEditTime] =  useState(0); // useState(Date.now());
   // The time when we last edit the caption
   const [deltaEditTime, setDeltaEditTime] = useState(0);
   const [edited, setEdited] = useState(false);
