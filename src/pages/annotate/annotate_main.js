@@ -443,6 +443,8 @@ function AnnotateContainer() {
       alert(
         "If you click Next then you will be finishing scoring. Click on Next again if you are finished."
       );
+      // line to stop activating the timeout
+      localStorage.setItem('finished', true);
       routeChange();
     }
     //setEditMode(() => false);
