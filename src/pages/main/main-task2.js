@@ -333,6 +333,7 @@ function Main2Container() {
           setDeltaEditTime(0);
         }
         let data_send = {
+          userID: localStorage["user-id"],
           startImageTime: startImageTime,
           deltaImageTime: t_i_f,
           startEditTime: startEditTime,

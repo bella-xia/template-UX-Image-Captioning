@@ -20,14 +20,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # exp_groups = ["default_online", "effort_online"]
-exp_groups = {"default": "default_online", "effort": "effort_online"}
+exp_groups = {"default": "default_t", "effort": "effort_t"}
 max_users = 20
 
 # for human-based caption evaluation
 csv_file_path = "captions_evaluator_onlinep1.csv"
-number_evaluators = 3
+number_evaluators = 2
 number_images = 12
-eval_folder = "annotations_test"
+eval_folder = "annotations_prolific"
 
 
 # db = SQLAlchemy(app)
@@ -133,12 +133,12 @@ def check_repeated_responses(responses, x=7):
     Returns:
         bool: True if repeated responses are found in any segment, False otherwise.
     """
-    for i in range(0, len(responses) - x + 1, x):
+    for i in range(0, len(responses) - x + 1):
         segment = responses[i:i+x]
         # Check if all responses in the segment are the same
         if len(set(segment)) == 1:
             return True  # Found repeated responses
-    
+        
     return False 
 
 @app.route("/validateRatings", methods=["POST"])
@@ -154,6 +154,9 @@ def validateRatings():
         list_details.append(row.val()["detailLevel"])
 
     warning_continue = check_repeated_responses(list_accuracies) | check_repeated_responses(list_details)
+    if not warning_continue:
+        db.child(eval_folder).child("success").push(user_id)
+
     response_body = {"warning": warning_continue}
     return jsonify(response_body)
 
@@ -199,7 +202,6 @@ def annotateID():
     request_data = json.loads(request.data)
     data = request_data["content"]
     print('data checking ID', data)
-    annotation_foler = request_data["group"] # same as eval_folder
     # new potential entry
     user_id = data["userID"]
     given_id = data["id_value"]
@@ -294,7 +296,12 @@ def setEvals():
     if eval_combinations.val():
         exists = any(item.key().startswith('E') for item in eval_combinations.each())
         # if there has been data saved in the E folders
-        if exists: 
+        if exists:
+            # only if there are any E entries, there could be a successful participant
+            success_data = db.child(eval_folder).child("success").get()
+            success_set = {item.val() for item in success_data.each()} if success_data.each() else set()
+            print('successful participants here', success_set)
+ 
             # for the existing entries in the database
             for comb in eval_combinations.each():
                 comb_str = comb.key()
@@ -305,7 +312,9 @@ def setEvals():
                 # iterate over the evaluators saved and check that valid evaluators include 12 entries
                 for each_eval in db.child(eval_folder).child(comb_str).get().each():
                     n_entries = len(each_eval.val())
-                    if n_entries < number_images:
+                    # check if the 12 entries were valid as well
+                    participant_key = each_eval.key()
+                    if n_entries < number_images or participant_key not in success_set:
                         number_of_children -= 1
                 # check that there are still evaluations to try
                 if len(combinations) > 0:

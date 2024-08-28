@@ -99,7 +99,7 @@ const IDAnnotate = () => {
           ]}
             style={{marginTop:"20px", fontSize:'20px'}}
         >
-            <Input style={{ width: '40%', float:'left'}}/>
+            <Input style={{ width: '30%', float:'left'}}/>
         </Form.Item>
 
         <div className="text">
