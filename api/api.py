@@ -64,7 +64,8 @@ def setup():
     # assign a random task to the current user
     now = datetime.now()
     user_id = now.strftime("%Y%m%d%H%M%S")
-    response = {"user_id": user_id}
+    group_idx = random.randint(0,1)
+    response = {"user_id": user_id, "group_idx": group_idx}
 
     return jsonify(response)
 
@@ -439,4 +440,4 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080))) ssl_context='adhoc',
+    app.run(debug=True, ssl_context='adhoc', host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080))) ssl_context='adhoc',

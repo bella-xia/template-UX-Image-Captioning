@@ -15,14 +15,15 @@ let conditions = {
 }
 // var showCompensation = Math.floor(Math.random() * 2);
 // var key = String(Object.keys(conditions)[showCompensation]); 
-var msg = conditions[localStorage['group']];
+// var msg = conditions[localStorage['group']];
 // localStorage.setItem("group", key);
-var displayedMessage = msg;
+// var displayedMessage = msg;
 
 function EyegazeStartContainer() {
   console.log(localStorage['group'])
-  console.log(msg)
   console.log('-----------')
+  let msg = conditions[localStorage['group']];
+  let displayedMessage = msg
 
   const routeChange = () => {
     localStorage.setItem("start_eye", Date.now());

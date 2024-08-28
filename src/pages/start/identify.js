@@ -28,10 +28,10 @@ let conditions = {
     default: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."
   
   }
-  var showCompensation = Math.floor(Math.random() * 2); // modify here to get more for certain group
-  var key = String(Object.keys(conditions)[showCompensation]); 
-  var msg = conditions[Object.keys(conditions)[showCompensation]];
-  localStorage.setItem("group", key);
+  // var showCompensation = Math.floor(Math.random() * 2); // modify here to get more for certain group
+  // var key = String(Object.keys(conditions)[showCompensation]); 
+  // var msg = conditions[Object.keys(conditions)[showCompensation]];
+  // localStorage.setItem("group", key);
 
 const IDContainer = () => {
   const [form] = Form.useForm();
@@ -85,6 +85,8 @@ const IDContainer = () => {
             // setTask(data['agent_number']);
             // send user id as well
             localStorage.setItem('user-id', data['user_id']);
+            let key = String(Object.keys(conditions)[data['group_idx']]); 
+            localStorage.setItem("group", key);
         });
     }, []);
 
