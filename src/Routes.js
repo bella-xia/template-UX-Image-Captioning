@@ -15,6 +15,7 @@ import eyegazeEndContainer from "./pages/eyegazeEnd/eyegazeEnd";
 import InterventionContainer from "./pages/instr/primer";
 
 import AnnotateContainer from "./pages/annotate/annotate_main";
+import IDAnnotate from "./pages/annotate/identify";
 import AnnotateInstructionsContainer from "./pages/annotate/instructions";
 import AnnotateStartContainer from "./pages/annotate/start";
 import AnnotateEndContainer from "./pages/annotate/end";
@@ -40,6 +41,7 @@ export default class Routes extends Component {
           <Route path="/terminate" component={TaskEndContainer} />
 
           <Route path="/Assessment" exact component={AnnotateStartContainer} />
+          <Route path="/Identify" component={IDAnnotate} />
           <Route path="/InstrEval" exact component={AnnotateInstructionsContainer} />
           <Route path="/Eval" exact component={AnnotateContainer} />
           <Route path="/EndEval" component={AnnotateEndContainer} />

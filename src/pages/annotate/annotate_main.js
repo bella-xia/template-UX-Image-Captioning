@@ -320,8 +320,31 @@ function AnnotateContainer() {
   localStorage.setItem("img_paths", JSON.stringify(img_paths));
 
   const routeChange = () => {
-    let path = "/#/EndEval";
-    window.location.assign(path);
+    fetch(localStorage['backend_path'].concat('/validateRatings'), {
+      method: "POST",
+      body: JSON.stringify({
+        comb: localStorage.getItem("combination"),
+        userID: localStorage["user-id"],
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((message) => {
+        console.log(message);
+      if (message['warning']===true){
+        localStorage.setItem('finished', true);
+        alert("We reviewed your task progress and found the same response for consecutive images in the majority of the cases. The study cannot be completed. Clic the OK button.")
+        let path = "/#/terminate"
+        window.location.assign(path)
+      }  else {
+        let path = "/#/EndEval";
+        window.location.assign(path);
+      }
+      }); 
+    // let path = "/#/EndEval";
+    // window.location.assign(path);
   };
 
   const updateImage = (count) => {
@@ -638,7 +661,6 @@ function AnnotateContainer() {
         const data = await response.json();
 
         if (isMounted.current) {
-          localStorage.setItem("user-id", data["user_id"]);
           localStorage.setItem("eval_folder", data["eval_folder"]);
           localStorage.setItem("combination", data["selected_combination"]);
           if (localStorage["combination"] ==='NA') {

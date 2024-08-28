@@ -59,7 +59,7 @@ function AnnotateInstructionsContainer() {
         </p>
 
         <p> 
-          Do not reload the website or try to go back since you will have to start again. 
+          <b>Do not</b> reload the website or try to go back since the data recording may be affected. 
           Please use <b>full screen</b> mode in <b>Chrome browser</b>.
         </p>
 

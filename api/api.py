@@ -27,7 +27,7 @@ max_users = 20
 csv_file_path = "captions_evaluator_onlinep1.csv"
 number_evaluators = 3
 number_images = 12
-eval_folder = "annotations_online"
+eval_folder = "annotations_test"
 
 
 # db = SQLAlchemy(app)
@@ -122,6 +122,41 @@ def getImageInfo():
     return jsonify(response_body)
 
 
+def check_repeated_responses(responses, x=7):
+    """
+    Check for repeated responses every x cases.
+
+    Args:
+        responses (list): A list of responses from consecutive questions.
+        x (int): The size of each segment to check for repeated responses.
+
+    Returns:
+        bool: True if repeated responses are found in any segment, False otherwise.
+    """
+    for i in range(0, len(responses) - x + 1, x):
+        segment = responses[i:i+x]
+        # Check if all responses in the segment are the same
+        if len(set(segment)) == 1:
+            return True  # Found repeated responses
+    
+    return False 
+
+@app.route("/validateRatings", methods=["POST"])
+def validateRatings():
+    request_data = json.loads(request.data)
+    user_id = request_data["userID"]
+
+    user_entries = db.child(eval_folder).child(request_data["comb"]).child(user_id).get()
+    list_accuracies = []
+    list_details = []
+    for row in user_entries.each():
+        list_accuracies.append(row.val()["accuracyLevel"])
+        list_details.append(row.val()["detailLevel"])
+
+    warning_continue = check_repeated_responses(list_accuracies) | check_repeated_responses(list_details)
+    response_body = {"warning": warning_continue}
+    return jsonify(response_body)
+
 @app.route("/validateResponses", methods=["POST"])
 def validateResponses():
     # receive userID, group from local storage
@@ -156,6 +191,40 @@ def surveyData():
         data
     )
     response_body = {"user_id": user_id}
+    return jsonify(response_body)
+
+@app.route("/annotateID", methods=["POST"])
+def annotateID():
+    # print("receiving data from frontend")
+    request_data = json.loads(request.data)
+    data = request_data["content"]
+    print('data checking ID', data)
+    annotation_foler = request_data["group"] # same as eval_folder
+    # new potential entry
+    user_id = data["userID"]
+    given_id = data["id_value"]
+
+    # for IDs recorded so far in the annotation folder
+    id_lists = []
+    entries = db.child(eval_folder).child("IDs").get() 
+    if entries.val() is not None:
+        for user in entries.each():
+            user_dict = user.val()
+            list_obj = list(user_dict.values())
+            first_dict = list_obj[0]
+            id_value = first_dict['id']
+            id_lists.append(id_value)
+
+    if given_id['id'] not in id_lists:
+        db.child(eval_folder).child("IDs").child(user_id).push(
+            given_id
+        )
+        print('recording new ID')
+        warning_continue = False 
+    else:
+        print('failed to record')
+        warning_continue = True
+    response_body = {"warning": warning_continue}
     return jsonify(response_body)
 
 @app.route("/validateID", methods=["POST"])
@@ -223,10 +292,12 @@ def setEvals():
     eval_combinations = db.child(eval_folder).get()
 
     if eval_combinations.val():
-        # for the existing entries in the database
-        for comb in eval_combinations.each():
-            comb_str = comb.key()
-            if comb_str.startswith('E'): 
+        exists = any(item.key().startswith('E') for item in eval_combinations.each())
+        # if there has been data saved in the E folders
+        if exists: 
+            # for the existing entries in the database
+            for comb in eval_combinations.each():
+                comb_str = comb.key()
                 print("found str:", comb_str)
                 number_of_children = len(comb.val())
                 print("number of elements", number_of_children)
@@ -257,8 +328,12 @@ def setEvals():
                     print("All the evaluations have been completed")
                     selected_combination = "NA"
                     captions_info = []
-            else:
-                continue
+        else:
+            selected_combination = random.choice(combinations)
+            print("selected combination", selected_combination)
+            # get captions and image IDs based on the selected combination
+            captions_info = get_captions_info(selected_combination)
+
     # TODO: make sure not to repeat one evaluator
     else:
         selected_combination = random.choice(combinations)
@@ -289,11 +364,11 @@ def setEvals():
     """
 
     # assign a random task to the current user
-    now = datetime.now()
-    user_id = now.strftime("%Y%m%d%H%M%S")
+    # now = datetime.now()
+    # user_id = now.strftime("%Y%m%d%H%M%S")
+    # "user_id": user_id,
 
     response = {
-        "user_id": user_id,
         "eval_folder": eval_folder,
         "selected_combination": selected_combination,
         "captions_info": captions_info,
@@ -355,4 +430,4 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, ssl_context='adhoc', host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080))) ssl_context='adhoc',
