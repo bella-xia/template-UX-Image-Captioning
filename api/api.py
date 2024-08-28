@@ -21,7 +21,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # exp_groups = ["default_online", "effort_online"]
 exp_groups = {"default": "default_online", "effort": "effort_online"}
-max_users = 10
+max_users = 20
 
 # for human-based caption evaluation
 csv_file_path = "captions_evaluator_onlinep1.csv"
@@ -355,4 +355,4 @@ def annotationData():
 
 if __name__ == "__main__":
     # db.create_all()
-    app.run(debug=True, host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, ssl_context='adhoc', host="0.0.0.0", port=8080)  # int(os.environ.get("PORT", 8080)))
