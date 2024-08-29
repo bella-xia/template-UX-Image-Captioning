@@ -19,8 +19,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# exp_groups = ["default_online", "effort_online"]
-exp_groups = {"default": "default_t", "effort": "effort_t"}
+exp_groups = ["default_online", "effort_online"]
 max_users = 20
 
 # for human-based caption evaluation
@@ -176,6 +175,7 @@ def validateResponses():
         list_edits.append(row.val()["deltaEditTime"])
     print(list_edits)
     # depending on the edit times, define the path to continue the study
+    # TODO: or percetange to account for additional entries created when moving back and forth
     warning_continue = list_edits.count(0) >= 7
     response_body = {"warning": warning_continue}
     print("user responses validated")

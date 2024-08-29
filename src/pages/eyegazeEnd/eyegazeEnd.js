@@ -20,7 +20,6 @@ const EyegazeEndContainer = () => {
         "Image_5",
         "Image_6",
         "Image_7",
-        "Image_8",
         "Image_9",
         "Image_10",
         "Image_11",

@@ -64,7 +64,7 @@ function AnnotateEndContainer() {
           </div>
 
           <div className="text">
-            Please click on the link below to be redirected to Prolific's website and finalize the study. 
+            Please click on the link below to be redirected to Prolific's website before closing this tab and finalize the study. 
           </div>
 
           <a href="https://app.prolific.com/submissions/complete?cc=C1GD2BCT" target="_blank" className="text">https://app.prolific.com/submissions/complete?cc=C1GD2BCT</a>
