@@ -35,8 +35,10 @@ const PaymentSurveyContainer = () => {
     // mark as completed
     localStorage.setItem('total_time', totalTime)
     localStorage.setItem('finished', true);
+    // add total study time and displayed message to form responses
     console.log("Received values of form: ", values);
     values.total_time = totalTime;
+    values.message = localStorage["message"]
     let copySaveArray = values;
     setAnswers(values);
     // save data
@@ -53,7 +55,7 @@ const PaymentSurveyContainer = () => {
       method: 'POST',
       body: JSON.stringify({
         userID: localStorage['user-id'], 
-        group: localStorage['group'], 
+        group: localStorage['exp'], 
         folder: 'demo',
         content: obj
       }),

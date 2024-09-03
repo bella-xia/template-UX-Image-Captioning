@@ -181,7 +181,7 @@ function Main2Container() {
     fetch(localStorage['backend_path'].concat('/validateResponses'), {
       method: "POST",
       body: JSON.stringify({
-        group: localStorage["group"],
+        group: localStorage["exp"],
         userID: localStorage["user-id"],
       }),
       headers: {
@@ -529,7 +529,7 @@ function Main2Container() {
       method: "POST",
       body: JSON.stringify({
         userID: localStorage["user-id"],
-        group: localStorage["group"],
+        group: localStorage["exp"],
         folder: "captions",
         content: obj,
       }),

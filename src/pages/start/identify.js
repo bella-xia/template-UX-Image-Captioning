@@ -28,10 +28,7 @@ let conditions = {
     default: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."
   
   }
-  // var showCompensation = Math.floor(Math.random() * 2); // modify here to get more for certain group
-  // var key = String(Object.keys(conditions)[showCompensation]); 
-  // var msg = conditions[Object.keys(conditions)[showCompensation]];
-  // localStorage.setItem("group", key);
+
 
 const IDContainer = () => {
   const [form] = Form.useForm();
@@ -54,7 +51,7 @@ const IDContainer = () => {
         // check that they haven't done it before
       method: 'POST',
       body: JSON.stringify({
-        group: localStorage['group'], 
+        group: localStorage['exp'], 
         folder: 'IDs',
         content: obj
       }),
@@ -86,7 +83,10 @@ const IDContainer = () => {
             // send user id as well
             localStorage.setItem('user-id', data['user_id']);
             let key = String(Object.keys(conditions)[data['group_idx']]); 
+            console.log(key)
             localStorage.setItem("group", key);
+            localStorage.setItem("exp", key);
+            console.log(localStorage['group'])
         });
     }, []);
 

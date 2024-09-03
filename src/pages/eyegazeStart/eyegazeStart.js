@@ -6,24 +6,21 @@ let messages = [
   "Thank you for participating. You will be paid $ 3.0 dollars for the next six images you evaluate.",
   "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study.",
 ];
-let group_names = ["effort", "default"];
+
 // new way to assign conditions
 let conditions = {
-  effort: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study.",
-  default: "Thank you for participating. You will be paid $ 6.0 dollars for succesfully completing the study."
+  effort: "Thank you for participating. You will be paid $ 6.0 dollars for successfully completing the study.",
+  default: "Thank you for participating. You will be paid $ 6.0 dollars for successfully completing the study."
 
 }
-// var showCompensation = Math.floor(Math.random() * 2);
-// var key = String(Object.keys(conditions)[showCompensation]); 
-// var msg = conditions[localStorage['group']];
-// localStorage.setItem("group", key);
-// var displayedMessage = msg;
 
 function EyegazeStartContainer() {
-  console.log(localStorage['group'])
+  console.log(localStorage.getItem('group'))
+  console.log(localStorage.getItem('exp'))
+  console.log(localStorage['user-id'])
   console.log('-----------')
-  let msg = conditions[localStorage['group']];
-  let displayedMessage = msg
+  let msg = conditions[localStorage['exp']];
+  let displayedMessage = msg;
 
   const routeChange = () => {
     localStorage.setItem("start_eye", Date.now());

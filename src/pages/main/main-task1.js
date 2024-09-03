@@ -498,7 +498,7 @@ function Main1Container() {
       method: "POST",
       body: JSON.stringify({
         userID: localStorage["user-id"],
-        group: localStorage["group"],
+        group: localStorage["exp"],
         folder: "captions",
         content: obj,
       }),
