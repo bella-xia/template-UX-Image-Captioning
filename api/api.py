@@ -19,11 +19,12 @@ app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-exp_groups = ["default_online", "effort_online"]
-max_users = 20
+# exp_groups = ["default_online", "effort_online"]
+exp_groups = {"default": "default_online", "effort": "effort_online"}
+max_users = 52
 
 # for human-based caption evaluation
-csv_file_path = "captions_evaluator_onlinep1.csv"
+csv_file_path = "captions_evaluator_sub_df_1.csv"
 number_evaluators = 2
 number_images = 12
 eval_folder = "annotations_prolific"
@@ -64,6 +65,7 @@ def setup():
     now = datetime.now()
     user_id = now.strftime("%Y%m%d%H%M%S")
     group_idx = random.randint(0,1)
+    # 0: effort, 1: default
     response = {"user_id": user_id, "group_idx": group_idx}
 
     return jsonify(response)
@@ -145,6 +147,7 @@ def check_repeated_responses(responses, x=7):
 def validateRatings():
     request_data = json.loads(request.data)
     user_id = request_data["userID"]
+    warning_attention = request_data["attention"]
 
     user_entries = db.child(eval_folder).child(request_data["comb"]).child(user_id).get()
     list_accuracies = []
@@ -154,7 +157,7 @@ def validateRatings():
         list_details.append(row.val()["detailLevel"])
 
     warning_continue = check_repeated_responses(list_accuracies) | check_repeated_responses(list_details)
-    if not warning_continue:
+    if not warning_continue and warning_attention!=2:
         db.child(eval_folder).child("success").push(user_id)
 
     response_body = {"warning": warning_continue}
@@ -176,7 +179,7 @@ def validateResponses():
     print(list_edits)
     # depending on the edit times, define the path to continue the study
     # TODO: or percetange to account for additional entries created when moving back and forth
-    warning_continue = list_edits.count(0) >= 7
+    warning_continue = list_edits.count(0) / len(list_edits) >= 0.58
     response_body = {"warning": warning_continue}
     print("user responses validated")
     return jsonify(response_body)
@@ -416,7 +419,25 @@ def get_captions_info(combination):
                 "tag": row["tag"],
             }
             captions_info.append(caption_info)
+
+        # append attention check images 
+        attn_acc_info = {
+            "userID": 2024,
+            "image_id": "Image_14.png",
+            "caption": "One girl is helping another to take a picture with a digital camera.",
+            "group": "None",
+            "tag": "attention_accuracy",
+        }
+        captions_info.append(attn_acc_info)
+        attn_det_info = {
+            "userID": 2024,
+            "image_id": "Image_20.png",
+            "caption": "A man holds onto ropes and is pulled through the water on his ski.",
+            "group": "None",
+            "tag": "attention_detail",
+        }
         print("backend check")
+        captions_info.append(attn_det_info)
         # print(captions_info)
         return captions_info
 

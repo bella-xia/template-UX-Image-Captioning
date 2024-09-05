@@ -73,9 +73,22 @@ function AnnotateContainer() {
   const [captionsList, setCaptionsList] = useState([]);
   const [captionsGroups, setCaptionsGroups] = useState([]);
 
-  const shuffle_idx = useState(
-    [0, 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14].sort(() => Math.random() - 0.5)
-  );
+  // const shuffle_idx = useState(
+  //   [0, 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 13, 19].sort(() => Math.random() - 0.5)
+  // ); 
+  const [shuffle_idx, setShuffleIdx] = useState(() => {
+    // First, create the array excluding 13 and 19
+    const originalArray = [0, 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14].sort(() => Math.random() - 0.5);
+  
+    // Insert 13 at the third position (index 2)
+    originalArray.splice(2, 0, 13);
+  
+    // Insert 19 at the second to last position (index length - 1)
+    originalArray.splice(originalArray.length - 2, 0, 19);
+  
+    return originalArray;
+  });
+
   const isMounted = useRef(true);
   const [captions, setCaptions] = useState([]); // useState(shuffle_idx[0].map(i => allCaptions[i]));
   const [prevCaption, setPrevCaption] = useState("");
@@ -102,25 +115,68 @@ function AnnotateContainer() {
   const [imageCountBackend, setImageCountBackend] = useState(0);
 
   const [questions, setQuestions] = useState([]);
+  const [warningAttention, setWarningAttention] = useState(0);
+
+  // const allQuestions = [
+  //   {
+  //     id: "accuracy",
+  //     text: (captionTag === "attention_accuracy") 
+  //       ? "For this question, please select ‘Somewhat agree’ regardless of the caption and image to show you are paying attention." 
+  //       : "The caption accurately represents the content of the image without distortion."
+  //   },
+  //   {
+  //     id: "detail",
+  //     text: (captionTag === "attention_detail") 
+  //       ? "For this question, please select ‘Somewhat agree’ regardless of the caption and image to show you are paying attention." 
+  //       : "The caption provides a detailed description that conveys the image gist or major events and key elements of the image."
+  //   },
+  // ];
 
   const allQuestions = [
     {
       id: "accuracy",
-      text: "Rate how accurate is the caption, considering whether the caption is related to the target image without distortion.",
-      labels: ["Very inaccurate", "Inaccurate", "Accurate", "Very accurate"],
+      text: "The caption accurately represents the content of the image without distortion."
     },
     {
       id: "detail",
-      text: "Rate how detailed is the caption, considering how much image gist (major event in the image) the captions conveys.",
-      labels: ["Very poor detail", "Poor detail", "Good detail", "Very good detail"],
+      text: "The caption provides a detailed description that conveys both the image gist (or major events in the image) and the finer details of the image."
     },
   ];
 
   useEffect(() => {
+    let currentQuestions = [];
+
+    if (captionTag === "attention_accuracy") {
+      currentQuestions = [
+        {
+          id: "accuracy",
+          text: "For this question, please select ‘Strongly agree’ regardless of the caption and image to show you are paying attention.",
+        },
+        {
+          id: "detail",
+          text: "The caption provides a detailed description that conveys both the image gist (or major events in the image) and the finer details of the image.",
+        },
+      ];
+    }
+    else if (captionTag === "attention_detail"){
+      currentQuestions = [
+        {
+          id: "accuracy",
+          text: "The caption accurately represents the content of the image without distortion.",
+        },
+        {
+          id: "detail",
+          text: "For this question, please select ‘Strongly disagree’ regardless of the caption and image to show you are paying attention.",
+        },
+      ];
+    }
+    else {
+      currentQuestions = allQuestions;
+    }
     // Randomize question order
-    const shuffledQuestions = allQuestions.sort(() => Math.random() - 0.5);
+    const shuffledQuestions = currentQuestions.sort(() => Math.random() - 0.5);
     setQuestions(shuffledQuestions);
-  }, [imageCount]);
+  }, [captionTag, imageCount]);
 
 
 
@@ -315,7 +371,7 @@ function AnnotateContainer() {
   };
 
   const baseImgUrl = "/image_folder/";
-  const img_paths = useState(shuffle_idx[0].map((i) => `Image_${i + 1}.png`));
+  const img_paths = useState(shuffle_idx.map((i) => `Image_${i + 1}.png`));
   //console.log(img_paths[imageCount][0]);
   localStorage.setItem("img_paths", JSON.stringify(img_paths));
 
@@ -325,6 +381,7 @@ function AnnotateContainer() {
       body: JSON.stringify({
         comb: localStorage.getItem("combination"),
         userID: localStorage["user-id"],
+        attention: warningAttention
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -339,8 +396,16 @@ function AnnotateContainer() {
         let path = "/#/terminate"
         window.location.assign(path)
       }  else {
-        let path = "/#/EndEval";
-        window.location.assign(path);
+        console.log('attention failed', warningAttention)
+        if (warningAttention ===2) {
+          alert("You have failed both attention checks. The study cannot be completed. Clic the OK button.")
+          let path = "/#/terminate"
+          window.location.assign(path)
+        } else {
+          let path = "/#/EndEval";
+          window.location.assign(path);
+        }
+
       }
       }); 
     // let path = "/#/EndEval";
@@ -395,20 +460,21 @@ function AnnotateContainer() {
   };
 
   const nextChange = () => {
+    window.scrollTo(0, 0);
     // console.log(selectedColumns);
     if (!sliderInteracted.accuracy && !sliderInteracted.detail) {
       alert(
-        "Please select one response for each slider before proceeding even if assigning very poor detail/inaccurate."
+        "Please select one response for each slider before proceeding even when selecting the lowest rating on the scale."
       );
       return; // Stop the function if sliders haven't been interacted with
     } else if (!sliderInteracted.accuracy) {
       alert(
-        "Please select one response in the accuracy slider before proceeding even if assigning very inaccurate."
+        "Please select one response in the accuracy slider before proceeding even when selecting the lowest rating on the scale."
       );
       return; // Stop the function if sliders haven't been interacted with
     } else if (!sliderInteracted.detail) {
       alert(
-        "Please select one response in the detail slider before proceeding even if assigning very poor detail."
+        "Please select one response in the detail slider before proceeding even when selecting the lowest rating on the scale."
       );
       return; // Stop the function if sliders haven't been interacted with
     }
@@ -428,6 +494,14 @@ function AnnotateContainer() {
       caption_tag: captionTag,
       image_time: t_i_f
     };
+
+    if (captionTag === "attention_accuracy" && sliderValues.accuracy != '3') {
+      setWarningAttention((prevWarning) => prevWarning + 1)
+
+    } else if (captionTag === "attention_detail" && sliderValues.detail != '0') { 
+      setWarningAttention((prevWarning) => prevWarning + 1)
+    }
+
     console.log("getting ready to send data", rowData);
     console.log(selectedColumnsA);
 
@@ -473,6 +547,7 @@ function AnnotateContainer() {
     //setEditMode(() => false);
     setMoveToLastImage(true);
   };
+  
 
   const returnOriginalText = () => {
     console.log("changed caption!");
@@ -752,8 +827,7 @@ function AnnotateContainer() {
                 textAlign: "left",
               }}
             >
-              Consider the image and the caption below to answer the following
-              questions.
+              Consider the image and the caption below to rate your agreement with the following statements: 
             </div>
 
             <Row type="flex" justify="left">
@@ -810,14 +884,15 @@ function AnnotateContainer() {
                         display: "flex",
                         justifyContent: "space-between",
                         marginTop: "5px",
-                        fontSize: "12px",
+                        fontSize: "14px",
                         width: "80%",
                         margin: "0 auto",
                       }}
                     >
-                      {question.labels.map((label, index) => (
-                        <span key={index}>{label}</span>
-                      ))}
+                      <span>Strongly disagree</span>
+                      <span>Disagree</span>
+                      <span>Agree</span>
+                      <span>Strongly agree</span>
                     </div>
                     <input
                       type="range"
@@ -827,7 +902,7 @@ function AnnotateContainer() {
                       value={sliderValues[question.id]}
                       onChange={(e) => handleSliderChange(question.id, e.target.value)}
                       onClick={(e) => handleSliderClick(question.id, e.target.value)}
-                      style={{ width: "80%", margin: "0 auto" }}
+                      style={{ width: "70%", margin: "0 auto" }}
                     />
                   </div>
                 ))}

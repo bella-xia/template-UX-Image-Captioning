@@ -51,15 +51,15 @@ function AnnotateInstructionsContainer() {
         <p>
           
           Welcome to this evaluation exercise. In this task, you will be
-          presented with 12 images and captions acquired in an initial study. 
+          presented with 14 images and captions acquired in an initial study. 
           Your role is to rate these captions based on specific
-          criteria provided for each set. It's important to approach this task
-          with your first instinct. We value your initial perceptions and
+          criteria provided for each set. 
+          We ask you to read the captions and questions carefully, but it is important to approach this task with your first instinct. We value your initial perceptions and
           judgments, so please avoid overthinking your responses.  
         </p>
 
         <p> 
-          <b>Do not</b> reload the website or try to go back since the data recording may be affected. 
+          <b>Do not</b> reload the website or try to go back since the data recording will be affected. 
           Please use <b>full screen</b> mode in <b>Chrome browser</b>.
         </p>
 
@@ -75,7 +75,7 @@ function AnnotateInstructionsContainer() {
         : 
         <>
 
-          Before you start, let's consider some examples of captions with different levels of accuracy and details.
+          Before you start, let's consider some examples of captions with different levels of accuracy and details that contribute to the overall quality.
 
           <Row type="flex" justify="center">
         <Col span={11} type="flex" align="middle" >
@@ -86,18 +86,18 @@ function AnnotateInstructionsContainer() {
 
         <Col span={10} align="left">
             <div className="text">
-            <b>Very Low:</b> A boy fishes by a river with a city skyline in the background. 
+            <b>Poor quality:</b> A boy fishes by a river with a city skyline in the background. 
             </div>
 
             <div className="text">
-            <b>Low quality:</b> A child throws pebbles into a river on a sunny day, with a cathedral in the background. 
+            <b>Fair quality:</b> A child throws pebbles into a river on a sunny day, with a cathedral in the background. 
             </div>
             <div className="text">
-            <b>Good quality</b> A boy in a blue shirt is skimming stones at a riverbank with a historic cathedral and a bridge in the background on a sunny day.
+            <b>Good quality:</b> A boy in a blue shirt is skimming stones at a riverbank with a historic cathedral and a bridge in the background on a sunny day.
             </div>
 
             <div className="text">
-            <b>High quality</b> A young boy wearing a blue sleeveless shirt stands at the river's edge, poised to throw a stone. In the background, the silhouette of a cathedral with twin spires rises above the cityscape, with a bridge spanning the river to the right. The sky is partly cloud
+            <b>Very good quality:</b> A young boy wearing a blue sleeveless shirt stands at the river's edge, poised to throw a stone. In the background, the silhouette of a cathedral with twin spires rises above the cityscape, with a bridge spanning the river to the right under a soft blue sky.
             
             </div>
 
