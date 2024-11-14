@@ -135,11 +135,11 @@ function AnnotateContainer() {
   const allQuestions = [
     {
       id: "accuracy",
-      text: "The caption accurately represents the content of the image without distortion."
+      text: <>"The caption provides an <b>accurate representation</b> of the image content." (Focus on how correctly the information matches the image.)</>
     },
     {
       id: "detail",
-      text: "The caption provides a detailed description that conveys both the image gist (or major events in the image) and the finer details of the image."
+      text: <>"The caption provides a <b>sufficient amount of detail</b> to thoroughly describe the image." (Focus on how much information is provided.)</>
     },
   ];
 
@@ -150,11 +150,11 @@ function AnnotateContainer() {
       currentQuestions = [
         {
           id: "accuracy",
-          text: "For this question, please select ‘Strongly agree’ regardless of the caption and image to show you are paying attention.",
+          text: <>For this question, please select ‘Strongly agree’ regardless of the caption and image to show you are paying attention.</>
         },
         {
           id: "detail",
-          text: "The caption provides a detailed description that conveys both the image gist (or major events in the image) and the finer details of the image.",
+          text: <>"The caption provides a <b>sufficient amount of detail</b> to thoroughly describe the image." (Focus on how much information is provided.)</>
         },
       ];
     }
@@ -162,11 +162,11 @@ function AnnotateContainer() {
       currentQuestions = [
         {
           id: "accuracy",
-          text: "The caption accurately represents the content of the image without distortion.",
+          text: <>"The caption provides an <b>accurate representation</b> of the image content." (Focus on how correctly the information matches the image.)</>
         },
         {
           id: "detail",
-          text: "For this question, please select ‘Strongly disagree’ regardless of the caption and image to show you are paying attention.",
+          text: <>For this question, please select ‘Strongly disagree’ regardless of the caption and image to show you are paying attention.</>
         },
       ];
     }
@@ -174,8 +174,8 @@ function AnnotateContainer() {
       currentQuestions = allQuestions;
     }
     // Randomize question order
-    const shuffledQuestions = currentQuestions.sort(() => Math.random() - 0.5);
-    setQuestions(shuffledQuestions);
+    // const shuffledQuestions = currentQuestions.sort(() => Math.random() - 0.5);
+    setQuestions(currentQuestions);
   }, [captionTag, imageCount]);
 
 

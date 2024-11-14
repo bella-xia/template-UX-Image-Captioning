@@ -13,6 +13,7 @@ function AnnotateInstructionsContainer() {
   const routeChange = () => {
     let path = "/#/Eval";
     // history.push(path);
+    window.scrollTo(0, 0);
     window.location.assign(path);
     console.log("moving to main evaluation page");
   };
@@ -20,6 +21,10 @@ function AnnotateInstructionsContainer() {
   const moreChange =  () => {
     setAcceptFirst(true);
   }
+
+  const checkboxHandler = () => {
+    setAgree(!agree);
+  };
 
   // connect with the backend to get a user ID and randomize agent
   // useEffect(() => {
@@ -84,7 +89,7 @@ function AnnotateInstructionsContainer() {
         </Col>
 
 
-        <Col span={10} align="left">
+        <Col span={12} align="left">
             <div className="text">
             <b>Poor quality:</b> A boy fishes by a river with a city skyline in the background. 
             </div>
@@ -104,7 +109,16 @@ function AnnotateInstructionsContainer() {
         </Col>
         </Row>
 
-        <Button style={{ marginLeft: "60%" }} variant="btn btn-success" onClick={routeChange}>
+
+        <Checkbox
+          onChange={checkboxHandler}
+          style={{ fontSize: "20px",  marginLeft: "50%" }}
+        >
+          I read and understood the examples. 
+        </Checkbox>
+
+
+        <Button disabled={!agree} style={{ marginLeft: "60%" }} variant="btn btn-success" onClick={routeChange}>
             Start
         </Button>
 

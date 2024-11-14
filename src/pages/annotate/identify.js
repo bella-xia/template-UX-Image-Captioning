@@ -103,7 +103,7 @@ const IDAnnotate = () => {
         </Form.Item>
 
         <div className="text">
-          As a reminder, this study was designed to take no more than 20 minutes. We estimated the study completion time from an initial data collection in person. Your submission may <b>not be approved</b> if your completion time does not fall within an acceptable range. 
+          As a reminder, this study was designed to take no more than 10 minutes. We estimated the study completion time from an initial data collection in person. Your submission may <b>not be approved</b> if your completion time does not fall within an acceptable range. 
         </div>
 
          <Form.Item >
