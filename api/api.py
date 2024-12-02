@@ -20,14 +20,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # exp_groups = ["default_online", "effort_online"]
-exp_groups = {"default": "default_ours", "effort": "effort_ours"}
-max_users = 61
+exp_groups = {"default": "default_b2", "effort": "effort_b2"}
+max_users = 55
 
 # for human-based caption evaluation
-csv_file_path = "captions_evaluator_sub_df_4.csv"
-number_evaluators = 1
+csv_file_path = "captions_evaluator_effort_sub_df1.csv"
+number_evaluators = 3
 number_images = 14
-eval_folder = "annotations_extra"
+eval_folder = "annotations_effort_sub1"
 
 
 # db = SQLAlchemy(app)
@@ -64,7 +64,7 @@ def setup():
     # assign a random task to the current user
     now = datetime.now()
     user_id = now.strftime("%Y%m%d%H%M%S")
-    group_idx = 1 # random.randint(0,1)
+    group_idx = random.randint(0,1)
     # 0: effort, 1: default
     response = {"user_id": user_id, "group_idx": group_idx}
 
@@ -162,6 +162,18 @@ def validateRatings():
 
     response_body = {"warning": warning_continue}
     return jsonify(response_body)
+
+@app.route("/recordCheck", methods=["POST"])
+def recordCheck():
+    request_data = json.loads(request.data)
+    group = request_data["group"]
+    user_id = request_data["userID"]
+    attempts = request_data["attempts"]
+    # save each user who attempted the comprehension check with a unique key
+    db.child(exp_groups[group]).child("checked").push(user_id)
+    response_body = {"user_id": user_id}
+    return jsonify(response_body)
+
 
 @app.route("/validateResponses", methods=["POST"])
 def validateResponses():

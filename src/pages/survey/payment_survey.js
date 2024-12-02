@@ -51,19 +51,21 @@ const PaymentSurveyContainer = () => {
     // review manipulation check response
     console.log(localStorage['exp'])
     console.log(values.check)
-    if (localStorage['exp'] === "effort" && values.check === '2') {
-      let path = "/#/End";
-      window.location.assign(path);
-    } else if (localStorage['exp'] === "default" && values.check === '1') {
-      let path = "/#/End";
-      window.location.assign(path);
-    } else {
-      // failed attention redirect and ask them to return the study 
-      alert("The response you provided in the last question DOES NOT correctly acknowledge the key information required for our study. Being aware of the compensation details is crucial for our study. This submission does not qualify for approval. Clic the OK button to continue and do not try reloading this page.")
-      let path = "/#/terminate"
-      window.location.assign(path)
-
-    }
+    let path = "/#/End";
+    window.location.assign(path);
+    // NOTE: commented for now because we have the comprehension check earlier. 
+    // if (localStorage['exp'] === "effort" && values.check === '2') {
+    //   let path = "/#/End";
+    //   window.location.assign(path);
+    // } else if (localStorage['exp'] === "default" && values.check === '1') {
+    //   let path = "/#/End";
+    //   window.location.assign(path);
+    // } else {
+    //   // failed attention redirect and ask them to return the study 
+    //   alert("The response you provided in the last question DOES NOT correctly acknowledge the key information required for our study. Being aware of the compensation details is crucial for our study. This submission does not qualify for approval. Clic the OK button to continue and do not try reloading this page.")
+    //   let path = "/#/terminate"
+    //   window.location.assign(path)
+    // }
   };
 
   const sendData = (obj) => {
@@ -168,8 +170,8 @@ const PaymentSurveyContainer = () => {
                   },
                 ]}>
             <Select>
-                <Select.Option value="1"> I was told I would earn $6 and how many images were left </Select.Option>
-                <Select.Option value="2"> My $6.0 could be reduced for not improving captions </Select.Option>
+                <Select.Option value="1"> I was told I would earn $6 no matter the quality of the captions</Select.Option>
+                <Select.Option value="2"> My $6.0 compensation could be reduced for not improving captions </Select.Option>
                 <Select.Option value="3"> I don't remember </Select.Option>
             </Select>
         </Form.Item>

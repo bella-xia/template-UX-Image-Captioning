@@ -7,7 +7,7 @@ let messages = [
 ];
 
 let conditions = {
-  effort: "You have earned $ 6.0 dollars so far. For the remaining six images, failing to create better captions will result in deductions from your current compensation of $6.0. Each caption that is not improved will lead to a subtraction from your earnings.",
+  effort: "You have completed half of the images. You have six images left.",
   default: "You have completed half of the images. You have six images left."
 
 }
