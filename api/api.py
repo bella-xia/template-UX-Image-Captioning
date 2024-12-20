@@ -24,10 +24,10 @@ exp_groups = {"default": "default_b2", "effort": "effort_b2"}
 max_users = 55
 
 # for human-based caption evaluation
-csv_file_path = "captions_evaluator_effort_sub_df1.csv"
+csv_file_path = "captions_evaluator_effort_sub_df2.csv"
 number_evaluators = 3
 number_images = 14
-eval_folder = "annotations_effort_sub1"
+eval_folder = "annotations_effort_sub2"
 
 
 # db = SQLAlchemy(app)
